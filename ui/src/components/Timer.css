@@ -1,0 +1,56 @@
+.timer-container {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-card);
+  border-radius: 50%;
+  box-shadow: var(--shadow-md);
+}
+
+.timer-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* Start from top */
+}
+
+.timer-track, .timer-progress {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.timer-track {
+  stroke: var(--color-background-start);
+}
+
+.timer-progress {
+  transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+}
+
+.timer-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+  z-index: 2;
+}
+
+/* Colors based on time left */
+.timer-good .timer-progress { stroke: var(--color-success); }
+.timer-warning .timer-text { color: var(--color-accent); }
+.timer-warning .timer-progress { stroke: var(--color-accent); }
+.timer-danger .timer-text { color: var(--color-error); animation: shake 0.5s infinite; }
+.timer-danger .timer-progress { stroke: var(--color-error); }
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(0); }
+  75% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
