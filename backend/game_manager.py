@@ -12,7 +12,8 @@ def create_game(player1, player2, theme):
         "theme": theme.lower(),
         "turn": 0,
         "word_chain": [],
-        "winner": None
+        "winner": None,
+        "reason": None
     }
 
     return game_id
@@ -33,21 +34,36 @@ def submit_word(game_id, player, word):
     if player != current_player:
         return {"valid": False, "reason": "Not your turn"}
 
-    # SENTENCE CHECK
-    if " " in word:
+    # PROFANITY CHECK
+    CUSS_WORDS = ["fuck", "shit", "damn", "ass", "bitch", "hell", "piss", "bastard"]
+    if any(cw in word for cw in CUSS_WORDS):
         game["winner"] = game["players"][1 - game["turn"]]
+        game["reason"] = "Inappropriate language / Cuss word used!"
         return {
             "valid": False,
-            "reason": "Only single words allowed",
+            "reason": game["reason"],
+            "winner": game["winner"] 
+        }
+
+    # SENTENCE CHECK (Limit to terms, not sentences)
+    words_count = len(word.split())
+    if words_count > 3:
+        game["winner"] = game["players"][1 - game["turn"]]
+        game["reason"] = "Full sentences are not allowed (Max 3 words)"
+        return {
+            "valid": False,
+            "reason": game["reason"],
             "winner": game["winner"]
         }
+
 
     # REPEAT CHECK
     if word in game["word_chain"]:
         game["winner"] = game["players"][1 - game["turn"]]
+        game["reason"] = "Word already used"
         return {
             "valid": False,
-            "reason": "Word already used",
+            "reason": game["reason"],
             "winner": game["winner"]
         }
 
@@ -57,9 +73,10 @@ def submit_word(game_id, player, word):
 
         if word[0] != last_word[-1]:
             game["winner"] = game["players"][1 - game["turn"]]
+            game["reason"] = f"Word must start with '{last_word[-1]}'"
             return {
                 "valid": False,
-                "reason": f"Word must start with '{last_word[-1]}'",
+                "reason": game["reason"],
                 "winner": game["winner"]
             }
 
@@ -68,9 +85,10 @@ def submit_word(game_id, player, word):
 
     if not result["valid"]:
         game["winner"] = game["players"][1 - game["turn"]]
+        game["reason"] = result["reason"]
         return {
             "valid": False,
-            "reason": result["reason"],
+            "reason": game["reason"],
             "winner": game["winner"]
         }
 
