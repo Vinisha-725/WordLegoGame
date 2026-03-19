@@ -46,13 +46,11 @@ function App() {
       const resp = await fetch(`${API_BASE}/game_state?game_id=${id}`);
       const data = await resp.json();
       setGameState(data);
-      if (data.winner) {
-        setScreen('game_over');
-      }
     } catch (err) {
       console.error(err);
     }
   };
+
 
   const playAgain = () => {
     setScreen('setup');

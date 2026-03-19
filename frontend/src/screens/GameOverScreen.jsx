@@ -46,14 +46,21 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
-        style={{ fontSize: '4.5rem', fontWeight: 900, marginBottom: '1rem' }}
+        style={{ fontSize: '4.5rem', fontWeight: 900, marginBottom: '0.5rem' }}
       >
         {winner} Wins!
       </motion.h1>
       
+      {gameState?.reason && (
+        <p style={{ fontSize: '1.2rem', color: 'var(--error)', marginBottom: '2rem', fontWeight: 600 }}>
+          Reason: {gameState.reason}
+        </p>
+      )}
+
       <p style={{ fontSize: '1.5rem', opacity: 0.8, marginBottom: '3rem' }}>
         A brilliant display of vocabulary!
       </p>
+
 
       <div className="chain-summary glass-panel" style={{ padding: '2rem', marginBottom: '4rem', background: 'rgba(255,255,255,0.02)', textAlign: 'left' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>

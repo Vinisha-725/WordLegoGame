@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HelpCircle, Send, CheckCircle, AlertCircle, Clock, Hash, LayoutGrid } from 'lucide-react';
+import { HelpCircle, Send, CheckCircle, AlertCircle, Clock, Hash, LayoutGrid, Trophy } from 'lucide-react';
 
 const API_BASE = "http://127.0.0.1:8000";
 
-function GameScreen({ gameState, gameData, onUpdate }) {
+function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
   const [word, setWord] = useState('');
   const [timer, setTimer] = useState(30);
   const [feedback, setFeedback] = useState(null);
   const [showRules, setShowRules] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const inputRef = useRef(null);
 
   const turn = gameState?.turn ?? 0;
@@ -17,21 +18,23 @@ function GameScreen({ gameState, gameData, onUpdate }) {
   const theme = gameState?.theme ?? "Loading...";
   const nextChar = chain.length > 0 ? chain[chain.length - 1].slice(-1).toUpperCase() : "ANY";
 
+  // Winners
+  const winner = gameState?.winner;
+
   useEffect(() => {
     let interval;
-    if (timer > 0 && !gameState?.winner) {
+    if (timer > 0 && !winner) {
       interval = setInterval(() => {
         setTimer(prev => prev - 1);
       }, 1000);
-    } else if (timer === 0 && !gameState?.winner) {
-      // Game over logic manually handled by backend if we sync. 
-      // For now we'll show feedback
+    } else if (timer === 0 && !winner) {
       setFeedback({ message: "Time's up!", type: 'error' });
+      // Trigger update to let backend know or handle local loss
+      // For now we just show feedback. Usually backend handles it if we sync.
     }
     return () => clearInterval(interval);
-  }, [timer, gameState?.winner]);
+  }, [timer, winner]);
 
-  // Reset timer on turn switch
   useEffect(() => {
     setTimer(30);
     setWord('');
@@ -41,7 +44,10 @@ function GameScreen({ gameState, gameData, onUpdate }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!word || gameState?.winner) return;
+    if (!word || winner || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setFeedback(null);
 
     try {
       const response = await fetch(`${API_BASE}/submit_word?game_id=${gameData.gameId}&player=${encodeURIComponent(currentP)}&word=${encodeURIComponent(word)}`, {
@@ -51,15 +57,17 @@ function GameScreen({ gameState, gameData, onUpdate }) {
       
       if (data.valid) {
         setFeedback({ message: "Great move!", type: 'success' });
-        onUpdate(gameData.gameId);
+        await onUpdate(gameData.gameId);
         setWord('');
       } else {
         setFeedback({ message: data.reason, type: 'error' });
-        onUpdate(gameData.gameId); // For winner update
+        await onUpdate(gameData.gameId); 
       }
     } catch (err) {
-      console.error(err);
       setFeedback({ message: "Network error!", type: 'error' });
+    } finally {
+      setIsSubmitting(false);
+      setTimeout(() => inputRef.current?.focus(), 10);
     }
   };
 
@@ -99,7 +107,7 @@ function GameScreen({ gameState, gameData, onUpdate }) {
 
       {/* Center: Word Chain */}
       <div className="chain-display glass-panel" style={{ flex: 1, padding: '2rem', minHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div style={{ paddingBottom: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between' }}>
            <h4 style={{ opacity: 0.6, textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '0.2em' }}>Word Chain</h4>
            <div style={{ opacity: 0.6, fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
              <Hash size={12} /> {chain.length} Words
@@ -148,14 +156,15 @@ function GameScreen({ gameState, gameData, onUpdate }) {
                 value={word}
                 onChange={(e) => setWord(e.target.value)}
                 autoComplete="off"
+                disabled={isSubmitting || winner}
               />
               <button 
                 type="submit" 
                 className="btn-primary" 
-                disabled={!word || gameState?.winner}
+                disabled={!word || winner || isSubmitting}
                 style={{ position: 'absolute', right: '8px', top: '8px', padding: '0.75rem 1.5rem', borderRadius: '0.5rem', fontSize: '1rem' }}
               >
-                SUBMIT
+                {isSubmitting ? '...' : <Send size={20} />}
               </button>
             </form>
             <AnimatePresence>
@@ -182,18 +191,6 @@ function GameScreen({ gameState, gameData, onUpdate }) {
         </div>
       </div>
 
-      {/* Floating Rules Action */}
-      <div style={{ position: 'fixed', bottom: '2rem', right: '2rem' }}>
-        <motion.button 
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setShowRules(true)}
-          style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'var(--card-bg)', backdropFilter: 'blur(10px)', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}
-        >
-          <HelpCircle size={32} />
-        </motion.button>
-      </div>
-
       {/* Rules Modal */}
       <AnimatePresence>
         {showRules && (
@@ -213,19 +210,63 @@ function GameScreen({ gameState, gameData, onUpdate }) {
                 <li>🚫 Only single words allowed</li>
                 <li>⏱️ 30 seconds per turn</li>
               </ul>
+              <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setShowRules(false)}>GOT IT</button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Winner Popup */}
+      <AnimatePresence>
+        {winner && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(15, 23, 42, 0.9)', backdropFilter: 'blur(8px)' }}>
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              className="glass-panel" 
+              style={{ width: '90%', maxWidth: '450px', padding: '4rem 2rem', textAlign: 'center', border: '2px solid rgba(99, 102, 241, 0.5)' }}
+            >
+              <motion.div 
+                animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.2, 1] }} 
+                transition={{ repeat: Infinity, duration: 2 }}
+              >
+                <Trophy size={100} color="var(--accent)" style={{ marginBottom: '2rem' }} />
+              </motion.div>
+              <h2 style={{ fontSize: '3rem', fontWeight: 900, marginBottom: '0.5rem' }}>{winner}</h2>
+              <h1 className="gradient-text" style={{ fontSize: '3.5rem', fontWeight: 900, marginBottom: '1rem' }}>WON!!</h1>
+              {gameState?.reason && (
+                <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '1rem', borderRadius: '1rem', marginBottom: '2rem' }}>
+                  <p style={{ color: 'var(--error)', fontWeight: 600 }}>Reason: {gameState.reason}</p>
+                </div>
+              )}
+              <p style={{ opacity: 0.8, marginBottom: '3rem', fontSize: '1.1rem' }}>Great gameplay! Time to see the stats.</p>
+
               <button 
                 className="btn-primary" 
-                style={{ width: '100%', marginTop: '2rem' }}
-                onClick={() => setShowRules(false)}
+                style={{ width: '100%', padding: '1.2rem' }}
+                onClick={() => onGameOver()}
               >
-                GOT IT
+                VIEW FINAL SCORE
               </button>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
+
+      {/* Floating Rules Action */}
+      <div style={{ position: 'fixed', bottom: '2rem', right: '2rem' }}>
+        <motion.button 
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setShowRules(true)}
+          style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'var(--card-bg)', backdropFilter: 'blur(10px)', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}
+        >
+          <HelpCircle size={32} />
+        </motion.button>
+      </div>
     </div>
   );
 }
 
 export default GameScreen;
+
