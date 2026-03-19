@@ -72,124 +72,116 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
   };
 
   return (
-    <div className="game-screen-container" style={{ display: 'flex', flexDirection: 'column', gap: '2rem', minHeight: '80vh' }}>
+    <div className="game-screen-container" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
       
       {/* Top Bar */}
-      <div className="top-bar glass-panel" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 2rem' }}>
-        <div className="theme-badge" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-          <LayoutGrid size={20} color="var(--primary)" />
-          {theme}
+      <div className="top-bar-mobile" style={{ padding: '1rem', background: 'rgba(15, 23, 42, 0.8)', borderBottom: '1px solid var(--card-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backdropFilter: 'blur(10px)', zIndex: 10 }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span style={{ fontSize: '0.6rem', opacity: 0.5, fontWeight: 700, letterSpacing: '0.1em' }}>THEME</span>
+          <span style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--primary)' }}>{theme.toUpperCase()}</span>
         </div>
         
-        <div className="turn-indicator" style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center' }}>
           <motion.div 
-            animate={{ scale: [1, 1.05, 1], shadow: "0 0 10px rgba(99, 102, 241, 0.4)" }}
+            animate={{ scale: [1, 1.05, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
-            style={{ padding: '0.5rem 2rem', borderRadius: '2rem', background: 'rgba(99, 102, 241, 0.2)', border: '1px solid var(--primary)', fontWeight: 700, fontSize: '1.2rem' }}
+            style={{ fontWeight: 800, fontSize: '1.2rem', color: 'white' }}
           >
-            {currentP}'s Turn
+            {currentP}
           </motion.div>
+          <div style={{ fontSize: '0.6rem', opacity: 0.5 }}>CURRENT TURN</div>
         </div>
 
-        <div className="timer" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <Clock size={20} color={timer < 10 ? "var(--error)" : "var(--accent)"} />
-          <div style={{ fontSize: '1.5rem', fontWeight: 800, width: '40px', color: timer < 10 ? "var(--error)" : "var(--accent)" }}>{timer}s</div>
-          <div style={{ width: '100px', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
-            <motion.div 
-              style={{ height: '100%', background: timer < 10 ? "var(--error)" : "var(--success)" }} 
-              initial={{ width: '100%' }}
-              animate={{ width: `${(timer / 30) * 100}%` }}
-              transition={{ duration: 1, ease: 'linear' }}
-            />
-          </div>
+        <div style={{ textAlign: 'right' }}>
+           <div style={{ fontSize: '1.2rem', fontWeight: 900, color: timer < 10 ? 'var(--error)' : 'var(--accent)' }}>{timer}s</div>
+           <div style={{ width: '60px', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', marginTop: '2px', overflow: 'hidden' }}>
+              <motion.div 
+                style={{ height: '100%', background: timer < 10 ? 'var(--error)' : 'var(--success)' }}
+                animate={{ width: `${(timer / 30) * 100}%` }}
+              />
+           </div>
         </div>
       </div>
 
-      {/* Center: Word Chain */}
-      <div className="chain-display glass-panel" style={{ flex: 1, padding: '2rem', minHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between' }}>
-           <h4 style={{ opacity: 0.6, textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '0.2em' }}>Word Chain</h4>
-           <div style={{ opacity: 0.6, fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-             <Hash size={12} /> {chain.length} Words
-           </div>
-        </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center' }}>
-          {chain.map((w, i) => (
+      {/* Center: Scrollable Word Chain */}
+      <div className="scroll-hidden" style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingBottom: '2rem' }}>
+        {chain.length === 0 ? (
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: 0.2 }}>
+            <LayoutGrid size={60} />
+            <p style={{ marginTop: '1rem', fontWeight: 600 }}>No words yet</p>
+          </div>
+        ) : (
+          chain.map((w, i) => (
             <motion.div
               key={`${w}-${i}`}
-              initial={{ opacity: 0, x: -20, scale: 0.8 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              className="word-pill"
+              initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
+              animate={{ opacity: 1, x: 0 }}
               style={{
-                background: i === chain.length - 1 ? 'linear-gradient(135deg, var(--primary), var(--secondary))' : 'rgba(255,255,255,0.05)',
-                padding: '0.5rem 1.25rem',
-                borderRadius: '1rem',
+                alignSelf: i % 2 === 0 ? 'flex-start' : 'flex-end',
+                background: i === chain.length - 1 ? 'linear-gradient(135deg, var(--primary), var(--secondary))' : 'var(--card-bg)',
+                padding: '0.75rem 1.25rem',
+                borderRadius: i % 2 === 0 ? '1.5rem 1.5rem 1.5rem 0.25rem' : '1.5rem 1.5rem 0.25rem 1.5rem',
                 fontWeight: 600,
-                border: '1px solid rgba(255,255,255,0.1)',
-                fontSize: i === chain.length - 1 ? '1.2rem' : '1rem'
+                fontSize: '1.1rem',
+                maxWidth: '80%',
+                boxShadow: i === chain.length - 1 ? '0 4px 15px rgba(99, 102, 241, 0.4)' : 'none',
+                border: '1px solid var(--card-border)'
               }}
             >
               {w}
             </motion.div>
-          ))}
-          {chain.length === 0 && (
-            <div style={{ margin: 'auto', opacity: 0.3, fontSize: '1.2rem', textAlign: 'center' }}>No words yet. Break the ice!</div>
+          ))
+        )}
+      </div>
+
+      {/* Footer: Hint & Input */}
+      <div className="footer-input" style={{ padding: '1.5rem', background: 'rgba(15, 23, 42, 0.95)', borderTop: '1px solid var(--card-border)', backdropFilter: 'blur(20px)' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
+          <div className="glass-panel" style={{ padding: '0.5rem 1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255,255,255,0.02)' }}>
+             <span style={{ fontSize: '0.8rem', opacity: 0.5, fontWeight: 600 }}>STARTS WITH</span>
+             <span className="gradient-text" style={{ fontSize: '1.8rem', fontWeight: 900 }}>{nextChar}</span>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} style={{ position: 'relative' }}>
+          <input 
+            ref={inputRef}
+            className={`input-field ${feedback?.type === 'error' ? 'shake' : ''}`}
+            placeholder="Type your word..."
+            value={word}
+            onChange={(e) => setWord(e.target.value)}
+            disabled={isSubmitting || winner}
+            style={{ paddingRight: '4rem' }}
+          />
+          <button 
+            type="submit" 
+            disabled={!word || winner || isSubmitting}
+            style={{ 
+              position: 'absolute', right: '8px', top: '8px', bottom: '8px', 
+              width: '45px', background: 'var(--primary)', border: 'none', 
+              borderRadius: '0.75rem', color: 'white', display: 'flex', 
+              alignItems: 'center', justifyContent: 'center' 
+            }}
+          >
+            {isSubmitting ? '...' : <Send size={20} />}
+          </button>
+        </form>
+
+        <AnimatePresence>
+          {feedback && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+              style={{ 
+                marginTop: '1rem', textAlign: 'center', fontSize: '0.9rem',
+                color: feedback.type === 'success' ? 'var(--success)' : 'var(--error)', fontWeight: 700 
+              }}
+            >
+              {feedback.message}
+            </motion.div>
           )}
-        </div>
+        </AnimatePresence>
       </div>
 
-      {/* Info Panel & Input */}
-      <div className="input-section glass-panel" style={{ padding: '2rem' }}>
-        <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-end' }}>
-          <div className="hint-card glass-panel" style={{ padding: '1rem 1.5rem', background: 'rgba(255,255,255,0.02)', textAlign: 'center', minWidth: '180px' }}>
-            <div style={{ opacity: 0.6, fontSize: '0.8rem', marginBottom: '0.5rem' }}>Next word starts with</div>
-            <div className="gradient-text" style={{ fontSize: '2.5rem', fontWeight: 800 }}>{nextChar}</div>
-          </div>
-
-          <div style={{ flex: 1 }}>
-            <form onSubmit={handleSubmit} style={{ position: 'relative' }}>
-              <input 
-                ref={inputRef}
-                className={`input-field ${feedback?.type === 'error' ? 'shake' : ''}`}
-                style={{ fontSize: '1.5rem', padding: '1.2rem 2rem', paddingRight: '120px' }}
-                placeholder="Enter word..."
-                value={word}
-                onChange={(e) => setWord(e.target.value)}
-                autoComplete="off"
-                disabled={isSubmitting || winner}
-              />
-              <button 
-                type="submit" 
-                className="btn-primary" 
-                disabled={!word || winner || isSubmitting}
-                style={{ position: 'absolute', right: '8px', top: '8px', padding: '0.75rem 1.5rem', borderRadius: '0.5rem', fontSize: '1rem' }}
-              >
-                {isSubmitting ? '...' : <Send size={20} />}
-              </button>
-            </form>
-            <AnimatePresence>
-              {feedback && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  style={{ 
-                    marginTop: '1rem', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '0.5rem', 
-                    color: feedback.type === 'success' ? 'var(--success)' : 'var(--error)',
-                    fontWeight: 600
-                  }}
-                >
-                  {feedback.type === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
-                  {feedback.message}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-      </div>
 
       {/* Rules Modal */}
       <AnimatePresence>

@@ -21,22 +21,24 @@ function SetupScreen({ onStart }) {
   };
 
   return (
-    <div className="setup-container glass-panel" style={{ padding: '3rem', textAlign: 'center' }}>
-      <motion.h1 
-        className="gradient-text"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        style={{ fontSize: '4rem', fontWeight: 800, marginBottom: '0.5rem' }}
-      >
-        WordLego AI
-      </motion.h1>
-      <p style={{ opacity: 0.8, fontSize: '1.2rem', marginBottom: '3rem' }}>
-        Build the longest word chain. Don’t break the rules.
-      </p>
+    <div className="setup-container" style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '2rem 1.5rem', overflowY: 'auto' }}>
+      <header style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <motion.h1 
+          className="gradient-text"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '0.5rem' }}
+        >
+          WordLego AI
+        </motion.h1>
+        <p style={{ opacity: 0.6, fontSize: '1rem' }}>
+          Build the longest chain. Follow the theme.
+        </p>
+      </header>
 
-      <div className="inputs-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '3rem' }}>
-        <div className="input-group" style={{ textAlign: 'left' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Player 1 Name</label>
+      <div className="form-section" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '3rem' }}>
+        <div className="input-group">
+          <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: 600, fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)' }}>PLAYER 1</label>
           <input 
             className="input-field"
             placeholder="Enter name..."
@@ -44,8 +46,8 @@ function SetupScreen({ onStart }) {
             onChange={(e) => setP1(e.target.value)}
           />
         </div>
-        <div className="input-group" style={{ textAlign: 'left' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Player 2 Name</label>
+        <div className="input-group">
+          <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: 600, fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)' }}>PLAYER 2</label>
           <input 
             className="input-field"
             placeholder="Enter name..."
@@ -55,46 +57,48 @@ function SetupScreen({ onStart }) {
         </div>
       </div>
 
-      <h3 style={{ textAlign: 'left', marginBottom: '1.5rem', fontWeight: 700, fontSize: '1.5rem' }}>Select Theme</h3>
-      <div className="theme-grid">
-        {themes.map((theme) => (
-          <motion.div
-            key={theme.id}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setSelectedTheme(theme.id)}
-            className={`theme-card glass-panel ${selectedTheme === theme.id ? 'selected' : ''}`}
-            style={{
-              padding: '1.5rem',
-              cursor: 'pointer',
-              transition: 'all 0.3s',
-              border: selectedTheme === theme.id ? '2px solid var(--primary)' : '1px solid var(--card-border)',
-              boxShadow: selectedTheme === theme.id ? '0 0 20px rgba(99, 102, 241, 0.4)' : 'none',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '1rem'
-            }}
-          >
-            <div style={{ fontSize: '2.5rem' }}>{theme.emoji}</div>
-            <div style={{ fontWeight: 600 }}>{theme.name}</div>
-          </motion.div>
-        ))}
+      <div className="theme-section">
+        <h3 style={{ marginBottom: '1.5rem', fontWeight: 700, fontSize: '1.2rem' }}>CHOOSE THEME</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          {themes.map((theme) => (
+            <motion.div
+              key={theme.id}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setSelectedTheme(theme.id)}
+              className="glass-panel"
+              style={{
+                padding: '1.25rem',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                border: selectedTheme === theme.id ? '2px solid var(--primary)' : '1px solid var(--card-border)',
+                background: selectedTheme === theme.id ? 'rgba(99, 102, 241, 0.1)' : 'var(--card-bg)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}
+            >
+              <div style={{ fontSize: '2rem' }}>{theme.emoji}</div>
+              <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{theme.name}</div>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
-      <motion.button 
-        className="btn-primary"
-        disabled={!p1 || !p2 || !selectedTheme}
-        onClick={handleStart}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        style={{ marginTop: '3rem', width: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', margin: '3rem auto 0' }}
-      >
-        <PlayCircle size={24} />
-        Start Game
-      </motion.button>
+      <div style={{ marginTop: 'auto', paddingTop: '2rem' }}>
+        <motion.button 
+          className="btn-primary"
+          disabled={!p1 || !p2 || !selectedTheme}
+          onClick={handleStart}
+          style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}
+        >
+          <PlayCircle size={24} />
+          Start Game
+        </motion.button>
+      </div>
     </div>
   );
 }
+
 
 export default SetupScreen;
