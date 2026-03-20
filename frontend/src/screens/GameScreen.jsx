@@ -196,11 +196,13 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
             >
               <h2 style={{ marginBottom: '1.5rem', fontSize: '2rem' }}>Game Rules</h2>
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', listStyle: 'none', padding: 0 }}>
-                <li>✅ Must follow the selected theme</li>
-                <li>🔤 Must start with last letter of previous word</li>
+                <li>✅ Follow theme (Semantic AI Check)</li>
+                <li>🔤 Start with last letter of previous word</li>
+                <li>🔗 Multi-word terms allowed (Max 3)</li>
                 <li>🚫 No repeated words</li>
-                <li>🚫 Only single words allowed</li>
+                <li>🚫 NO CUSS WORDS (Instant loss)</li>
                 <li>⏱️ 30 seconds per turn</li>
+
               </ul>
               <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setShowRules(false)}>GOT IT</button>
             </motion.div>
