@@ -10,25 +10,31 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 # Download wordnet if needed
 nltk.download("wordnet", quiet=True)
 
+import dictionary
+
 def is_valid_word(word):
     """Check if word exists in WordNet"""
-    if not word:
-        return False
-    return len(wordnet.synsets(word)) > 0
+    return dictionary.is_valid_word(word)
 
 def is_theme_related(word, theme):
-    """Use AI to check if word is related to theme"""
+    """Use AI to check if word is related to theme, with dictionary fallback"""
+    word = word.lower().strip()
+    theme = theme.lower().strip()
+    
+    # Check dictionary first for speed
+    if dictionary.is_in_theme_list(word, theme):
+        return True
+        
     try:
-        if theme.lower() == "atlas":
-            # For Atlas theme, accept any geographical features
+        # For Atlas theme, accept any geographical features
+        if theme == "atlas":
             prompt = f"""
             Is the word "{word}" a geographical feature, location, or place on Earth?
             This includes: countries, cities, towns, continents, rivers, lakes, oceans, 
             mountains, forests, deserts, dams, islands, regions, etc.
             Answer with only YES or NO. No explanation.
             """
-        elif theme.lower() == "things":
-            # For Things theme, accept ONLY manufactured everyday objects
+        elif theme == "things":
             prompt = f"""
             QUICK YES/NO: Is "{word}" something humans manufactured in a factory?
             YES = table, chair, bottle, phone, computer, car, book, pen, clock, lamp
@@ -36,7 +42,6 @@ def is_theme_related(word, theme):
             Answer with only YES or NO.
             """
         else:
-            # For other themes, use regular theme checking
             prompt = f"""
             Is the word "{word}" related to the theme "{theme}"? 
             Answer with only YES or NO. No explanation.
@@ -52,53 +57,54 @@ def is_theme_related(word, theme):
 def check_letter_chain(prev_word, new_word):
     """Check if new_word starts with last letter of prev_word"""
     if not prev_word:
-        return True  # First word is always valid
-    
-    prev_last = prev_word[-1].lower()
-    new_first = new_word[0].lower()
-    
-    return prev_last == new_first
+        return True
+    return prev_word[-1].lower() == new_word[0].lower()
 
 def contains_swear_words(word):
-    """Check for swear words using AI"""
+    """Fast check for swear words using list and AI as secondary"""
+    word = word.lower().strip()
+    
+    # Fast local list check
+    bad_words = {"fuck", "shit", "damn", "ass", "bitch", "hell", "piss", "bastard", "nigga", "crap", "dick", "pussy"}
+    if any(bw in word for bw in bad_words):
+        return True
+        
     try:
-        prompt = f"""
-        Does the word "{word}" contain any swear words, profanity, or offensive language?
-        Answer with only YES or NO. No explanation.
-        """
-        response = model.generate_content(prompt)
-        result = response.text.strip().upper()
-        return result == "YES"
+        # Only use AI for subtle profanity or if the word is long
+        if len(word) > 4:
+            prompt = f"""
+            Does the word "{word}" contain any swear words, profanity, or offensive language?
+            Answer with only YES or NO. No explanation.
+            """
+            response = model.generate_content(prompt)
+            result = response.text.strip().upper()
+            return result == "YES"
+        return False
     except:
-        # Fallback to basic check
-        swear_words = ["fuck", "shit", "damn", "ass", "bitch", "hell", "piss", "bastard", "nigga"]
-        return any(swear in word.lower() for swear in swear_words)
+        return False
 
 def validate_word_move(word, theme, prev_word):
     """
-    Comprehensive AI validation for a word move
+    Comprehensive validation for a word move - Optimized
     Returns (is_valid, reason)
     """
     word = word.strip().lower()
     
-    # Check if it's a real word
-    if not is_valid_word(word):
-        return False, f"'{word}' is not a valid word"
-    
-    # Check letter chaining
-    if not check_letter_chain(prev_word, word):
-        if prev_word:
-            return False, f"Word must start with '{prev_word[-1]}'"
-        else:
-            return False, "Invalid first word"
-    
-    # Check theme relevance
-    if not is_theme_related(word, theme):
-        return False, f"'{word}' is not related to theme '{theme}'"
-    
-    # Check for swear words
+    # 1. Check for swear words (Fastest)
     if contains_swear_words(word):
         return False, "Inappropriate language used!"
+        
+    # 2. Check letter chaining (Fast)
+    if prev_word and not check_letter_chain(prev_word, word):
+        return False, f"Word must start with '{prev_word[-1].upper()}'"
+    
+    # 3. Check if it's a real word (Uses WordNet)
+    if not is_valid_word(word):
+        return False, f"'{word.upper()}' is not a valid word"
+    
+    # 4. Check theme relevance (Fastest if in list, Slowest if Gemini)
+    if not is_theme_related(word, theme):
+        return False, f"'{word.upper()}' is not related to theme '{theme.upper()}'"
     
     return True, "Valid move"
 
