@@ -2,63 +2,159 @@ import random
 from nltk.corpus import wordnet
 from ai.ai_generator import is_valid_word, is_theme_related, check_letter_chain
 
+# Pre-computed word lists for better performance
+COMMON_WORDS = {
+    'a': ['apple', 'apricot', 'avocado'],
+    'b': ['banana', 'blueberry', 'blackberry'],
+    'c': ['cherry', 'coconut', 'cranberry'],
+    'd': ['date', 'durian'],
+    'e': ['elderberry'],
+    'f': ['fig', 'fruit'],
+    'g': ['grape', 'grapefruit', 'guava'],
+    'h': ['honeydew'],
+    'i': ['imbe'],
+    'j': ['jackfruit'],
+    'k': ['kiwi', 'kumquat'],
+    'l': ['lemon', 'lime', 'lychee'],
+    'm': ['mango', 'melon', 'mandarin'],
+    'n': ['nectarine'],
+    'o': ['orange', 'olive'],
+    'p': ['papaya', 'passion', 'peach', 'pear', 'plum', 'pineapple'],
+    'q': ['quince'],
+    'r': ['raspberry', 'raisin'],
+    's': ['strawberry', 'starfruit'],
+    't': ['tangerine', 'tomato'],
+    'u': ['ugli'],
+    'v': ['vanilla'],
+    'w': ['watermelon'],
+    'x': ['xigua'],
+    'y': ['yellow Passion'],
+    'z': ['zucchini']
+}
+
 def get_possible_words(last_letter, theme, used_words):
-    """Get all possible valid words starting with last_letter"""
+    """Get possible words quickly using pre-computed lists"""
+    last_letter = last_letter.lower()
+    
+    # For fruits theme, use pre-computed list
+    if theme.lower() == 'fruits':
+        words = COMMON_WORDS.get(last_letter, [])
+        return [w for w in words if w not in used_words]
+    
+    # For other themes, use a smaller, faster approach
     possible_words = []
     
-    # Search through WordNet for words starting with the required letter
-    for syn in wordnet.all_synsets():
-        for lemma in syn.lemmas():
-            word = lemma.name().replace("_", "").lower()
-            
-            # Check if word meets all criteria
-            if (word.startswith(last_letter.lower()) and 
-                word not in used_words and 
-                len(word) > 2 and  # Avoid very short words
-                is_valid_word(word) and 
-                is_theme_related(word, theme) and
-                check_letter_chain(None, word)):  # Just check letter start
-                
-                possible_words.append(word)
+    # Small sample words for different themes
+    theme_words = {
+        'animals': {
+            'a': ['ant', 'antelope', 'ape'],
+            'b': ['bear', 'bat', 'bird'],
+            'c': ['cat', 'cow', 'camel'],
+            'd': ['dog', 'dolphin', 'duck'],
+            'e': ['eagle', 'elephant'],
+            'f': ['fox', 'frog', 'fish'],
+            'g': ['goat', 'gorilla', 'giraffe'],
+            'h': ['horse', 'hippo'],
+            'i': ['iguana'],
+            'j': ['jaguar'],
+            'k': ['kangaroo', 'koala'],
+            'l': ['lion', 'leopard', 'lizard'],
+            'm': ['monkey', 'mouse', 'moose'],
+            'n': ['newt'],
+            'o': ['owl', 'ostrich'],
+            'p': ['panda', 'parrot', 'penguin'],
+            'q': ['quail'],
+            'r': ['rabbit', 'rhino', 'raccoon'],
+            's': ['snake', 'shark', 'sheep'],
+            't': ['tiger', 'turtle', 'turkey'],
+            'u': ['unicorn'],
+            'v': ['vulture'],
+            'w': ['wolf', 'whale'],
+            'x': ['xerus'],
+            'y': ['yak'],
+            'z': ['zebra', 'zebrafish']
+        },
+        'atlas': {
+            'a': ['america', 'africa', 'asia', 'atlantic'],
+            'b': ['brazil', 'britain', 'berlin'],
+            'c': ['china', 'canada', 'california'],
+            'd': ['denmark', 'dubai', 'delhi'],
+            'e': ['egypt', 'england', 'europe'],
+            'f': ['france', 'florida', 'finland'],
+            'g': ['germany', 'greece', 'greenland'],
+            'h': ['hawaii', 'holland'],
+            'i': ['india', 'italy', 'ireland'],
+            'j': ['japan', 'jamaica'],
+            'k': ['korea', 'kenya'],
+            'l': ['london', 'los angeles'],
+            'm': ['mexico', 'moscow', 'madrid'],
+            'n': ['norway', 'nigeria', 'new york'],
+            'o': ['oslo', 'ottawa'],
+            'p': ['paris', 'poland', 'portugal'],
+            'q': ['quebec'],
+            'r': ['rome', 'russia', 'rio'],
+            's': ['spain', 'sweden', 'sydney'],
+            't': ['tokyo', 'texas', 'turkey'],
+            'u': ['usa', 'uk', 'utah'],
+            'v': ['venice', 'vietnam'],
+            'w': ['washington', 'wisconsin'],
+            'x': ['xian'],
+            'y': ['york', 'yukon'],
+            'z': ['zimbabwe', 'zurich']
+        },
+        'things': {
+            'a': ['apple', 'airplane', 'automobile'],
+            'b': ['bottle', 'book', 'box', 'ball'],
+            'c': ['chair', 'computer', 'car', 'clock'],
+            'd': ['desk', 'door', 'drone'],
+            'e': ['eraser', 'engine'],
+            'f': ['phone', 'fan', 'fork'],
+            'g': ['glass', 'guitar'],
+            'h': ['hammer', 'hat', 'house'],
+            'i': ['iron', 'ice'],
+            'j': ['jar', 'jeans'],
+            'k': ['key', 'knife'],
+            'l': ['lamp', 'laptop', 'lock'],
+            'm': ['mirror', 'mouse', 'mug'],
+            'n': ['notebook', 'needle'],
+            'o': ['oven', 'orange'],
+            'p': ['pen', 'plate', 'phone', 'paper'],
+            'q': ['quartz'],
+            'r': ['radio', 'ruler', 'remote'],
+            's': ['spoon', 'scissors', 'shoe'],
+            't': ['table', 'television', 'telephone'],
+            'u': ['umbrella'],
+            'v': ['vase', 'violin'],
+            'w': ['watch', 'window'],
+            'x': ['x-ray'],
+            'y': ['yarn'],
+            'z': ['zipper']
+        }
+    }
     
-    # Limit to reasonable number for performance
-    return possible_words[:50] if possible_words else []
+    words = theme_words.get(theme.lower(), {}).get(last_letter, [])
+    return [w for w in words if w not in used_words]
 
 def evaluate_word(word, game_state):
-    """Evaluate the strategic value of a word"""
+    """Quick evaluation for AI decision making"""
     score = 0.0
     last_letter = word[-1].lower()
     
-    # Factor 1: Position value (rare last letters are valuable)
-    letter_frequency = {
-        'e': 12.7, 't': 9.1, 'a': 8.2, 'o': 7.5, 'i': 7.0, 'n': 6.7,
-        's': 6.3, 'h': 6.1, 'r': 6.0, 'd': 4.3, 'l': 4.0, 'c': 2.8,
-        'u': 2.8, 'm': 2.4, 'w': 2.4, 'f': 2.2, 'g': 2.0, 'y': 2.0,
-        'p': 1.9, 'b': 1.5, 'v': 1.0, 'k': 0.8, 'j': 0.2, 'x': 0.2,
-        'q': 0.1, 'z': 0.1
-    }
-    
-    # Lower frequency = higher score (strategic advantage)
-    score += (10 - letter_frequency.get(last_letter, 5)) * 2
-    
-    # Factor 2: Word length (moderate bonus for longer words)
-    score += min(len(word) * 0.5, 3)
-    
-    # Factor 3: Available next moves (penalty if too many options for opponent)
-    next_moves = get_possible_words(last_letter, game_state['theme'], game_state['word_chain'] + [word])
-    if len(next_moves) > 20:
-        score -= 2  # Too many options for opponent
-    elif len(next_moves) < 5:
-        score += 3  # Limit opponent options
-    
-    # Factor 4: Word uniqueness (bonus for uncommon words)
-    if len(word) > 6:
+    # Simple letter frequency scoring
+    rare_letters = {'j', 'q', 'x', 'z', 'k', 'v', 'w', 'y'}
+    if last_letter in rare_letters:
+        score += 3  # Bonus for rare letters
+    else:
         score += 1
+    
+    # Word length bonus
+    if len(word) > 6:
+        score += 2
     
     return score
 
 def minimax(game_state, depth, alpha, beta, maximizing_player):
-    """Minimax algorithm with alpha-beta pruning"""
+    """Fast minimax with limited depth"""
     
     # Terminal conditions
     if depth == 0 or game_state.get('game_over', False):
@@ -86,7 +182,7 @@ def minimax(game_state, depth, alpha, beta, maximizing_player):
                 'word_chain': used_words + [move],
                 'last_letter': move[-1],
                 'theme': theme,
-                'current_player': 'human',  # Switch player
+                'current_player': 'human',
                 'game_over': False
             }
             
@@ -110,7 +206,7 @@ def minimax(game_state, depth, alpha, beta, maximizing_player):
                 'word_chain': used_words + [move],
                 'last_letter': move[-1],
                 'theme': theme,
-                'current_player': 'ai',  # Switch player
+                'current_player': 'ai',
                 'game_over': False
             }
             
@@ -127,7 +223,7 @@ def minimax(game_state, depth, alpha, beta, maximizing_player):
         return min_eval, best_move
 
 def evaluate_position(game_state):
-    """Evaluate the current game position"""
+    """Quick position evaluation"""
     score = 0.0
     
     # If game is over, return extreme values
@@ -153,7 +249,7 @@ def evaluate_position(game_state):
     return score
 
 def get_best_move(last_letter, theme, word_chain, difficulty='medium'):
-    """Get AI's best move based on difficulty"""
+    """Get AI's best move quickly"""
     
     # Set search depth based on difficulty
     depth_map = {'easy': 1, 'medium': 2, 'hard': 3}
@@ -171,7 +267,7 @@ def get_best_move(last_letter, theme, word_chain, difficulty='medium'):
         # Easy mode: random valid word
         return random.choice(possible_moves)
     
-    # Medium and Hard: use minimax
+    # Medium and Hard: use minimax with limited depth
     minimax_state = {
         'word_chain': used_words,
         'last_letter': last_letter,

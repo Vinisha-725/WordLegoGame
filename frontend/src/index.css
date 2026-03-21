@@ -28,6 +28,7 @@ body {
   background: radial-gradient(circle at top, #1e1b4b, #000);
   color: var(--foreground);
   min-height: 100vh;
+  min-height: -webkit-fill-available; /* Mobile height fix */
   margin: 0;
   overflow: hidden; /* Prevent body scroll */
   user-select: none;
@@ -35,22 +36,35 @@ body {
 
 #root {
   height: 100vh;
+  height: -webkit-fill-available;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .app-container {
   width: 100%;
-  max-width: 450px; /* Force mobile width on desktop */
+  max-width: 500px; /* Slightly wider for better laptop fit */
   height: 100%;
+  max-height: 100vh;
   background: var(--background);
   position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 0 50px rgba(0,0,0,0.5);
+  box-shadow: 0 0 100px rgba(0,0,0,0.8);
+  transition: max-width 0.3s ease;
+}
+
+@media (min-width: 1024px) {
+  .app-container {
+    max-width: 480px;
+    height: 90vh; /* Floating look on desktop */
+    border-radius: 2rem;
+    border: 1px solid var(--card-border);
+  }
 }
 
 /* Glassmorphism Styles */
