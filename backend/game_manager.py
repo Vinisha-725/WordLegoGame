@@ -1,44 +1,59 @@
 import uuid
+import time
 from validator import validate_word
+from game_rules import check_chain
 
 games = {}
 
 def create_game(player1, player2, theme):
-
     game_id = str(uuid.uuid4())
-
     games[game_id] = {
         "players": [player1, player2],
         "theme": theme.lower(),
         "turn": 0,
         "word_chain": [],
         "winner": None,
-        "reason": None
+        "reason": None,
+        "last_move_time": time.time()
     }
-
     return game_id
 
 
 def submit_word(game_id, player, word):
-
     game = games.get(game_id)
 
     if not game:
         return {"valid": False, "reason": "Game not found"}
 
-    word = word.strip().lower()
+    if game["winner"]:
+        return {"valid": False, "reason": f"Game already over. {game['winner']} won."}
 
+    word = word.strip().lower()
+    current_time = time.time()
     current_player = game["players"][game["turn"]]
 
     # TURN CHECK
     if player != current_player:
         return {"valid": False, "reason": "Not your turn"}
 
-    # PROFANITY CHECK
-    CUSS_WORDS = ["fuck", "shit", "damn", "ass", "bitch", "hell", "piss", "bastard"]
-    if any(cw in word for cw in CUSS_WORDS):
+    # TIMER CHECK (30 seconds limit)
+    time_taken = current_time - game["last_move_time"]
+    if time_taken > 31: # allowing 1s buffer for network latencies
         game["winner"] = game["players"][1 - game["turn"]]
-        game["reason"] = "Inappropriate language / Cuss word used!"
+        game["reason"] = f"Time's up! took too long ({int(time_taken)}s)"
+        return {
+            "valid": False,
+            "reason": game["reason"],
+            "winner": game["winner"]
+        }
+
+    # PROFANITY CHECK (Whole word match)
+    cuss_words = ["fuck", "shit", "damn", "ass", "bitch", "hell", "piss", "bastard"]
+    # Check if any cuss word exists as a separate word in the input
+    input_words = word.split()
+    if any(cw in input_words for cw in cuss_words):
+        game["winner"] = game["players"][1 - game["turn"]]
+        game["reason"] = "Inappropriate language used!"
         return {
             "valid": False,
             "reason": game["reason"],
@@ -46,8 +61,7 @@ def submit_word(game_id, player, word):
         }
 
     # SENTENCE CHECK (Limit to terms, not sentences)
-    words_count = len(word.split())
-    if words_count > 3:
+    if len(input_words) > 3:
         game["winner"] = game["players"][1 - game["turn"]]
         game["reason"] = "Full sentences are not allowed (Max 3 words)"
         return {
@@ -60,29 +74,26 @@ def submit_word(game_id, player, word):
     # REPEAT CHECK
     if word in game["word_chain"]:
         game["winner"] = game["players"][1 - game["turn"]]
-        game["reason"] = "Word already used"
+        game["reason"] = f"'{word}' has already been used"
         return {
             "valid": False,
             "reason": game["reason"],
             "winner": game["winner"]
         }
 
-    # START LETTER CHECK
-    if game["word_chain"]:
-        last_word = game["word_chain"][-1]
-
-        if word[0] != last_word[-1]:
-            game["winner"] = game["players"][1 - game["turn"]]
-            game["reason"] = f"Word must start with '{last_word[-1]}'"
-            return {
-                "valid": False,
-                "reason": game["reason"],
-                "winner": game["winner"]
-            }
+    # CHAIN CHECK using game_rules.py
+    last_word = game["word_chain"][-1] if game["word_chain"] else None
+    if not check_chain(last_word, word):
+        game["winner"] = game["players"][1 - game["turn"]]
+        game["reason"] = f"Word must start with '{last_word[-1]}'"
+        return {
+            "valid": False,
+            "reason": game["reason"],
+            "winner": game["winner"]
+        }
 
     # THEME VALIDATION
     result = validate_word(game["theme"], word)
-
     if not result["valid"]:
         game["winner"] = game["players"][1 - game["turn"]]
         game["reason"] = result["reason"]
@@ -92,11 +103,10 @@ def submit_word(game_id, player, word):
             "winner": game["winner"]
         }
 
-    # ADD WORD
+    # ADD WORD & UPDATE GAME STATE
     game["word_chain"].append(word)
-
-    # SWITCH TURN
     game["turn"] = 1 - game["turn"]
+    game["last_move_time"] = time.time()
 
     return {
         "valid": True,
