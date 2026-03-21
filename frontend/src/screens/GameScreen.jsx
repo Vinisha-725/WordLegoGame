@@ -12,6 +12,8 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [aiThinking, setAiThinking] = useState(false);
   const inputRef = useRef(null);
+  const scrollRef = useRef(null);
+  const bottomRef = useRef(null);
 
   const turn = gameState?.turn ?? 0;
   const currentP = gameState?.players ? gameState.players[turn] : "Loading...";
@@ -41,9 +43,14 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
       setAiThinking(true);
     } else {
       setAiThinking(false);
-      inputRef.current?.focus();
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [turn, currentP]);
+
+  // Autoscroll to bottom
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chain]);
 
   useEffect(() => {
     if (gameState && chain.length > 0) {
@@ -243,16 +250,20 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
       </motion.div>
 
       {/* Word Chain */}
-      <div style={{ 
-        flex: 1, 
-        overflowY: 'auto', 
-        padding: 'clamp(1rem, 3vw, 2rem)',
-        display: 'flex', 
-        flexDirection: 'column', 
-        gap: 'clamp(0.5rem, 2vw, 1rem)',
-        zIndex: 1,
-        position: 'relative'
-      }}>
+    <div 
+        ref={scrollRef}
+        style={{ 
+          flex: 1, 
+          overflowY: 'auto', 
+          padding: 'clamp(1rem, 3vw, 2rem)',
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: 'clamp(0.5rem, 2vw, 1rem)',
+          zIndex: 1,
+          position: 'relative',
+          scrollBehavior: 'smooth'
+        }}
+      >
         {chain.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -316,6 +327,7 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
             );
           })
         )}
+        <div ref={bottomRef} style={{ height: '2px' }} />
       </div>
 
       {/* Input Section */}
@@ -466,36 +478,46 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
           </motion.div>
         )}
 
-        {/* Feedback */}
-        <AnimatePresence>
-          {feedback && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              style={{ 
-                marginTop: 'clamp(0.75rem, 2vw, 1.5rem)', 
-                textAlign: 'center', 
-                fontSize: 'clamp(0.8rem, 2vw, 1rem)',
-                fontWeight: 600,
-                padding: 'clamp(0.5rem, 2vw, 1rem)',
-                borderRadius: '10px',
-                background: feedback.type === 'success' 
-                  ? 'rgba(16, 185, 129, 0.2)' 
-                  : (feedback.type === 'info' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(239, 68, 68, 0.2)'),
-                border: feedback.type === 'success' 
-                  ? '1px solid rgba(16, 185, 129, 0.3)' 
-                  : (feedback.type === 'info' ? '1px solid rgba(99, 102, 241, 0.3)' : '1px solid rgba(239, 68, 68, 0.3)'),
-                color: feedback.type === 'success' 
-                  ? '#10b981' 
-                  : (feedback.type === 'info' ? '#6366f1' : '#ef4444'),
-                backdropFilter: 'blur(10px)'
-              }}
-            >
-              {feedback.message}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Feedback Container with Fixed Height to Prevent Jumps */}
+        <div style={{ height: 'clamp(40px, 8vw, 60px)', marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <AnimatePresence mode="wait">
+            {feedback && (
+              <motion.div 
+                key={feedback.message}
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                style={{ 
+                  width: '100%',
+                  textAlign: 'center', 
+                  fontSize: 'clamp(0.75rem, 2vw, 0.9rem)',
+                  fontWeight: 600,
+                  padding: 'clamp(0.4rem, 1.5vw, 0.75rem)',
+                  borderRadius: '10px',
+                  background: feedback.type === 'success' 
+                    ? 'rgba(16, 185, 129, 0.15)' 
+                    : (feedback.type === 'info' ? 'rgba(99, 102, 241, 0.15)' : 'rgba(239, 68, 68, 0.15)'),
+                  border: feedback.type === 'success' 
+                    ? '1px solid rgba(16, 185, 129, 0.2)' 
+                    : (feedback.type === 'info' ? '1px solid rgba(99, 102, 241, 0.2)' : '1px solid rgba(239, 68, 68, 0.2)'),
+                  color: feedback.type === 'success' 
+                    ? '#10b981' 
+                    : (feedback.type === 'info' ? '#818cf8' : '#ef4444'),
+                  backdropFilter: 'blur(10px)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
+              >
+                {feedback.type === 'success' && <CheckCircle size={14} />}
+                {feedback.type === 'error' && <AlertCircle size={14} />}
+                {feedback.type === 'info' && <Bot size={14} />}
+                {feedback.message}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </motion.div>
 
       {/* Rules Modal */}

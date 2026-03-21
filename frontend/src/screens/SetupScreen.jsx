@@ -474,7 +474,7 @@ function SetupScreen({ onStart }) {
           whileTap={isFormValid ? { scale: 0.95 } : {}}
         >
           <PlayCircle size={20} />
-          {gameMode === 'ai' ? 'Start vs AI' : 'Start Game'}
+          {gameMode === 'ai' ? 'Start Game' : 'Start Game'}
         </motion.button>
       </motion.div>
 
