@@ -35,247 +35,281 @@ function RuleBookScreen() {
       icon: <Users size={24} />,
       title: "Game Modes",
       modes: [
-        {
-          name: "Multiplayer",
-          description: "Classic 2-player mode where humans compete against each other",
-          icon: <Users size={20} />
-        },
-        {
-          name: "vs AI",
-          description: "Single-player mode against an AI opponent with minimax algorithm",
-          icon: <Bot size={20} />
-        }
+        "👥 Multiplayer: Play against another human player",
+        "🤖 AI Mode: Challenge an AI opponent with minimax algorithm"
       ]
     },
     {
       icon: <Bot size={24} />,
       title: "AI Difficulty Levels",
       difficulties: [
-        {
-          level: "Easy",
-          description: "AI makes random valid moves - perfect for beginners",
-          color: "#10b981"
-        },
-        {
-          level: "Medium", 
-          description: "AI uses 2-move lookahead with basic strategy",
-          color: "#f59e0b"
-        },
-        {
-          level: "Hard",
-          description: "AI uses 3-move lookahead with optimal minimax algorithm",
-          color: "#ef4444"
-        }
+        "😊 Easy: Random valid words, 1-ply search",
+        "🎯 Medium: 2-ply minimax with alpha-beta pruning",
+        "🔥 Hard: 3-ply minimax with advanced evaluation"
       ]
     },
     {
       icon: <Trophy size={24} />,
       title: "Winning Conditions",
       wins: [
-        "⏰ Opponent runs out of time",
-        "❌ Opponent submits invalid word",
-        "🚫 Opponent uses inappropriate language",
-        "🔄 Opponent repeats a word",
-        "📝 Opponent uses full sentences",
-        "🤖 AI has no valid moves (vs AI mode)"
+        "🏆 Opponent runs out of time",
+        "🏆 Opponent submits invalid word",
+        "🏆 Opponent repeats a word",
+        "🏆 Opponent uses prohibited language",
+        "🏆 AI has no valid moves (in AI mode)"
       ]
     },
     {
       icon: <Zap size={24} />,
       title: "AI Technology",
-      content: "The AI opponent uses advanced algorithms including Minimax with Alpha-Beta pruning, letter frequency analysis, and strategic position evaluation to provide challenging gameplay."
+      content: "The AI uses the Minimax algorithm with Alpha-Beta pruning for optimal decision-making. It evaluates words based on theme relevance, letter positioning, and strategic value. The AI difficulty affects search depth and evaluation sophistication."
     }
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
-
   return (
-    <div style={{ 
-      color: 'white',
-      height: '100%',
-      overflow: 'auto'
+    <div style={{
+      width: '100vw',
+      height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'auto',
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+      position: 'relative',
+      padding: 'clamp(1rem, 3vw, 2rem)',
+      maxWidth: '100vw'
     }}>
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2rem'
-        }}
-      >
-        {/* Header */}
-        <motion.div variants={itemVariants} style={{ textAlign: 'center' }}>
-          <motion.h1 
+      {/* Animated Background */}
+      <div style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+        zIndex: 0
+      }}>
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={i}
             style={{
-              fontSize: '3rem',
-              fontWeight: 900,
-              marginBottom: '1rem',
-              background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
+              position: 'absolute',
+              width: Math.random() * 3 + 1 + 'px',
+              height: Math.random() * 3 + 1 + 'px',
+              background: `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 255, ${Math.random() * 0.2 + 0.05})`,
+              borderRadius: '50%',
+              left: Math.random() * 100 + '%',
+              top: Math.random() * 100 + '%'
             }}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", damping: 10 }}
-          >
-            WordLego Rule Book
-          </motion.h1>
-          <p style={{ opacity: 0.7, fontSize: '1.1rem' }}>
-            Master the art of strategic word building
-          </p>
-        </motion.div>
+            animate={{
+              y: [0, -40, 0],
+              opacity: [0.1, 0.3, 0.1],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{
+              duration: Math.random() * 6 + 6,
+              repeat: Infinity,
+              delay: Math.random() * 3
+            }}
+          />
+        ))}
+      </div>
 
-        {/* Sections */}
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        style={{ textAlign: 'center', marginBottom: 'clamp(1.5rem, 4vw, 3rem)', position: 'relative', zIndex: 1 }}
+      >
+        <motion.div
+          animate={{ rotate: [0, 10, -10, 0] }}
+          transition={{ repeat: Infinity, duration: 4 }}
+          style={{ marginBottom: '1rem' }}
+        >
+          <BookOpen size={48} color="#6366f1" />
+        </motion.div>
+        <h1 style={{
+          fontSize: 'clamp(2rem, 6vw, 3.5rem)',
+          fontWeight: 900,
+          marginBottom: '0.5rem',
+          background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          textShadow: '0 0 40px rgba(99, 102, 241, 0.3)'
+        }}>
+          WordLego Rule Book
+        </h1>
+        <p style={{ 
+          opacity: 0.8, 
+          fontSize: 'clamp(0.9rem, 2.5vw, 1.3rem)',
+          color: '#94a3b8'
+        }}>
+          Master the art of strategic word building
+        </p>
+      </motion.div>
+
+      {/* Content */}
+      <div style={{
+        flex: 1,
+        overflowY: 'auto',
+        position: 'relative',
+        zIndex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 'clamp(1rem, 3vw, 2rem)',
+        maxWidth: '800px',
+        margin: '0 auto',
+        width: '100%'
+      }}>
         {sections.map((section, index) => (
           <motion.div
-            key={index}
-            variants={itemVariants}
+            key={section.title}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.5 }}
             style={{
-              background: 'rgba(99, 102, 241, 0.1)',
+              background: 'rgba(15, 23, 42, 0.8)',
               border: '1px solid rgba(99, 102, 241, 0.2)',
               borderRadius: '16px',
-              padding: '24px',
-              backdropFilter: 'blur(10px)'
+              padding: 'clamp(1rem, 3vw, 2rem)',
+              backdropFilter: 'blur(20px)',
+              position: 'relative',
+              overflow: 'hidden'
             }}
             whileHover={{ 
-              scale: 1.02,
-              background: 'rgba(99, 102, 241, 0.15)',
-              borderColor: 'rgba(99, 102, 241, 0.3)'
+              scale: 1.02, 
+              borderColor: 'rgba(99, 102, 241, 0.4)',
+              boxShadow: '0 8px 25px rgba(99, 102, 241, 0.2)'
             }}
-            transition={{ type: "spring", stiffness: 300 }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '1rem',
+              marginBottom: '1rem'
+            }}>
               <div style={{
+                padding: '0.5rem',
                 background: 'rgba(99, 102, 241, 0.2)',
-                borderRadius: '12px',
-                padding: '8px',
+                borderRadius: '10px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                flexShrink: 0
               }}>
                 {section.icon}
               </div>
               <h2 style={{
-                fontSize: '1.5rem',
+                fontSize: 'clamp(1.2rem, 3.5vw, 1.6rem)',
                 fontWeight: 700,
+                color: '#e2e8f0',
                 margin: 0,
-                color: '#a5b4fc'
+                flex: 1,
+                lineHeight: 1.2
               }}>
                 {section.title}
               </h2>
             </div>
 
             {section.content && (
-              <p style={{ 
-                fontSize: '1rem', 
+              <p style={{
+                fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+                color: '#94a3b8',
                 lineHeight: 1.6,
-                opacity: 0.9,
-                margin: 0
+                margin: 0,
+                paddingLeft: '3rem'
               }}>
                 {section.content}
               </p>
             )}
 
             {section.rules && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+                paddingLeft: '3rem'
+              }}>
                 {section.rules.map((rule, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    style={{
-                      padding: '8px 12px',
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      borderRadius: '8px',
-                      fontSize: '0.95rem'
-                    }}
-                  >
-                    {rule}
-                  </motion.div>
+                  <div key={i} style={{
+                    fontSize: 'clamp(0.85rem, 2.5vw, 1rem)',
+                    color: '#e2e8f0',
+                    lineHeight: 1.5,
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '0.5rem'
+                  }}>
+                    <span style={{ flexShrink: 0 }}>{rule.split(':')[0]}:</span>
+                    <span style={{ opacity: 0.9 }}>{rule.split(':')[1]}</span>
+                  </div>
                 ))}
               </div>
             )}
 
             {section.modes && (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+                paddingLeft: '3rem'
+              }}>
                 {section.modes.map((mode, i) => (
-                  <motion.div
-                    key={i}
-                    whileHover={{ scale: 1.05 }}
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '12px',
-                      padding: '16px',
-                      textAlign: 'center'
-                    }}
-                  >
-                    <div style={{ marginBottom: '8px' }}>{mode.icon}</div>
-                    <h3 style={{ margin: '0 0 8px 0', fontSize: '1.1rem', fontWeight: 600 }}>
-                      {mode.name}
-                    </h3>
-                    <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.8 }}>
-                      {mode.description}
-                    </p>
-                  </motion.div>
+                  <div key={i} style={{
+                    fontSize: 'clamp(0.85rem, 2.5vw, 1rem)',
+                    color: '#e2e8f0',
+                    lineHeight: 1.5,
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '0.5rem'
+                  }}>
+                    <span style={{ flexShrink: 0 }}>{mode.split(':')[0]}:</span>
+                    <span style={{ opacity: 0.9 }}>{mode.split(':')[1]}</span>
+                  </div>
                 ))}
               </div>
             )}
 
             {section.difficulties && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+                paddingLeft: '3rem'
+              }}>
                 {section.difficulties.map((diff, i) => (
-                  <motion.div
-                    key={i}
-                    whileHover={{ x: 10 }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '16px',
-                      padding: '12px',
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      borderRadius: '12px',
-                      borderLeft: `4px solid ${diff.color}`
-                    }}
-                  >
-                    <div style={{
-                      background: diff.color,
-                      borderRadius: '8px',
-                      padding: '4px 8px',
-                      fontSize: '0.8rem',
-                      fontWeight: 700,
-                      color: 'white'
-                    }}>
-                      {diff.level}
-                    </div>
-                    <p style={{ margin: 0, fontSize: '0.9rem' }}>
-                      {diff.description}
-                    </p>
-                  </motion.div>
+                  <div key={i} style={{
+                    fontSize: 'clamp(0.85rem, 2.5vw, 1rem)',
+                    color: '#e2e8f0',
+                    lineHeight: 1.5,
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '0.5rem'
+                  }}>
+                    <span style={{ flexShrink: 0 }}>{diff.split(':')[0]}:</span>
+                    <span style={{ opacity: 0.9 }}>{diff.split(':')[1]}</span>
+                  </div>
                 ))}
               </div>
             )}
 
             {section.wins && (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px' }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+                paddingLeft: '3rem'
+              }}>
                 {section.wins.map((win, i) => (
+                  <div key={i} style={{
+                    fontSize: 'clamp(0.85rem, 2.5vw, 1rem)',
+                    color: '#e2e8f0',
+                    lineHeight: 1.5,
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '0.5rem'
+                  }}>
+                    <span style={{ flexShrink: 0 }}>{win.split(':')[0]}:</span>
+                    <span style={{ opacity: 0.9 }}>{win.split(':')[1]}</span>
+                  </div>
                   <motion.div
                     key={i}
                     initial={{ opacity: 0, scale: 0.8 }}

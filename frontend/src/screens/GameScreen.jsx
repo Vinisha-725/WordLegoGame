@@ -101,13 +101,14 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
 
   return (
     <div style={{
-      width: '100%',
-      height: '100%',
+      width: '100vw',
+      height: '100vh',
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
-      position: 'relative'
+      position: 'relative',
+      maxWidth: '100vw'
     }}>
       {/* Animated Background */}
       <div style={{
@@ -117,7 +118,7 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
         overflow: 'hidden',
         zIndex: 0
       }}>
-        {[...Array(15)].map((_, i) => (
+        {[...Array(10)].map((_, i) => (
           <motion.div
             key={i}
             style={{
@@ -130,14 +131,14 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
               top: Math.random() * 100 + '%'
             }}
             animate={{
-              y: [0, -50, 0],
+              y: [0, -30, 0],
               opacity: [0.1, 0.3, 0.1],
               scale: [1, 1.2, 1]
             }}
             transition={{
-              duration: Math.random() * 8 + 8,
+              duration: Math.random() * 6 + 6,
               repeat: Infinity,
-              delay: Math.random() * 4
+              delay: Math.random() * 3
             }}
           />
         ))}
@@ -148,7 +149,7 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         style={{
-          padding: '1.5rem 2rem',
+          padding: 'clamp(0.75rem, 2vw, 1.5rem)',
           background: 'rgba(15, 23, 42, 0.9)',
           borderBottom: '1px solid rgba(99, 102, 241, 0.2)',
           display: 'flex',
@@ -156,17 +157,18 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
           alignItems: 'center',
           backdropFilter: 'blur(20px)',
           zIndex: 10,
-          position: 'relative'
+          position: 'relative',
+          flexShrink: 0
         }}
       >
         {/* Theme */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <Sparkles size={16} color="#fbbf24" />
-            <span style={{ fontSize: '0.7rem', opacity: 0.7, fontWeight: 700, letterSpacing: '0.1em' }}>THEME</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+            <Sparkles size={14} color="#fbbf24" />
+            <span style={{ fontSize: 'clamp(0.6rem, 1.5vw, 0.7rem)', opacity: 0.7, fontWeight: 700, letterSpacing: '0.05em' }}>THEME</span>
           </div>
           <motion.span 
-            style={{ fontWeight: 800, fontSize: '1.1rem', color: '#6366f1' }}
+            style={{ fontWeight: 800, fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)', color: '#6366f1' }}
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
           >
@@ -181,21 +183,21 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
             transition={{ repeat: Infinity, duration: 2 }}
             style={{ 
               fontWeight: 800, 
-              fontSize: '1.4rem', 
+              fontSize: 'clamp(1rem, 3vw, 1.4rem)', 
               color: 'white',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
+              gap: '6px',
               justifyContent: 'center'
             }}
           >
-            {currentP === 'AI' && <Bot size={24} color="#6366f1" />}
+            {currentP === 'AI' && <Bot size={20} color="#6366f1" />}
             {currentP}
           </motion.div>
           <div style={{ 
-            fontSize: '0.8rem', 
+            fontSize: 'clamp(0.7rem, 2vw, 0.8rem)', 
             opacity: 0.7,
-            marginTop: '4px'
+            marginTop: '2px'
           }}>
             {isAIMode ? (currentP === 'AI' ? 'AI THINKING' : 'YOUR TURN') : 'CURRENT TURN'}
           </div>
@@ -205,12 +207,12 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
         <div style={{ textAlign: 'right' }}>
           <motion.div 
             style={{ 
-              fontSize: '1.5rem', 
+              fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', 
               fontWeight: 900, 
               color: timer < 10 ? '#ef4444' : (aiThinking ? '#6366f1' : '#10b981'),
               display: 'flex',
               alignItems: 'center',
-              gap: '8px'
+              gap: '6px'
             }}
             animate={{ scale: timer < 10 ? [1, 1.1, 1] : 1 }}
             transition={{ repeat: timer < 10 ? Infinity : 0, duration: 0.5 }}
@@ -218,12 +220,12 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
             {aiThinking ? <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 1 }}
-            ><Bot size={20} /></motion.div> : <Clock size={20} />}
+            ><Bot size={18} /></motion.div> : <Clock size={18} />}
             {aiThinking ? '🤔' : `${timer}s`}
           </motion.div>
           <div style={{ 
-            width: '80px', 
-            height: '6px', 
+            width: 'clamp(60px, 15vw, 80px)', 
+            height: 'clamp(4px, 1vw, 6px)', 
             background: 'rgba(255,255,255,0.1)', 
             borderRadius: '3px', 
             marginTop: '4px', 
@@ -245,10 +247,10 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
       <div style={{ 
         flex: 1, 
         overflowY: 'auto', 
-        padding: '2rem',
+        padding: 'clamp(1rem, 3vw, 2rem)',
         display: 'flex', 
         flexDirection: 'column', 
-        gap: '1rem',
+        gap: 'clamp(0.5rem, 2vw, 1rem)',
         zIndex: 1,
         position: 'relative'
       }}>
@@ -269,10 +271,10 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ repeat: Infinity, duration: 4 }}
             >
-              <Target size={80} color="#6366f1" />
+              <Target size={60} color="#6366f1" />
             </motion.div>
-            <p style={{ marginTop: '1.5rem', fontWeight: 600, fontSize: '1.2rem' }}>Start the chain!</p>
-            {isAIMode && <p style={{ marginTop: '0.5rem', fontSize: '1rem' }}>You go first</p>}
+            <p style={{ marginTop: '1.5rem', fontWeight: 600, fontSize: 'clamp(1rem, 2.5vw, 1.2rem)' }}>Start the chain!</p>
+            {isAIMode && <p style={{ marginTop: '0.5rem', fontSize: 'clamp(0.8rem, 2vw, 1rem)' }}>You go first</p>}
           </motion.div>
         ) : (
           chain.map((w, i) => {
@@ -280,23 +282,23 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
             return (
               <motion.div
                 key={`${w}-${i}`}
-                initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30, scale: 0.8 }}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20, scale: 0.8 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 transition={{ 
                   type: "spring", 
                   damping: 20,
-                  delay: i * 0.1
+                  delay: i * 0.05
                 }}
                 style={{
                   alignSelf: i % 2 === 0 ? 'flex-start' : 'flex-end',
                   background: i === chain.length - 1 
                     ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' 
                     : (isAIWord ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255, 255, 255, 0.05)'),
-                  padding: '1rem 1.5rem',
+                  padding: 'clamp(0.5rem, 2vw, 1rem)',
                   borderRadius: i % 2 === 0 ? '1.5rem 1.5rem 1.5rem 0.25rem' : '1.5rem 1.5rem 0.25rem 1.5rem',
                   fontWeight: 600,
-                  fontSize: '1.1rem',
-                  maxWidth: '70%',
+                  fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+                  maxWidth: 'clamp(200px, 70vw, 70%)',
                   boxShadow: i === chain.length - 1 
                     ? '0 8px 25px rgba(99, 102, 241, 0.4)' 
                     : '0 4px 15px rgba(0, 0, 0, 0.2)',
@@ -305,11 +307,11 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
                     : '1px solid rgba(255, 255, 255, 0.1)',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: '6px',
                   backdropFilter: 'blur(10px)'
                 }}
               >
-                {isAIWord && <Bot size={18} color="#6366f1" />}
+                {isAIWord && <Bot size={16} color="#6366f1" />}
                 {w}
               </motion.div>
             );
@@ -322,38 +324,39 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         style={{ 
-          padding: '2rem',
+          padding: 'clamp(1rem, 3vw, 2rem)',
           background: 'rgba(15, 23, 42, 0.95)', 
           borderTop: '1px solid rgba(99, 102, 241, 0.2)', 
           backdropFilter: 'blur(20px)',
           zIndex: 10,
-          position: 'relative'
+          position: 'relative',
+          flexShrink: 0
         }}
       >
         {/* Next Letter Indicator */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'clamp(0.75rem, 2vw, 1.5rem)' }}>
           <motion.div
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
             style={{
               background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2))',
               border: '2px solid rgba(99, 102, 241, 0.3)',
-              borderRadius: '16px',
-              padding: '1rem 2rem',
+              borderRadius: '12px',
+              padding: 'clamp(0.5rem, 2vw, 1rem)',
               display: 'flex',
               alignItems: 'center',
-              gap: '1rem',
+              gap: '0.75rem',
               backdropFilter: 'blur(10px)'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Zap size={20} color="#fbbf24" />
-              <span style={{ fontSize: '0.9rem', opacity: 0.8, fontWeight: 600 }}>STARTS WITH</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Zap size={18} color="#fbbf24" />
+              <span style={{ fontSize: 'clamp(0.8rem, 2vw, 0.9rem)', opacity: 0.8, fontWeight: 600 }}>STARTS WITH</span>
             </div>
             <motion.span 
               className="gradient-text"
               style={{ 
-                fontSize: '2.5rem', 
+                fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', 
                 fontWeight: 900,
                 background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
                 WebkitBackgroundClip: 'text',
@@ -379,12 +382,12 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
                 ref={inputRef}
                 style={{
                   width: '100%',
-                  padding: '1.25rem 4rem 1.25rem 1.5rem',
+                  padding: 'clamp(0.75rem, 2vw, 1.25rem) clamp(3rem, 8vw, 4rem)',
                   background: 'rgba(15, 23, 42, 0.8)',
                   border: '2px solid rgba(99, 102, 241, 0.3)',
-                  borderRadius: '16px',
+                  borderRadius: '12px',
                   color: 'white',
-                  fontSize: '1.1rem',
+                  fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
                   fontWeight: 500,
                   transition: 'all 0.3s ease',
                   backdropFilter: 'blur(10px)'
@@ -407,14 +410,14 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
                 disabled={!word || winner || isSubmitting}
                 style={{ 
                   position: 'absolute', 
-                  right: '12px', 
+                  right: '8px', 
                   top: '50%', 
                   transform: 'translateY(-50%)',
-                  width: '50px', 
-                  height: '50px', 
+                  width: 'clamp(40px, 10vw, 50px)', 
+                  height: 'clamp(40px, 10vw, 50px)', 
                   background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', 
                   border: 'none', 
-                  borderRadius: '12px', 
+                  borderRadius: '10px', 
                   color: 'white', 
                   display: 'flex', 
                   alignItems: 'center', 
@@ -430,10 +433,10 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
                     animate={{ rotate: 360 }}
                     transition={{ repeat: Infinity, duration: 1 }}
                   >
-                    <Clock size={20} />
+                    <Clock size={18} />
                   </motion.div>
                 ) : (
-                  <Send size={20} />
+                  <Send size={18} />
                 )}
               </motion.button>
             </motion.div>
@@ -445,19 +448,19 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            style={{ textAlign: 'center', padding: '2rem' }}
+            style={{ textAlign: 'center', padding: 'clamp(1rem, 3vw, 2rem)' }}
           >
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 1 }}
               style={{ display: 'inline-block', marginBottom: '1rem' }}
             >
-              <Bot size={40} color="#6366f1" />
+              <Bot size={35} color="#6366f1" />
             </motion.div>
             <motion.p
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ repeat: Infinity, duration: 2 }}
-              style={{ opacity: 0.8, fontSize: '1.1rem' }}
+              style={{ opacity: 0.8, fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)' }}
             >
               AI is thinking...
             </motion.p>
@@ -472,12 +475,12 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               style={{ 
-                marginTop: '1.5rem', 
+                marginTop: 'clamp(0.75rem, 2vw, 1.5rem)', 
                 textAlign: 'center', 
-                fontSize: '1rem',
+                fontSize: 'clamp(0.8rem, 2vw, 1rem)',
                 fontWeight: 600,
-                padding: '1rem',
-                borderRadius: '12px',
+                padding: 'clamp(0.5rem, 2vw, 1rem)',
+                borderRadius: '10px',
                 background: feedback.type === 'success' 
                   ? 'rgba(16, 185, 129, 0.2)' 
                   : (feedback.type === 'info' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(239, 68, 68, 0.2)'),
@@ -514,24 +517,24 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
               exit={{ scale: 0.9, opacity: 0 }}
               style={{ 
                 width: '90%', 
-                maxWidth: '600px', 
-                padding: '3rem', 
+                maxWidth: '500px', 
+                padding: '2rem', 
                 position: 'relative',
                 background: 'rgba(15, 23, 42, 0.95)',
                 border: '1px solid rgba(99, 102, 241, 0.2)',
-                borderRadius: '20px',
+                borderRadius: '16px',
                 backdropFilter: 'blur(20px)'
               }}
             >
-              <h2 style={{ marginBottom: '2rem', fontSize: '2rem', color: 'white' }}>Game Rules</h2>
+              <h2 style={{ marginBottom: '1.5rem', fontSize: 'clamp(1.5rem, 4vw, 2rem)', color: 'white' }}>Game Rules</h2>
               <ul style={{ 
                 display: 'flex', 
                 flexDirection: 'column', 
-                gap: '1rem', 
+                gap: '0.75rem', 
                 listStyle: 'none', 
                 padding: 0,
                 color: '#e2e8f0',
-                fontSize: '1rem',
+                fontSize: 'clamp(0.8rem, 2vw, 1rem)',
                 lineHeight: 1.6
               }}>
                 <li>✅ Follow theme (Semantic AI Check)</li>
@@ -546,14 +549,14 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
                 className="btn-primary" 
                 style={{ 
                   width: '100%', 
-                  marginTop: '2rem',
-                  padding: '1rem',
+                  marginTop: '1.5rem',
+                  padding: '0.75rem',
                   background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
                   border: 'none',
-                  borderRadius: '12px',
+                  borderRadius: '10px',
                   color: 'white',
                   fontWeight: 600,
-                  fontSize: '1rem'
+                  fontSize: 'clamp(0.8rem, 2vw, 1rem)'
                 }} 
                 onClick={() => setShowRules(false)}
                 whileHover={{ scale: 1.02 }}
@@ -584,11 +587,11 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               style={{ 
                 width: '90%', 
-                maxWidth: '500px', 
-                padding: '4rem 2rem', 
+                maxWidth: '400px', 
+                padding: 'clamp(2rem, 5vw, 4rem)', 
                 textAlign: 'center', 
                 border: '2px solid rgba(99, 102, 241, 0.5)',
-                borderRadius: '24px',
+                borderRadius: '20px',
                 background: 'rgba(15, 23, 42, 0.95)',
                 backdropFilter: 'blur(20px)'
               }}
@@ -597,10 +600,10 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
                 animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.2, 1] }} 
                 transition={{ repeat: Infinity, duration: 3 }}
               >
-                <Trophy size={100} color="#fbbf24" style={{ marginBottom: '2rem' }} />
+                <Trophy size={80} color="#fbbf24" style={{ marginBottom: '1.5rem' }} />
               </motion.div>
               <h2 style={{ 
-                fontSize: '3rem', 
+                fontSize: 'clamp(2rem, 5vw, 3rem)', 
                 fontWeight: 900, 
                 marginBottom: '0.5rem',
                 background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
@@ -611,7 +614,7 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
                 {winner}
               </h2>
               <h1 style={{ 
-                fontSize: '3.5rem', 
+                fontSize: 'clamp(2.5rem, 6vw, 3.5rem)', 
                 fontWeight: 900, 
                 marginBottom: '1rem',
                 background: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
@@ -625,19 +628,20 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
                 <div style={{ 
                   background: 'rgba(239, 68, 68, 0.1)', 
                   border: '1px solid rgba(239, 68, 68, 0.2)', 
-                  padding: '1rem', 
-                  borderRadius: '12px', 
-                  marginBottom: '2rem',
+                  padding: '0.75rem', 
+                  borderRadius: '10px', 
+                  marginBottom: '1.5rem',
                   color: '#ef4444',
-                  fontWeight: 600
+                  fontWeight: 600,
+                  fontSize: 'clamp(0.8rem, 2vw, 1rem)'
                 }}>
                   Reason: {gameState.reason}
                 </div>
               )}
               <p style={{ 
                 opacity: 0.8, 
-                marginBottom: '3rem', 
-                fontSize: '1.1rem',
+                marginBottom: '2rem', 
+                fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
                 color: '#e2e8f0'
               }}>
                 Great gameplay! Time to see the stats.
@@ -647,13 +651,13 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
                 className="btn-primary" 
                 style={{ 
                   width: '100%', 
-                  padding: '1.5rem',
+                  padding: 'clamp(1rem, 3vw, 1.5rem)',
                   background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
                   border: 'none',
-                  borderRadius: '16px',
+                  borderRadius: '12px',
                   color: 'white',
                   fontWeight: 700,
-                  fontSize: '1.1rem',
+                  fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
                   cursor: 'pointer',
                   boxShadow: '0 10px 30px rgba(99, 102, 241, 0.4)'
                 }}

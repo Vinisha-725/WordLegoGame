@@ -37,13 +37,14 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
 
   return (
     <div style={{
-      width: '100%',
-      height: '100%',
+      width: '100vw',
+      height: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      overflow: 'hidden',
+      overflow: 'auto',
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
-      position: 'relative'
+      position: 'relative',
+      maxWidth: '100vw'
     }}>
       {/* Animated Background */}
       <div style={{
@@ -53,27 +54,27 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
         overflow: 'hidden',
         zIndex: 0
       }}>
-        {[...Array(25)].map((_, i) => (
+        {[...Array(15)].map((_, i) => (
           <motion.div
             key={i}
             style={{
               position: 'absolute',
-              width: Math.random() * 4 + 1 + 'px',
-              height: Math.random() * 4 + 1 + 'px',
+              width: Math.random() * 3 + 1 + 'px',
+              height: Math.random() * 3 + 1 + 'px',
               background: `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 255, ${Math.random() * 0.3 + 0.1})`,
               borderRadius: '50%',
               left: Math.random() * 100 + '%',
               top: Math.random() * 100 + '%'
             }}
             animate={{
-              y: [0, -100, 0],
+              y: [0, -80, 0],
               opacity: [0.1, 0.5, 0.1],
               scale: [1, 1.5, 1]
             }}
             transition={{
-              duration: Math.random() * 10 + 10,
+              duration: Math.random() * 8 + 8,
               repeat: Infinity,
-              delay: Math.random() * 5
+              delay: Math.random() * 4
             }}
           />
         ))}
@@ -86,16 +87,17 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '2rem',
+        padding: 'clamp(1rem, 3vw, 2rem)',
         position: 'relative',
-        zIndex: 1
+        zIndex: 1,
+        minHeight: '100vh'
       }}>
         {/* Trophy Animation */}
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: "spring", damping: 10, stiffness: 100 }}
-          style={{ marginBottom: '2rem' }}
+          style={{ marginBottom: 'clamp(1rem, 3vw, 2rem)' }}
         >
           <motion.div
             animate={{ 
@@ -110,7 +112,7 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
             }}
           >
             <Trophy 
-              size={120} 
+              size={80} 
               color="#fbbf24" 
               style={{ 
                 filter: 'drop-shadow(0 0 30px rgba(251, 191, 36, 0.6))',
@@ -129,7 +131,7 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3, type: "spring", damping: 10 }}
           style={{ 
-            fontSize: '4rem', 
+            fontSize: 'clamp(2rem, 6vw, 4rem)', 
             fontWeight: 900, 
             marginBottom: '1rem',
             background: isAIWinner 
@@ -150,7 +152,7 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          style={{ textAlign: 'center', marginBottom: '2rem' }}
+          style={{ textAlign: 'center', marginBottom: 'clamp(1rem, 3vw, 2rem)' }}
         >
           {isAIWinner && (
             <motion.div
@@ -159,16 +161,16 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px',
-                padding: '1rem 2rem',
+                gap: '8px',
+                padding: '0.75rem 1.5rem',
                 background: 'rgba(99, 102, 241, 0.2)',
                 border: '2px solid rgba(99, 102, 241, 0.3)',
-                borderRadius: '16px',
+                borderRadius: '12px',
                 backdropFilter: 'blur(10px)'
               }}
             >
-              <Sparkles size={24} color="#6366f1" />
-              <span style={{ fontSize: '1.2rem', fontWeight: 600, color: '#6366f1' }}>
+              <Sparkles size={20} color="#6366f1" />
+              <span style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)', fontWeight: 600, color: '#6366f1' }}>
                 AI Victory! Minimax Algorithm Wins
               </span>
             </motion.div>
@@ -181,16 +183,16 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px',
-                padding: '1rem 2rem',
+                gap: '8px',
+                padding: '0.75rem 1.5rem',
                 background: 'rgba(251, 191, 36, 0.2)',
                 border: '2px solid rgba(251, 191, 36, 0.3)',
-                borderRadius: '16px',
+                borderRadius: '12px',
                 backdropFilter: 'blur(10px)'
               }}
             >
-              <Target size={24} color="#fbbf24" />
-              <span style={{ fontSize: '1.2rem', fontWeight: 600, color: '#fbbf24' }}>
+              <Target size={20} color="#fbbf24" />
+              <span style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)', fontWeight: 600, color: '#fbbf24' }}>
                 Human Victory! Strategic Mastermind
               </span>
             </motion.div>
@@ -206,16 +208,17 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
             style={{
               background: 'rgba(239, 68, 68, 0.1)',
               border: '1px solid rgba(239, 68, 68, 0.2)',
-              padding: '1rem 2rem',
-              borderRadius: '12px',
-              marginBottom: '2rem',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '10px',
+              marginBottom: 'clamp(1rem, 3vw, 2rem)',
               color: '#ef4444',
               fontWeight: 600,
-              backdropFilter: 'blur(10px)'
+              backdropFilter: 'blur(10px)',
+              fontSize: 'clamp(0.8rem, 2vw, 1rem)'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Zap size={20} color="#ef4444" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Zap size={18} color="#ef4444" />
               {gameState.reason}
             </div>
           </motion.div>
@@ -228,69 +231,69 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
           transition={{ delay: 0.7 }}
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '1.5rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+            gap: 'clamp(0.75rem, 2vw, 1.5rem)',
             width: '100%',
-            maxWidth: '800px',
-            marginBottom: '3rem'
+            maxWidth: '600px',
+            marginBottom: 'clamp(2rem, 5vw, 3rem)'
           }}
         >
           <motion.div
-            whileHover={{ scale: 1.05, y: -5 }}
+            whileHover={{ scale: 1.05, y: -3 }}
             style={{
               background: 'rgba(99, 102, 241, 0.1)',
               border: '1px solid rgba(99, 102, 241, 0.2)',
-              borderRadius: '16px',
-              padding: '1.5rem',
+              borderRadius: '12px',
+              padding: 'clamp(0.75rem, 2vw, 1.5rem)',
               textAlign: 'center',
               backdropFilter: 'blur(10px)'
             }}
           >
-            <Hash size={32} color="#6366f1" style={{ marginBottom: '0.5rem' }} />
-            <div style={{ fontSize: '2rem', fontWeight: 900, color: '#6366f1' }}>
+            <Hash size={28} color="#6366f1" style={{ marginBottom: '0.5rem' }} />
+            <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 900, color: '#6366f1' }}>
               {chain.length}
             </div>
-            <div style={{ fontSize: '0.9rem', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <div style={{ fontSize: 'clamp(0.7rem, 2vw, 0.9rem)', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Words Built
             </div>
           </motion.div>
 
           <motion.div
-            whileHover={{ scale: 1.05, y: -5 }}
+            whileHover={{ scale: 1.05, y: -3 }}
             style={{
               background: 'rgba(139, 92, 246, 0.1)',
               border: '1px solid rgba(139, 92, 246, 0.2)',
-              borderRadius: '16px',
-              padding: '1.5rem',
+              borderRadius: '12px',
+              padding: 'clamp(0.75rem, 2vw, 1.5rem)',
               textAlign: 'center',
               backdropFilter: 'blur(10px)'
             }}
           >
-            <Target size={32} color="#8b5cf6" style={{ marginBottom: '0.5rem' }} />
-            <div style={{ fontSize: '2rem', fontWeight: 900, color: '#8b5cf6' }}>
+            <Target size={28} color="#8b5cf6" style={{ marginBottom: '0.5rem' }} />
+            <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 900, color: '#8b5cf6' }}>
               {gameData.theme}
             </div>
-            <div style={{ fontSize: '0.9rem', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <div style={{ fontSize: 'clamp(0.7rem, 2vw, 0.9rem)', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Theme
             </div>
           </motion.div>
 
           <motion.div
-            whileHover={{ scale: 1.05, y: -5 }}
+            whileHover={{ scale: 1.05, y: -3 }}
             style={{
               background: 'rgba(251, 191, 36, 0.1)',
               border: '1px solid rgba(251, 191, 36, 0.2)',
-              borderRadius: '16px',
-              padding: '1.5rem',
+              borderRadius: '12px',
+              padding: 'clamp(0.75rem, 2vw, 1.5rem)',
               textAlign: 'center',
               backdropFilter: 'blur(10px)'
             }}
           >
-            <Sparkles size={32} color="#fbbf24" style={{ marginBottom: '0.5rem' }} />
-            <div style={{ fontSize: '2rem', fontWeight: 900, color: '#fbbf24' }}>
+            <Sparkles size={28} color="#fbbf24" style={{ marginBottom: '0.5rem' }} />
+            <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 900, color: '#fbbf24' }}>
               {gameMode === 'ai' ? 'vs AI' : 'vs Human'}
             </div>
-            <div style={{ fontSize: '0.9rem', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <div style={{ fontSize: 'clamp(0.7rem, 2vw, 0.9rem)', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Mode
             </div>
           </motion.div>
@@ -303,27 +306,27 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
           transition={{ delay: 0.8 }}
           style={{
             width: '100%',
-            maxWidth: '800px',
+            maxWidth: '600px',
             background: 'rgba(15, 23, 42, 0.8)',
             border: '1px solid rgba(99, 102, 241, 0.2)',
-            borderRadius: '20px',
-            padding: '2rem',
+            borderRadius: '16px',
+            padding: 'clamp(1rem, 3vw, 2rem)',
             backdropFilter: 'blur(20px)',
-            marginBottom: '3rem'
+            marginBottom: 'clamp(2rem, 5vw, 3rem)'
           }}
         >
           <div style={{ 
             display: 'flex', 
             justifyContent: 'space-between', 
             alignItems: 'center',
-            marginBottom: '1.5rem',
+            marginBottom: '1rem',
             borderBottom: '1px solid rgba(99, 102, 241, 0.2)',
             paddingBottom: '1rem'
           }}>
             <h3 style={{ 
               textTransform: 'uppercase', 
-              fontSize: '1rem', 
-              letterSpacing: '0.1em', 
+              fontSize: 'clamp(0.8rem, 2vw, 1rem)', 
+              letterSpacing: '0.05em', 
               opacity: 0.8,
               color: '#e2e8f0',
               fontWeight: 600
@@ -333,12 +336,13 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
             <div style={{ 
               display: 'flex', 
               alignItems: 'center', 
-              gap: '8px', 
+              gap: '6px', 
               opacity: 0.7,
               color: '#6366f1',
-              fontWeight: 600
+              fontWeight: 600,
+              fontSize: 'clamp(0.7rem, 2vw, 0.9rem)'
             }}>
-              <Hash size={16} /> 
+              <Hash size={14} /> 
               {chain.length} Words
             </div>
           </div>
@@ -355,12 +359,12 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
                 <motion.span
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.1 }}
+                  transition={{ delay: i * 0.05 }}
                   style={{ 
                     fontWeight: 600, 
                     color: '#6366f1', 
-                    fontSize: '1rem',
-                    padding: '0.5rem 1rem',
+                    fontSize: 'clamp(0.8rem, 2vw, 1rem)',
+                    padding: '0.4rem 0.8rem',
                     background: 'rgba(99, 102, 241, 0.1)',
                     borderRadius: '8px',
                     border: '1px solid rgba(99, 102, 241, 0.2)'
@@ -369,7 +373,7 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
                   {w}
                 </motion.span>
                 {i < chain.length - 1 && (
-                  <ChevronRight size={16} style={{ opacity: 0.3 }} />
+                  <ChevronRight size={14} style={{ opacity: 0.3 }} />
                 )}
               </React.Fragment>
             ))}
@@ -384,9 +388,9 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
           style={{ 
             display: 'flex', 
             flexDirection: 'column', 
-            gap: '1rem',
+            gap: '0.75rem',
             width: '100%',
-            maxWidth: '400px'
+            maxWidth: '350px'
           }}
         >
           <motion.button 
@@ -395,23 +399,23 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
             whileTap={{ scale: 0.95 }}
             style={{
               width: '100%',
-              padding: '1.5rem',
+              padding: 'clamp(0.75rem, 2vw, 1.5rem)',
               background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
               border: 'none',
-              borderRadius: '16px',
+              borderRadius: '12px',
               color: 'white',
               fontWeight: 700,
-              fontSize: '1.1rem',
+              fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '12px',
+              gap: '8px',
               boxShadow: '0 10px 30px rgba(99, 102, 241, 0.4)',
               backdropFilter: 'blur(10px)'
             }}
           >
-            <RefreshCw size={24} />
+            <RefreshCw size={20} />
             Play Again
           </motion.button>
           
@@ -421,23 +425,23 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
             whileTap={{ scale: 0.98 }}
             style={{
               width: '100%',
-              padding: '1.25rem',
+              padding: 'clamp(0.6rem, 2vw, 1.25rem)',
               background: 'transparent',
               border: '2px solid rgba(99, 102, 241, 0.3)',
-              borderRadius: '16px',
+              borderRadius: '12px',
               color: '#6366f1',
               fontWeight: 600,
-              fontSize: '1rem',
+              fontSize: 'clamp(0.8rem, 2vw, 1rem)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '12px',
+              gap: '8px',
               backdropFilter: 'blur(10px)',
               transition: 'all 0.3s ease'
             }}
           >
-            <Home size={20} />
+            <Home size={18} />
             Exit to Menu
           </motion.button>
         </motion.div>
