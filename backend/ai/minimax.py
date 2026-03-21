@@ -1,139 +1,30 @@
 import random
-from nltk.corpus import wordnet
-from ai.ai_generator import is_valid_word, is_theme_related, check_letter_chain
+from ai.ai_generator import is_valid_word, is_theme_related
 
-# Pre-computed word lists for better performance
-COMMON_WORDS = {
-    'a': ['apple', 'apricot', 'avocado'],
-    'b': ['banana', 'blueberry', 'blackberry'],
-    'c': ['cherry', 'coconut', 'cranberry'],
-    'd': ['date', 'durian'],
-    'e': ['elderberry'],
-    'f': ['fig', 'fruit'],
-    'g': ['grape', 'grapefruit', 'guava'],
-    'h': ['honeydew'],
-    'i': ['imbe'],
-    'j': ['jackfruit'],
-    'k': ['kiwi', 'kumquat'],
-    'l': ['lemon', 'lime', 'lychee'],
-    'm': ['mango', 'melon', 'mandarin'],
-    'n': ['nectarine'],
-    'o': ['orange', 'olive'],
-    'p': ['papaya', 'passion', 'peach', 'pear', 'plum', 'pineapple'],
-    'q': ['quince'],
-    'r': ['raspberry', 'raisin'],
-    's': ['strawberry', 'starfruit'],
-    't': ['tangerine', 'tomato'],
-    'u': ['ugli'],
-    'v': ['vanilla'],
-    'w': ['watermelon'],
-    'x': ['xigua'],
-    'y': ['yellow Passion'],
-    'z': ['zucchini']
-}
+
+import dictionary
 
 def get_possible_words(last_letter, theme, used_words):
-    """Get possible words quickly using pre-computed lists"""
+    """Get possible words quickly using central dictionary"""
     last_letter = last_letter.lower()
+    theme = theme.lower()
     
-    # For fruits theme, use pre-computed list
-    if theme.lower() == 'fruits':
-        words = COMMON_WORDS.get(last_letter, [])
-        return [w for w in words if w not in used_words]
+    # Use set for faster lookup
+    used_set = set(used_words)
     
-    # For other themes, use a smaller, faster approach
-    possible_words = []
+    # Get words from central theme dictionary
+    theme_dict = dictionary.THEME_DICTIONARIES.get(theme, {})
     
-    # Small sample words for different themes
-    theme_words = {
-        'animals': {
-            'a': ['ant', 'antelope', 'ape'],
-            'b': ['bear', 'bat', 'bird'],
-            'c': ['cat', 'cow', 'camel'],
-            'd': ['dog', 'dolphin', 'duck'],
-            'e': ['eagle', 'elephant'],
-            'f': ['fox', 'frog', 'fish'],
-            'g': ['goat', 'gorilla', 'giraffe'],
-            'h': ['horse', 'hippo'],
-            'i': ['iguana'],
-            'j': ['jaguar'],
-            'k': ['kangaroo', 'koala'],
-            'l': ['lion', 'leopard', 'lizard'],
-            'm': ['monkey', 'mouse', 'moose'],
-            'n': ['newt'],
-            'o': ['owl', 'ostrich'],
-            'p': ['panda', 'parrot', 'penguin'],
-            'q': ['quail'],
-            'r': ['rabbit', 'rhino', 'raccoon'],
-            's': ['snake', 'shark', 'sheep'],
-            't': ['tiger', 'turtle', 'turkey'],
-            'u': ['unicorn'],
-            'v': ['vulture'],
-            'w': ['wolf', 'whale'],
-            'x': ['xerus'],
-            'y': ['yak'],
-            'z': ['zebra', 'zebrafish']
-        },
-        'atlas': {
-            'a': ['america', 'africa', 'asia', 'atlantic'],
-            'b': ['brazil', 'britain', 'berlin'],
-            'c': ['china', 'canada', 'california'],
-            'd': ['denmark', 'dubai', 'delhi'],
-            'e': ['egypt', 'england', 'europe'],
-            'f': ['france', 'florida', 'finland'],
-            'g': ['germany', 'greece', 'greenland'],
-            'h': ['hawaii', 'holland'],
-            'i': ['india', 'italy', 'ireland'],
-            'j': ['japan', 'jamaica'],
-            'k': ['korea', 'kenya'],
-            'l': ['london', 'los angeles'],
-            'm': ['mexico', 'moscow', 'madrid'],
-            'n': ['norway', 'nigeria', 'new york'],
-            'o': ['oslo', 'ottawa'],
-            'p': ['paris', 'poland', 'portugal'],
-            'q': ['quebec'],
-            'r': ['rome', 'russia', 'rio'],
-            's': ['spain', 'sweden', 'sydney'],
-            't': ['tokyo', 'texas', 'turkey'],
-            'u': ['usa', 'uk', 'utah'],
-            'v': ['venice', 'vietnam'],
-            'w': ['washington', 'wisconsin'],
-            'x': ['xian'],
-            'y': ['york', 'yukon'],
-            'z': ['zimbabwe', 'zurich']
-        },
-        'things': {
-            'a': ['apple', 'airplane', 'automobile'],
-            'b': ['bottle', 'book', 'box', 'ball'],
-            'c': ['chair', 'computer', 'car', 'clock'],
-            'd': ['desk', 'door', 'drone'],
-            'e': ['eraser', 'engine'],
-            'f': ['phone', 'fan', 'fork'],
-            'g': ['glass', 'guitar'],
-            'h': ['hammer', 'hat', 'house'],
-            'i': ['iron', 'ice'],
-            'j': ['jar', 'jeans'],
-            'k': ['key', 'knife'],
-            'l': ['lamp', 'laptop', 'lock'],
-            'm': ['mirror', 'mouse', 'mug'],
-            'n': ['notebook', 'needle'],
-            'o': ['oven', 'orange'],
-            'p': ['pen', 'plate', 'phone', 'paper'],
-            'q': ['quartz'],
-            'r': ['radio', 'ruler', 'remote'],
-            's': ['spoon', 'scissors', 'shoe'],
-            't': ['table', 'television', 'telephone'],
-            'u': ['umbrella'],
-            'v': ['vase', 'violin'],
-            'w': ['watch', 'window'],
-            'x': ['x-ray'],
-            'y': ['yarn'],
-            'z': ['zipper']
-        }
-    }
+    # If it's a list-based dictionary (like fruits), it might be a set
+    if isinstance(theme_dict, set):
+        return [w for w in theme_dict if w.startswith(last_letter) and w not in used_set]
     
-    words = theme_words.get(theme.lower(), {}).get(last_letter, [])
-    return [w for w in words if w not in used_words]
+    # If it's a char-based dictionary (already optimized for last_letter)
+    if isinstance(theme_dict, dict):
+        words = theme_dict.get(last_letter, [])
+        return [w for w in words if w not in used_set]
+        
+    return []
 
 def evaluate_word(word, game_state):
     """Quick evaluation for AI decision making"""
