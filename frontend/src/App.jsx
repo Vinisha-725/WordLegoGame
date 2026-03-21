@@ -106,13 +106,7 @@ function App() {
   };
 
   return (
-    <div className="app-container" style={{
-      width: '100vw',
-      height: '100vh',
-      overflow: 'hidden',
-      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
-      position: 'relative'
-    }}>
+    <div className="app-container">
       {/* Animated Background */}
       <div style={{
         position: 'absolute',
@@ -151,22 +145,24 @@ function App() {
       <motion.button
         onClick={() => setShowRuleBook(true)}
         style={{
-          position: 'fixed',
+          position: 'absolute',
           top: '20px',
           right: '20px',
           zIndex: 1000,
-          background: 'rgba(99, 102, 241, 0.2)',
+          background: 'rgba(99, 102, 241, 0.15)',
           border: '1px solid rgba(99, 102, 241, 0.3)',
           borderRadius: '12px',
-          padding: '12px',
+          padding: '10px',
           cursor: 'pointer',
           backdropFilter: 'blur(10px)',
-          transition: 'all 0.3s ease'
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
-        whileHover={{ scale: 1.1, background: 'rgba(99, 102, 241, 0.3)' }}
+        whileHover={{ scale: 1.1, background: 'rgba(99, 102, 241, 0.25)' }}
         whileTap={{ scale: 0.95 }}
       >
-        <Book size={24} color="#6366f1" />
+        <Book size={20} color="#6366f1" />
       </motion.button>
 
       {/* Main Content */}
@@ -299,8 +295,8 @@ function App() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             style={{
-              position: 'fixed',
-              bottom: '30px',
+              position: 'absolute',
+              bottom: '40px',
               left: '50%',
               transform: 'translateX(-50%)',
               background: 'rgba(239, 68, 68, 0.9)',

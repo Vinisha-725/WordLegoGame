@@ -101,14 +101,13 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
 
   return (
     <div style={{
-      width: '100vw',
-      height: '100vh',
+      width: '100%',
+      height: '100%',
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
-      position: 'relative',
-      maxWidth: '100vw'
+      position: 'relative'
     }}>
       {/* Animated Background */}
       <div style={{
@@ -503,13 +502,14 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
       <AnimatePresence>
         {showRules && (
           <div style={{ 
-            position: 'fixed', 
+            position: 'absolute', 
             inset: 0, 
             zIndex: 100, 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center', 
-            background: 'rgba(0,0,0,0.8)' 
+            background: 'rgba(0,0,0,0.85)',
+            backdropFilter: 'blur(10px)'
           }}>
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
@@ -573,14 +573,14 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
       <AnimatePresence>
         {winner && (
           <div style={{ 
-            position: 'fixed', 
+            position: 'absolute', 
             inset: 0, 
             zIndex: 200, 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center', 
-            background: 'rgba(15, 23, 42, 0.95)', 
-            backdropFilter: 'blur(8px)' 
+            background: 'rgba(15, 23, 42, 0.96)', 
+            backdropFilter: 'blur(12px)' 
           }}>
             <motion.div 
               initial={{ scale: 0.8, opacity: 0, y: 20 }}
@@ -673,26 +673,27 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
       </AnimatePresence>
 
       {/* Floating Rules Action */}
-      <div style={{ position: 'fixed', bottom: '2rem', right: '2rem' }}>
+      <div style={{ position: 'absolute', bottom: '2rem', right: '2.5rem' }}>
         <motion.button 
-          whileHover={{ scale: 1.1 }}
+          whileHover={{ scale: 1.1, background: 'rgba(99, 102, 241, 0.2)' }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setShowRules(true)}
           style={{ 
-            width: '60px', 
-            height: '60px', 
-            borderRadius: '50%', 
+            width: '56px', 
+            height: '56px', 
+            borderRadius: '16px', 
             background: 'rgba(15, 23, 42, 0.8)', 
-            border: '1px solid rgba(99, 102, 241, 0.2)', 
+            border: '2px solid rgba(99, 102, 241, 0.3)', 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center', 
             cursor: 'pointer', 
-            color: 'white',
-            backdropFilter: 'blur(10px)'
+            color: '#6366f1',
+            backdropFilter: 'blur(10px)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
           }}
         >
-          <HelpCircle size={32} />
+          <HelpCircle size={28} />
         </motion.button>
       </div>
     </div>

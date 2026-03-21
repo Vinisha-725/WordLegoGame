@@ -68,16 +68,16 @@ function RuleBookScreen() {
 
   return (
     <div style={{
-      width: '100vw',
-      height: '100vh',
+      width: '100%',
+      height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      overflow: 'auto',
-      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+      overflowX: 'hidden',
+      overflowY: 'auto',
+      background: 'transparent',
       position: 'relative',
-      padding: 'clamp(1rem, 3vw, 2rem)',
-      maxWidth: '100vw'
-    }}>
+      padding: 'clamp(1rem, 3vw, 2rem)'
+    }} className="scroll-hidden">
       {/* Animated Background */}
       <div style={{
         position: 'absolute',

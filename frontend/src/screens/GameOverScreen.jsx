@@ -37,14 +37,14 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
 
   return (
     <div style={{
-      width: '100vw',
-      height: '100vh',
+      width: '100%',
+      height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      overflow: 'auto',
+      overflowX: 'hidden',
+      overflowY: 'auto',
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
-      position: 'relative',
-      maxWidth: '100vw'
+      position: 'relative'
     }}>
       {/* Animated Background */}
       <div style={{
@@ -90,7 +90,8 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
         padding: 'clamp(1rem, 3vw, 2rem)',
         position: 'relative',
         zIndex: 1,
-        minHeight: '100vh'
+        minHeight: '100%',
+        width: '100%'
       }}>
         {/* Trophy Animation */}
         <motion.div

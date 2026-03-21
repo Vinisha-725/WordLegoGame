@@ -41,15 +41,15 @@ function SetupScreen({ onStart }) {
   return (
     <div style={{
       width: '100%',
-      height: '100vh',
+      height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      padding: '1rem',
+      padding: '1.5rem',
       position: 'relative',
-      overflow: 'auto',
-      maxWidth: '1200px',
-      margin: '0 auto'
-    }}>
+      overflowX: 'hidden',
+      overflowY: 'auto',
+      scrollbarWidth: 'none'
+    }} className="scroll-hidden">
       {/* Background decoration */}
       <div style={{
         position: 'absolute',
@@ -121,7 +121,7 @@ function SetupScreen({ onStart }) {
           transition={{ delay: 0.2 }}
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
             gap: '1rem'
           }}
         >
@@ -434,7 +434,14 @@ function SetupScreen({ onStart }) {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        style={{ position: 'relative', zIndex: 1, marginTop: '1rem' }}
+        style={{ 
+          position: 'relative', 
+          zIndex: 1, 
+          marginTop: 'auto',
+          paddingTop: '2rem',
+          paddingBottom: '1rem',
+          width: '100%'
+        }}
       >
         <motion.button 
           className="btn-primary"
@@ -442,27 +449,26 @@ function SetupScreen({ onStart }) {
           onClick={handleStart}
           style={{ 
             width: '100%', 
-            maxWidth: '300px',
-            margin: '0 auto',
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center', 
-            gap: '8px',
-            padding: '1rem 1.5rem',
-            fontSize: '1rem',
-            fontWeight: 700,
-            borderRadius: '12px',
+            gap: '12px',
+            padding: '1.25rem',
+            fontSize: '1.1rem',
+            fontWeight: 800,
+            borderRadius: '16px',
             background: isFormValid 
               ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' 
-              : 'rgba(100, 116, 139, 0.3)',
+              : 'rgba(100, 116, 139, 0.2)',
             border: 'none',
             color: 'white',
             cursor: isFormValid ? 'pointer' : 'not-allowed',
             transition: 'all 0.3s ease',
             boxShadow: isFormValid 
-              ? '0 10px 30px rgba(99, 102, 241, 0.3)' 
+              ? '0 15px 35px rgba(99, 102, 241, 0.4)' 
               : 'none',
-            backdropFilter: 'blur(10px)'
+            backdropFilter: 'blur(10px)',
+            opacity: isFormValid ? 1 : 0.6
           }}
           whileHover={isFormValid ? { scale: 1.05, y: -2 } : {}}
           whileTap={isFormValid ? { scale: 0.95 } : {}}
