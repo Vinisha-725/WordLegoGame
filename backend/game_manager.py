@@ -1,10 +1,11 @@
 import uuid
 import time
 from validator import validate_word
+from ai.minimax import get_best_move
 
 games = {}
 
-def create_game(player1, player2, theme):
+def create_game(player1, player2, theme, game_mode="multiplayer", difficulty="medium"):
     game_id = str(uuid.uuid4())
     games[game_id] = {
         "players": [player1, player2],
@@ -13,7 +14,10 @@ def create_game(player1, player2, theme):
         "word_chain": [],
         "winner": None,
         "reason": None,
-        "last_move_time": time.time()
+        "last_move_time": time.time(),
+        "game_mode": game_mode,  # "ai" or "multiplayer"
+        "difficulty": difficulty,  # "easy", "medium", "hard"
+        "ai_thinking": False  # Flag to prevent multiple AI calls
     }
     return game_id
 
@@ -85,6 +89,52 @@ def submit_word(game_id, player, word):
     game["turn"] = 1 - game["turn"]
     game["last_move_time"] = time.time()
     
+    # AI MODE: If next player is AI, make AI move
+    if (game["game_mode"] == "ai" and 
+        game["players"][game["turn"]] == "AI" and 
+        not game["winner"] and
+        not game["ai_thinking"]):
+        
+        game["ai_thinking"] = True  # Prevent multiple AI calls
+        
+        # Get AI move
+        last_letter = game["word_chain"][-1][-1] if game["word_chain"] else None
+        ai_word = get_best_move(
+            last_letter, 
+            game["theme"], 
+            game["word_chain"], 
+            game["difficulty"]
+        )
+        
+        if ai_word:
+            # Add AI word
+            game["word_chain"].append(ai_word)
+            game["turn"] = 1 - game["turn"]  # Back to human player
+            game["last_move_time"] = time.time()
+            
+            result = {
+                "valid": True,
+                "word_chain": game["word_chain"],
+                "next_player": game["players"][game["turn"]],
+                "ai_move": ai_word,
+                "message": f"AI played: {ai_word}"
+            }
+        else:
+            # AI can't find a word, human wins
+            game["winner"] = game["players"][1 - game["turn"]]  # Human player
+            game["reason"] = "AI has no valid moves. You win!"
+            result = {
+                "valid": True,
+                "word_chain": game["word_chain"],
+                "winner": game["winner"],
+                "reason": game["reason"],
+                "message": "AI has no valid moves. You win!"
+            }
+        
+        game["ai_thinking"] = False
+        return result
+    
+    # MULTIPLAYER MODE or HUMAN turn
     return {
         "valid": True,
         "word_chain": game["word_chain"],
