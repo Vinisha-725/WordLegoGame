@@ -12,7 +12,7 @@ function RuleBookScreen() {
     {
       icon: <Target size={24} />,
       title: "Objective",
-      content: "Build the longest possible chain of valid words while following the game rules. Outlast your opponent by making valid moves and forcing them into errors."
+      content: "Build the longest possible chain of valid words while following game rules. Outlast your opponent by making valid moves and forcing them into errors."
     },
     {
       icon: <Shield size={24} />,
@@ -53,7 +53,7 @@ function RuleBookScreen() {
       title: "Winning Conditions",
       wins: [
         "🏆 Opponent runs out of time",
-        "🏆 Opponent submits invalid word",
+        "🏆 Opponent submits an invalid word",
         "🏆 Opponent repeats a word",
         "🏆 Opponent uses prohibited language",
         "🏆 AI has no valid moves (in AI mode)"
@@ -310,42 +310,44 @@ function RuleBookScreen() {
                     <span style={{ flexShrink: 0 }}>{win.split(':')[0]}:</span>
                     <span style={{ opacity: 0.9 }}>{win.split(':')[1]}</span>
                   </div>
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.1 }}
-                    style={{
-                      background: 'rgba(34, 197, 94, 0.1)',
-                      border: '1px solid rgba(34, 197, 94, 0.2)',
-                      borderRadius: '8px',
-                      padding: '12px',
-                      fontSize: '0.9rem'
-                    }}
-                  >
-                    {win}
-                  </motion.div>
                 ))}
               </div>
             )}
           </motion.div>
         ))}
+      </div>
 
-        {/* Footer */}
-        <motion.div
-          variants={itemVariants}
-          style={{
-            textAlign: 'center',
-            padding: '20px',
-            background: 'rgba(139, 92, 246, 0.1)',
-            borderRadius: '12px',
-            border: '1px solid rgba(139, 92, 246, 0.2)'
-          }}
-        >
-          <p style={{ margin: 0, fontSize: '1rem', opacity: 0.8 }}>
-            🎮 Good luck and have fun building your word chains!
-          </p>
-        </motion.div>
+      {/* Footer */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8 }}
+        style={{
+          textAlign: 'center',
+          padding: 'clamp(1rem, 3vw, 2rem)',
+          position: 'relative',
+          zIndex: 1
+        }}
+      >
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.5rem',
+          fontSize: 'clamp(0.8rem, 2vw, 1rem)',
+          color: '#64748b',
+          marginBottom: '1rem'
+        }}>
+          <Zap size={16} color="#fbbf24" />
+          <span>Powered by Advanced AI Technology</span>
+        </div>
+        <p style={{
+          fontSize: 'clamp(0.75rem, 2vw, 0.9rem)',
+          color: '#475569',
+          margin: 0
+        }}>
+          WordLego AI © 2024 | Strategic Word Building Game
+        </p>
       </motion.div>
     </div>
   );
