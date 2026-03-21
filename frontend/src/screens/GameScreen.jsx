@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HelpCircle, Send, CheckCircle, AlertCircle, Clock, Hash, LayoutGrid, Trophy, Bot } from 'lucide-react';
+import { HelpCircle, Send, CheckCircle, AlertCircle, Clock, Hash, LayoutGrid, Trophy, Bot, Sparkles, Zap, Target } from 'lucide-react';
 
 const API_BASE = "http://127.0.0.1:8000";
 
@@ -19,8 +19,6 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
   const theme = gameState?.theme ?? "Loading...";
   const nextChar = chain.length > 0 ? chain[chain.length - 1].slice(-1).toUpperCase() : "ANY";
   const gameMode = gameData?.gameMode || 'multiplayer';
-
-  // Winners
   const winner = gameState?.winner;
 
   useEffect(() => {
@@ -31,8 +29,6 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
       }, 1000);
     } else if (timer === 0 && !winner) {
       setFeedback({ message: "Time's up!", type: 'error' });
-      // Trigger update to let backend know or handle local loss
-      // For now we just show feedback. Usually backend handles it if we sync.
     }
     return () => clearInterval(interval);
   }, [timer, winner, aiThinking]);
@@ -43,7 +39,6 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
     setFeedback(null);
     if (currentP === 'AI') {
       setAiThinking(true);
-      // AI will respond automatically, no need to focus input
     } else {
       setAiThinking(false);
       inputRef.current?.focus();
@@ -51,10 +46,9 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
   }, [turn, currentP]);
 
   useEffect(() => {
-    // Check if AI just made a move and show feedback
     if (gameState && chain.length > 0) {
       const lastWord = chain[chain.length - 1];
-      const isLastWordFromAI = gameMode === 'ai' && turn === 0; // After AI's turn, it's human's turn
+      const isLastWordFromAI = gameMode === 'ai' && turn === 0;
       
       if (isLastWordFromAI && currentP !== 'AI') {
         setFeedback({ message: `AI played: ${lastWord}`, type: 'info' });
@@ -106,74 +100,216 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
   const isAIMode = gameMode === 'ai';
 
   return (
-    <div className="game-screen-container" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-      
+    <div style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+      position: 'relative'
+    }}>
+      {/* Animated Background */}
+      <div style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+        zIndex: 0
+      }}>
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={i}
+            style={{
+              position: 'absolute',
+              width: Math.random() * 3 + 1 + 'px',
+              height: Math.random() * 3 + 1 + 'px',
+              background: `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 255, ${Math.random() * 0.2 + 0.05})`,
+              borderRadius: '50%',
+              left: Math.random() * 100 + '%',
+              top: Math.random() * 100 + '%'
+            }}
+            animate={{
+              y: [0, -50, 0],
+              opacity: [0.1, 0.3, 0.1],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{
+              duration: Math.random() * 8 + 8,
+              repeat: Infinity,
+              delay: Math.random() * 4
+            }}
+          />
+        ))}
+      </div>
+
       {/* Top Bar */}
-      <div className="top-bar-mobile" style={{ padding: '1rem', background: 'rgba(15, 23, 42, 0.8)', borderBottom: '1px solid var(--card-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backdropFilter: 'blur(10px)', zIndex: 10 }}>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        style={{
+          padding: '1.5rem 2rem',
+          background: 'rgba(15, 23, 42, 0.9)',
+          borderBottom: '1px solid rgba(99, 102, 241, 0.2)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          backdropFilter: 'blur(20px)',
+          zIndex: 10,
+          position: 'relative'
+        }}
+      >
+        {/* Theme */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: '0.6rem', opacity: 0.5, fontWeight: 700, letterSpacing: '0.1em' }}>THEME</span>
-          <span style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--primary)' }}>{theme.toUpperCase()}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <Sparkles size={16} color="#fbbf24" />
+            <span style={{ fontSize: '0.7rem', opacity: 0.7, fontWeight: 700, letterSpacing: '0.1em' }}>THEME</span>
+          </div>
+          <motion.span 
+            style={{ fontWeight: 800, fontSize: '1.1rem', color: '#6366f1' }}
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+          >
+            {theme.toUpperCase()}
+          </motion.span>
         </div>
         
+        {/* Current Player */}
         <div style={{ textAlign: 'center' }}>
           <motion.div 
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
-            style={{ fontWeight: 800, fontSize: '1.2rem', color: 'white', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            style={{ 
+              fontWeight: 800, 
+              fontSize: '1.4rem', 
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              justifyContent: 'center'
+            }}
           >
-            {currentP === 'AI' && <Bot size={20} color="var(--accent)" />}
+            {currentP === 'AI' && <Bot size={24} color="#6366f1" />}
             {currentP}
           </motion.div>
-          <div style={{ fontSize: '0.6rem', opacity: 0.5 }}>
+          <div style={{ 
+            fontSize: '0.8rem', 
+            opacity: 0.7,
+            marginTop: '4px'
+          }}>
             {isAIMode ? (currentP === 'AI' ? 'AI THINKING' : 'YOUR TURN') : 'CURRENT TURN'}
           </div>
         </div>
 
+        {/* Timer */}
         <div style={{ textAlign: 'right' }}>
-           <div style={{ fontSize: '1.2rem', fontWeight: 900, color: timer < 10 ? 'var(--error)' : (aiThinking ? 'var(--accent)' : 'var(--success)') }}>
-             {aiThinking ? '🤔' : `${timer}s`}
-           </div>
-           <div style={{ width: '60px', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', marginTop: '2px', overflow: 'hidden' }}>
-              <motion.div 
-                style={{ height: '100%', background: timer < 10 ? 'var(--error)' : (aiThinking ? 'var(--accent)' : 'var(--success)') }}
-                animate={{ width: aiThinking ? '100%' : `${(timer / 30) * 100}%` }}
-              />
-           </div>
-        </div>
-      </div>
-
-      {/* Center: Scrollable Word Chain */}
-      <div className="scroll-hidden" style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingBottom: '2rem' }}>
-        {chain.length === 0 ? (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: 0.2 }}>
-            <LayoutGrid size={60} />
-            <p style={{ marginTop: '1rem', fontWeight: 600 }}>No words yet</p>
-            {isAIMode && <p style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>You start first!</p>}
+          <motion.div 
+            style={{ 
+              fontSize: '1.5rem', 
+              fontWeight: 900, 
+              color: timer < 10 ? '#ef4444' : (aiThinking ? '#6366f1' : '#10b981'),
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+            animate={{ scale: timer < 10 ? [1, 1.1, 1] : 1 }}
+            transition={{ repeat: timer < 10 ? Infinity : 0, duration: 0.5 }}
+          >
+            {aiThinking ? <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1 }}
+            ><Bot size={20} /></motion.div> : <Clock size={20} />}
+            {aiThinking ? '🤔' : `${timer}s`}
+          </motion.div>
+          <div style={{ 
+            width: '80px', 
+            height: '6px', 
+            background: 'rgba(255,255,255,0.1)', 
+            borderRadius: '3px', 
+            marginTop: '4px', 
+            overflow: 'hidden' 
+          }}>
+            <motion.div 
+              style={{ 
+                height: '100%', 
+                background: timer < 10 ? '#ef4444' : (aiThinking ? '#6366f1' : '#10b981'),
+                borderRadius: '3px'
+              }}
+              animate={{ width: aiThinking ? '100%' : `${(timer / 30) * 100}%` }}
+            />
           </div>
+        </div>
+      </motion.div>
+
+      {/* Word Chain */}
+      <div style={{ 
+        flex: 1, 
+        overflowY: 'auto', 
+        padding: '2rem',
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '1rem',
+        zIndex: 1,
+        position: 'relative'
+      }}>
+        {chain.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            style={{ 
+              flex: 1, 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              opacity: 0.3
+            }}
+          >
+            <motion.div
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ repeat: Infinity, duration: 4 }}
+            >
+              <Target size={80} color="#6366f1" />
+            </motion.div>
+            <p style={{ marginTop: '1.5rem', fontWeight: 600, fontSize: '1.2rem' }}>Start the chain!</p>
+            {isAIMode && <p style={{ marginTop: '0.5rem', fontSize: '1rem' }}>You go first</p>}
+          </motion.div>
         ) : (
           chain.map((w, i) => {
-            const isAIWord = isAIMode && i % 2 === 1; // AI plays second, fourth, etc.
+            const isAIWord = isAIMode && i % 2 === 1;
             return (
               <motion.div
                 key={`${w}-${i}`}
-                initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30, scale: 0.8 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                transition={{ 
+                  type: "spring", 
+                  damping: 20,
+                  delay: i * 0.1
+                }}
                 style={{
                   alignSelf: i % 2 === 0 ? 'flex-start' : 'flex-end',
-                  background: i === chain.length - 1 ? 'linear-gradient(135deg, var(--primary), var(--secondary))' : (isAIWord ? 'rgba(99, 102, 241, 0.2)' : 'var(--card-bg)'),
-                  padding: '0.75rem 1.25rem',
+                  background: i === chain.length - 1 
+                    ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' 
+                    : (isAIWord ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255, 255, 255, 0.05)'),
+                  padding: '1rem 1.5rem',
                   borderRadius: i % 2 === 0 ? '1.5rem 1.5rem 1.5rem 0.25rem' : '1.5rem 1.5rem 0.25rem 1.5rem',
                   fontWeight: 600,
                   fontSize: '1.1rem',
-                  maxWidth: '80%',
-                  boxShadow: i === chain.length - 1 ? '0 4px 15px rgba(99, 102, 241, 0.4)' : 'none',
-                  border: '1px solid var(--card-border)',
+                  maxWidth: '70%',
+                  boxShadow: i === chain.length - 1 
+                    ? '0 8px 25px rgba(99, 102, 241, 0.4)' 
+                    : '0 4px 15px rgba(0, 0, 0, 0.2)',
+                  border: i === chain.length - 1 
+                    ? '1px solid rgba(99, 102, 241, 0.3)' 
+                    : '1px solid rgba(255, 255, 255, 0.1)',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem'
+                  gap: '8px',
+                  backdropFilter: 'blur(10px)'
                 }}
               >
-                {isAIWord && <Bot size={16} color="var(--accent)" />}
+                {isAIWord && <Bot size={18} color="#6366f1" />}
                 {w}
               </motion.div>
             );
@@ -181,82 +317,223 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
         )}
       </div>
 
-      {/* Footer: Hint & Input */}
-      <div className="footer-input" style={{ padding: '1.5rem', background: 'rgba(15, 23, 42, 0.95)', borderTop: '1px solid var(--card-border)', backdropFilter: 'blur(20px)' }}>
+      {/* Input Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        style={{ 
+          padding: '2rem',
+          background: 'rgba(15, 23, 42, 0.95)', 
+          borderTop: '1px solid rgba(99, 102, 241, 0.2)', 
+          backdropFilter: 'blur(20px)',
+          zIndex: 10,
+          position: 'relative'
+        }}
+      >
+        {/* Next Letter Indicator */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
-          <div className="glass-panel" style={{ padding: '0.5rem 1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255,255,255,0.02)' }}>
-             <span style={{ fontSize: '0.8rem', opacity: 0.5, fontWeight: 600 }}>STARTS WITH</span>
-             <span className="gradient-text" style={{ fontSize: '1.8rem', fontWeight: 900 }}>{nextChar}</span>
-          </div>
+          <motion.div
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            style={{
+              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2))',
+              border: '2px solid rgba(99, 102, 241, 0.3)',
+              borderRadius: '16px',
+              padding: '1rem 2rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              backdropFilter: 'blur(10px)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Zap size={20} color="#fbbf24" />
+              <span style={{ fontSize: '0.9rem', opacity: 0.8, fontWeight: 600 }}>STARTS WITH</span>
+            </div>
+            <motion.span 
+              className="gradient-text"
+              style={{ 
+                fontSize: '2.5rem', 
+                fontWeight: 900,
+                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
+            >
+              {nextChar}
+            </motion.span>
+          </motion.div>
         </div>
 
+        {/* Input Form */}
         {isPlayerTurn && !winner && (
           <form onSubmit={handleSubmit} style={{ position: 'relative' }}>
-            <input 
-              ref={inputRef}
-              className={`input-field ${feedback?.type === 'error' ? 'shake' : ''}`}
-              placeholder="Type your word..."
-              value={word}
-              onChange={(e) => setWord(e.target.value)}
-              disabled={isSubmitting || winner}
-              style={{ paddingRight: '4rem' }}
-            />
-            <button 
-              type="submit" 
-              disabled={!word || winner || isSubmitting}
-              style={{ 
-                position: 'absolute', right: '8px', top: '8px', bottom: '8px', 
-                width: '45px', background: 'var(--primary)', border: 'none', 
-                borderRadius: '0.75rem', color: 'white', display: 'flex', 
-                alignItems: 'center', justifyContent: 'center' 
-              }}
+            <motion.div
+              whileFocus={{ scale: 1.02 }}
+              style={{ position: 'relative' }}
             >
-              {isSubmitting ? '...' : <Send size={20} />}
-            </button>
+              <input 
+                ref={inputRef}
+                style={{
+                  width: '100%',
+                  padding: '1.25rem 4rem 1.25rem 1.5rem',
+                  background: 'rgba(15, 23, 42, 0.8)',
+                  border: '2px solid rgba(99, 102, 241, 0.3)',
+                  borderRadius: '16px',
+                  color: 'white',
+                  fontSize: '1.1rem',
+                  fontWeight: 500,
+                  transition: 'all 0.3s ease',
+                  backdropFilter: 'blur(10px)'
+                }}
+                placeholder="Type your word..."
+                value={word}
+                onChange={(e) => setWord(e.target.value)}
+                disabled={isSubmitting || winner}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#6366f1';
+                  e.target.style.boxShadow = '0 0 25px rgba(99, 102, 241, 0.3)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(99, 102, 241, 0.3)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
+              <motion.button 
+                type="submit" 
+                disabled={!word || winner || isSubmitting}
+                style={{ 
+                  position: 'absolute', 
+                  right: '12px', 
+                  top: '50%', 
+                  transform: 'translateY(-50%)',
+                  width: '50px', 
+                  height: '50px', 
+                  background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', 
+                  border: 'none', 
+                  borderRadius: '12px', 
+                  color: 'white', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)'
+                }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                {isSubmitting ? (
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1 }}
+                  >
+                    <Clock size={20} />
+                  </motion.div>
+                ) : (
+                  <Send size={20} />
+                )}
+              </motion.button>
+            </motion.div>
           </form>
         )}
 
+        {/* AI Thinking */}
         {aiThinking && !winner && (
-          <div style={{ textAlign: 'center', padding: '1rem' }}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            style={{ textAlign: 'center', padding: '2rem' }}
+          >
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 1 }}
-              style={{ display: 'inline-block' }}
+              style={{ display: 'inline-block', marginBottom: '1rem' }}
             >
-              <Bot size={30} color="var(--accent)" />
+              <Bot size={40} color="#6366f1" />
             </motion.div>
-            <p style={{ marginTop: '0.5rem', opacity: 0.7 }}>AI is thinking...</p>
-          </div>
+            <motion.p
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+              style={{ opacity: 0.8, fontSize: '1.1rem' }}
+            >
+              AI is thinking...
+            </motion.p>
+          </motion.div>
         )}
 
+        {/* Feedback */}
         <AnimatePresence>
           {feedback && (
             <motion.div 
-              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
               style={{ 
-                marginTop: '1rem', textAlign: 'center', fontSize: '0.9rem',
-                color: feedback.type === 'success' ? 'var(--success)' : (feedback.type === 'info' ? 'var(--primary)' : 'var(--error)'), fontWeight: 700 
+                marginTop: '1.5rem', 
+                textAlign: 'center', 
+                fontSize: '1rem',
+                fontWeight: 600,
+                padding: '1rem',
+                borderRadius: '12px',
+                background: feedback.type === 'success' 
+                  ? 'rgba(16, 185, 129, 0.2)' 
+                  : (feedback.type === 'info' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(239, 68, 68, 0.2)'),
+                border: feedback.type === 'success' 
+                  ? '1px solid rgba(16, 185, 129, 0.3)' 
+                  : (feedback.type === 'info' ? '1px solid rgba(99, 102, 241, 0.3)' : '1px solid rgba(239, 68, 68, 0.3)'),
+                color: feedback.type === 'success' 
+                  ? '#10b981' 
+                  : (feedback.type === 'info' ? '#6366f1' : '#ef4444'),
+                backdropFilter: 'blur(10px)'
               }}
             >
               {feedback.message}
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
 
       {/* Rules Modal */}
       <AnimatePresence>
         {showRules && (
-          <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.8)' }}>
+          <div style={{ 
+            position: 'fixed', 
+            inset: 0, 
+            zIndex: 100, 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            background: 'rgba(0,0,0,0.8)' 
+          }}>
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="glass-panel" 
-              style={{ width: '90%', maxWidth: '500px', padding: '3rem', position: 'relative' }}
+              style={{ 
+                width: '90%', 
+                maxWidth: '600px', 
+                padding: '3rem', 
+                position: 'relative',
+                background: 'rgba(15, 23, 42, 0.95)',
+                border: '1px solid rgba(99, 102, 241, 0.2)',
+                borderRadius: '20px',
+                backdropFilter: 'blur(20px)'
+              }}
             >
-              <h2 style={{ marginBottom: '1.5rem', fontSize: '2rem' }}>Game Rules</h2>
-              <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', listStyle: 'none', padding: 0 }}>
+              <h2 style={{ marginBottom: '2rem', fontSize: '2rem', color: 'white' }}>Game Rules</h2>
+              <ul style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '1rem', 
+                listStyle: 'none', 
+                padding: 0,
+                color: '#e2e8f0',
+                fontSize: '1rem',
+                lineHeight: 1.6
+              }}>
                 <li>✅ Follow theme (Semantic AI Check)</li>
                 <li>🔤 Start with last letter of previous word</li>
                 <li>🔗 Multi-word terms allowed (Max 3)</li>
@@ -265,7 +542,25 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
                 <li>⏱️ 30 seconds per turn</li>
                 {isAIMode && <li>🤖 AI uses Minimax algorithm with Alpha-Beta pruning</li>}
               </ul>
-              <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }} onClick={() => setShowRules(false)}>GOT IT</button>
+              <motion.button 
+                className="btn-primary" 
+                style={{ 
+                  width: '100%', 
+                  marginTop: '2rem',
+                  padding: '1rem',
+                  background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                  border: 'none',
+                  borderRadius: '12px',
+                  color: 'white',
+                  fontWeight: 600,
+                  fontSize: '1rem'
+                }} 
+                onClick={() => setShowRules(false)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                GOT IT
+              </motion.button>
             </motion.div>
           </div>
         )}
@@ -274,35 +569,100 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
       {/* Winner Popup */}
       <AnimatePresence>
         {winner && (
-          <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(15, 23, 42, 0.9)', backdropFilter: 'blur(8px)' }}>
+          <div style={{ 
+            position: 'fixed', 
+            inset: 0, 
+            zIndex: 200, 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            background: 'rgba(15, 23, 42, 0.95)', 
+            backdropFilter: 'blur(8px)' 
+          }}>
             <motion.div 
               initial={{ scale: 0.8, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
-              className="glass-panel" 
-              style={{ width: '90%', maxWidth: '450px', padding: '4rem 2rem', textAlign: 'center', border: '2px solid rgba(99, 102, 241, 0.5)' }}
+              style={{ 
+                width: '90%', 
+                maxWidth: '500px', 
+                padding: '4rem 2rem', 
+                textAlign: 'center', 
+                border: '2px solid rgba(99, 102, 241, 0.5)',
+                borderRadius: '24px',
+                background: 'rgba(15, 23, 42, 0.95)',
+                backdropFilter: 'blur(20px)'
+              }}
             >
               <motion.div 
-                animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.2, 1] }} 
-                transition={{ repeat: Infinity, duration: 2 }}
+                animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.2, 1] }} 
+                transition={{ repeat: Infinity, duration: 3 }}
               >
-                <Trophy size={100} color="var(--accent)" style={{ marginBottom: '2rem' }} />
+                <Trophy size={100} color="#fbbf24" style={{ marginBottom: '2rem' }} />
               </motion.div>
-              <h2 style={{ fontSize: '3rem', fontWeight: 900, marginBottom: '0.5rem' }}>{winner}</h2>
-              <h1 className="gradient-text" style={{ fontSize: '3.5rem', fontWeight: 900, marginBottom: '1rem' }}>WON!!</h1>
+              <h2 style={{ 
+                fontSize: '3rem', 
+                fontWeight: 900, 
+                marginBottom: '0.5rem',
+                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
+                {winner}
+              </h2>
+              <h1 style={{ 
+                fontSize: '3.5rem', 
+                fontWeight: 900, 
+                marginBottom: '1rem',
+                background: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
+                WON!!
+              </h1>
               {gameState?.reason && (
-                <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '1rem', borderRadius: '1rem', marginBottom: '2rem' }}>
-                  <p style={{ color: 'var(--error)', fontWeight: 600 }}>Reason: {gameState.reason}</p>
+                <div style={{ 
+                  background: 'rgba(239, 68, 68, 0.1)', 
+                  border: '1px solid rgba(239, 68, 68, 0.2)', 
+                  padding: '1rem', 
+                  borderRadius: '12px', 
+                  marginBottom: '2rem',
+                  color: '#ef4444',
+                  fontWeight: 600
+                }}>
+                  Reason: {gameState.reason}
                 </div>
               )}
-              <p style={{ opacity: 0.8, marginBottom: '3rem', fontSize: '1.1rem' }}>Great gameplay! Time to see the stats.</p>
+              <p style={{ 
+                opacity: 0.8, 
+                marginBottom: '3rem', 
+                fontSize: '1.1rem',
+                color: '#e2e8f0'
+              }}>
+                Great gameplay! Time to see the stats.
+              </p>
 
-              <button 
+              <motion.button 
                 className="btn-primary" 
-                style={{ width: '100%', padding: '1.2rem' }}
+                style={{ 
+                  width: '100%', 
+                  padding: '1.5rem',
+                  background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                  border: 'none',
+                  borderRadius: '16px',
+                  color: 'white',
+                  fontWeight: 700,
+                  fontSize: '1.1rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 10px 30px rgba(99, 102, 241, 0.4)'
+                }}
                 onClick={() => onGameOver()}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
               >
                 VIEW FINAL SCORE
-              </button>
+              </motion.button>
             </motion.div>
           </div>
         )}
@@ -314,7 +674,19 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setShowRules(true)}
-          style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'var(--card-bg)', backdropFilter: 'blur(10px)', border: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}
+          style={{ 
+            width: '60px', 
+            height: '60px', 
+            borderRadius: '50%', 
+            background: 'rgba(15, 23, 42, 0.8)', 
+            border: '1px solid rgba(99, 102, 241, 0.2)', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            cursor: 'pointer', 
+            color: 'white',
+            backdropFilter: 'blur(10px)'
+          }}
         >
           <HelpCircle size={32} />
         </motion.button>

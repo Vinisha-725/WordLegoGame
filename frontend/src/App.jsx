@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import SetupScreen from './screens/SetupScreen';
 import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
+import RuleBookScreen from './screens/RuleBookScreen';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Book, X } from 'lucide-react';
 
 const API_BASE = "http://127.0.0.1:8000";
 
@@ -18,6 +20,7 @@ function App() {
   });
   const [gameState, setGameState] = useState(null);
   const [error, setError] = useState(null);
+  const [showRuleBook, setShowRuleBook] = useState(false);
 
   const startGame = async (p1, p2, theme, gameMode = 'multiplayer', difficulty = 'medium') => {
     try {
@@ -67,7 +70,6 @@ function App() {
     }
   };
 
-
   const playAgain = () => {
     setScreen('setup');
     setGameState(null);
@@ -91,61 +93,245 @@ function App() {
     return () => clearInterval(interval);
   }, [screen, gameData.gameId, gameState?.winner]);
 
+  const pageVariants = {
+    initial: { opacity: 0, y: 20, scale: 0.95 },
+    in: { opacity: 1, y: 0, scale: 1 },
+    out: { opacity: 0, y: -20, scale: 1.05 }
+  };
+
+  const pageTransition = {
+    type: "tween",
+    ease: "anticipate",
+    duration: 0.5
+  };
+
   return (
-    <div className="app-container">
-      <AnimatePresence mode="wait">
-        {screen === 'setup' && (
+    <div className="app-container" style={{
+      width: '100vw',
+      height: '100vh',
+      overflow: 'hidden',
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+      position: 'relative'
+    }}>
+      {/* Animated Background */}
+      <div style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+        zIndex: 0
+      }}>
+        {[...Array(20)].map((_, i) => (
           <motion.div
-            key="setup"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-          >
-            <SetupScreen onStart={startGame} />
-          </motion.div>
-        )}
+            key={i}
+            style={{
+              position: 'absolute',
+              width: Math.random() * 4 + 1 + 'px',
+              height: Math.random() * 4 + 1 + 'px',
+              background: `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 255, ${Math.random() * 0.3 + 0.1})`,
+              borderRadius: '50%',
+              left: Math.random() * 100 + '%',
+              top: Math.random() * 100 + '%'
+            }}
+            animate={{
+              y: [0, -100, 0],
+              opacity: [0.1, 0.5, 0.1],
+              scale: [1, 1.5, 1]
+            }}
+            transition={{
+              duration: Math.random() * 10 + 10,
+              repeat: Infinity,
+              delay: Math.random() * 5
+            }}
+          />
+        ))}
+      </div>
 
-        {screen === 'playing' && gameState && (
-          <motion.div
-            key="playing"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <GameScreen 
-              gameState={gameState} 
-              gameData={gameData}
-              onUpdate={fetchGameState}
-              onGameOver={() => setScreen('game_over')}
-            />
-          </motion.div>
-        )}
+      {/* Rule Book Button */}
+      <motion.button
+        onClick={() => setShowRuleBook(true)}
+        style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          zIndex: 1000,
+          background: 'rgba(99, 102, 241, 0.2)',
+          border: '1px solid rgba(99, 102, 241, 0.3)',
+          borderRadius: '12px',
+          padding: '12px',
+          cursor: 'pointer',
+          backdropFilter: 'blur(10px)',
+          transition: 'all 0.3s ease'
+        }}
+        whileHover={{ scale: 1.1, background: 'rgba(99, 102, 241, 0.3)' }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Book size={24} color="#6366f1" />
+      </motion.button>
 
-        {screen === 'game_over' && (
+      {/* Main Content */}
+      <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }}>
+        <AnimatePresence mode="wait">
+          {screen === 'setup' && (
+            <motion.div
+              key="setup"
+              variants={pageVariants}
+              initial="initial"
+              animate="in"
+              exit="out"
+              transition={pageTransition}
+              style={{ width: '100%', height: '100%' }}
+            >
+              <SetupScreen onStart={startGame} />
+            </motion.div>
+          )}
+
+          {screen === 'playing' && gameState && (
+            <motion.div
+              key="playing"
+              variants={pageVariants}
+              initial="initial"
+              animate="in"
+              exit="out"
+              transition={pageTransition}
+              style={{ width: '100%', height: '100%' }}
+            >
+              <GameScreen 
+                gameState={gameState} 
+                gameData={gameData}
+                onUpdate={fetchGameState}
+                onGameOver={() => setScreen('game_over')}
+              />
+            </motion.div>
+          )}
+
+          {screen === 'game_over' && (
+            <motion.div
+              key="game_over"
+              variants={pageVariants}
+              initial="initial"
+              animate="in"
+              exit="out"
+              transition={pageTransition}
+              style={{ width: '100%', height: '100%' }}
+            >
+              <GameOverScreen 
+                gameState={gameState} 
+                gameData={gameData}
+                onPlayAgain={playAgain}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Rule Book Modal */}
+      <AnimatePresence>
+        {showRuleBook && (
           <motion.div
-            key="game_over"
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 2000,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'rgba(0, 0, 0, 0.8)',
+              backdropFilter: 'blur(10px)'
+            }}
+            onClick={() => setShowRuleBook(false)}
           >
-            <GameOverScreen 
-              gameState={gameState} 
-              gameData={gameData}
-              onPlayAgain={playAgain}
-            />
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", damping: 20 }}
+              style={{
+                width: '90%',
+                maxWidth: '800px',
+                height: '80%',
+                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95))',
+                border: '1px solid rgba(99, 102, 241, 0.2)',
+                borderRadius: '20px',
+                padding: '40px',
+                position: 'relative',
+                overflow: 'auto',
+                backdropFilter: 'blur(20px)'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <motion.button
+                onClick={() => setShowRuleBook(false)}
+                style={{
+                  position: 'absolute',
+                  top: '20px',
+                  right: '20px',
+                  background: 'rgba(239, 68, 68, 0.2)',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer'
+                }}
+                whileHover={{ scale: 1.1, background: 'rgba(239, 68, 68, 0.3)' }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <X size={20} color="#ef4444" />
+              </motion.button>
+
+              <RuleBookScreen />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {error && (
-        <div className="error-toast glass-panel">
-          {error}
-          <button onClick={() => setError(null)}>✖</button>
-        </div>
-      )}
+      {/* Error Toast */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            style={{
+              position: 'fixed',
+              bottom: '30px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              background: 'rgba(239, 68, 68, 0.9)',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              borderRadius: '12px',
+              padding: '16px 24px',
+              color: 'white',
+              fontWeight: 600,
+              zIndex: 3000,
+              backdropFilter: 'blur(10px)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
+            }}
+          >
+            <span>{error}</span>
+            <button 
+              onClick={() => setError(null)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'white',
+                cursor: 'pointer',
+                fontSize: '18px'
+              }}
+            >
+              ×
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
