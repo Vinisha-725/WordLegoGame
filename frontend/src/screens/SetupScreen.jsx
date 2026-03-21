@@ -4,7 +4,7 @@ import { Apple, Globe, Dog, Film, PlayCircle } from 'lucide-react';
 
 const themes = [
   { id: 'Fruits', name: 'Fruits', icon: <Apple />, emoji: '🍎' },
-  { id: 'Countries', name: 'Countries', icon: <Globe />, emoji: '🌍' },
+  { id: 'Atlas', name: 'Atlas', icon: <Globe />, emoji: '🌍' },
   { id: 'Animals', name: 'Animals', icon: <Dog />, emoji: '🐘' },
   { id: 'Movies', name: 'Movies', icon: <Film />, emoji: '🎬' },
 ];
