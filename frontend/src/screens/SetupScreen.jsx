@@ -6,7 +6,7 @@ const themes = [
   { id: 'Fruits', name: 'Fruits', icon: <Apple />, emoji: '🍎' },
   { id: 'Atlas', name: 'Atlas', icon: <Globe />, emoji: '🌍' },
   { id: 'Animals', name: 'Animals', icon: <Dog />, emoji: '🐘' },
-  { id: 'Movies', name: 'Movies', icon: <Film />, emoji: '🎬' },
+  { id: 'Things', name: 'Things', icon: <Film />, emoji: '📦' },
 ];
 
 function SetupScreen({ onStart }) {
