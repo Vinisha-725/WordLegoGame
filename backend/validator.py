@@ -1,11 +1,11 @@
-from embedding_validator import check_theme
+from dictionary import is_valid_word
 
 def validate_word(theme: str, word: str):
-    # AI theme check
-    if not check_theme(word, theme):
+
+    if not is_valid_word(word):
         return {
             "valid": False,
-            "reason": f"Word '{word}' is not related to theme '{theme}'"
+            "reason": f"'{word}' is not a valid word"
         }
 
     return {

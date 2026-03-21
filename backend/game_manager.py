@@ -2,6 +2,8 @@ import uuid
 import time
 from validator import validate_word
 from game_rules import check_chain
+from ai.minimax import get_best_move
+from ai.ai_generator import generate_words
 
 games = {}
 
@@ -48,7 +50,7 @@ def submit_word(game_id, player, word):
         }
 
     # PROFANITY CHECK (Whole word match)
-    cuss_words = ["fuck", "shit", "damn", "ass", "bitch", "hell", "piss", "bastard"]
+    cuss_words = ["fuck", "shit", "damn", "ass", "bitch", "hell", "piss", "bastard", "nigga"]
     # Check if any cuss word exists as a separate word in the input
     input_words = word.split()
     if any(cw in input_words for cw in cuss_words):
@@ -103,13 +105,30 @@ def submit_word(game_id, player, word):
             "winner": game["winner"]
         }
 
-    # ADD WORD & UPDATE GAME STATE
+    # ADD PLAYER WORD
     game["word_chain"].append(word)
-    game["turn"] = 1 - game["turn"]
+    
+    # 🤖 AI MOVE
+    last_letter = word[-1]
+    ai_word = get_best_move(last_letter, game["theme"])
+    
+    # ❌ If AI cannot find a word → player wins
+    if not ai_word:
+        game["winner"] = player
+        game["last_move_time"] = time.time()
+        return {
+            "valid": True,
+            "message": "AI has no moves. You win!",
+            "word_chain": game["word_chain"],
+            "winner": player
+        }
+    
+    # ADD AI WORD
+    game["word_chain"].append(ai_word)
     game["last_move_time"] = time.time()
-
+    
     return {
         "valid": True,
         "word_chain": game["word_chain"],
-        "next_player": game["players"][game["turn"]]
+        "ai_move": ai_word
     }

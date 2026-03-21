@@ -1,4 +1,4 @@
-from ai_generator import generate_words
+from .ai_generator import generate_words
 
 MAX_DEPTH = 2  # keep small (API calls are expensive)
 
