@@ -220,6 +220,3 @@ This project is for educational and hackathon purposes.
 
 Built to combine **gaming + AI + real-time interaction** into a fun and competitive experience.
 
----
-
-🔥 *Play smart. Think fast. Don’t break the chain.*
