@@ -4,7 +4,7 @@ import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
 import RuleBookScreen from './screens/RuleBookScreen';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Book, X } from 'lucide-react';
+import { Book, X, Bot } from 'lucide-react';
 
 const API_BASE = "http://127.0.0.1:8000";
 
@@ -167,58 +167,28 @@ function App() {
 
       {/* Main Content */}
       <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }}>
-        <AnimatePresence mode="wait">
+        <div style={{ width: '100%', height: '100%' }}>
           {screen === 'setup' && (
-            <motion.div
-              key="setup"
-              variants={pageVariants}
-              initial="initial"
-              animate="in"
-              exit="out"
-              transition={pageTransition}
-              style={{ width: '100%', height: '100%' }}
-            >
-              <SetupScreen onStart={startGame} />
-            </motion.div>
+            <SetupScreen onStart={startGame} />
           )}
 
           {screen === 'playing' && gameState && (
-            <motion.div
-              key="playing"
-              variants={pageVariants}
-              initial="initial"
-              animate="in"
-              exit="out"
-              transition={pageTransition}
-              style={{ width: '100%', height: '100%' }}
-            >
-              <GameScreen 
-                gameState={gameState} 
-                gameData={gameData}
-                onUpdate={fetchGameState}
-                onGameOver={() => setScreen('game_over')}
-              />
-            </motion.div>
+            <GameScreen 
+              gameState={gameState} 
+              gameData={gameData}
+              onUpdate={fetchGameState}
+              onGameOver={() => setScreen('game_over')}
+            />
           )}
 
           {screen === 'game_over' && (
-            <motion.div
-              key="game_over"
-              variants={pageVariants}
-              initial="initial"
-              animate="in"
-              exit="out"
-              transition={pageTransition}
-              style={{ width: '100%', height: '100%' }}
-            >
-              <GameOverScreen 
-                gameState={gameState} 
-                gameData={gameData}
-                onPlayAgain={playAgain}
-              />
-            </motion.div>
+            <GameOverScreen 
+              gameState={gameState} 
+              gameData={gameData}
+              onPlayAgain={playAgain}
+            />
           )}
-        </AnimatePresence>
+        </div>
       </div>
 
       {/* Rule Book Modal */}
