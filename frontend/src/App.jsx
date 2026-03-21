@@ -12,21 +12,37 @@ function App() {
     player1: '',
     player2: '',
     theme: '',
+    gameMode: 'multiplayer',
+    difficulty: 'medium',
     gameId: null,
   });
   const [gameState, setGameState] = useState(null);
   const [error, setError] = useState(null);
 
-  const startGame = async (p1, p2, theme) => {
+  const startGame = async (p1, p2, theme, gameMode = 'multiplayer', difficulty = 'medium') => {
     try {
       setGameData({
         player1: p1,
         player2: p2,
         theme: theme,
+        gameMode: gameMode,
+        difficulty: difficulty,
       });
 
-      const response = await fetch(`${API_BASE}/create_game?player1=${encodeURIComponent(p1)}&player2=${encodeURIComponent(p2)}&theme=${encodeURIComponent(theme)}`, {
+      const requestBody = {
+        player1: p1,
+        player2: p2,
+        theme: theme,
+        game_mode: gameMode,
+        difficulty: difficulty
+      };
+
+      const response = await fetch(`${API_BASE}/create_game`, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
       });
       
       const data = await response.json();
@@ -59,6 +75,8 @@ function App() {
       player1: '',
       player2: '',
       theme: '',
+      gameMode: 'multiplayer',
+      difficulty: 'medium',
       gameId: null,
     });
   };
