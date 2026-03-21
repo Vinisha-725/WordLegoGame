@@ -27,6 +27,14 @@ def is_theme_related(word, theme):
             mountains, forests, deserts, dams, islands, regions, etc.
             Answer with only YES or NO. No explanation.
             """
+        elif theme.lower() == "things":
+            # For Things theme, accept ONLY manufactured everyday objects
+            prompt = f"""
+            QUICK YES/NO: Is "{word}" something humans manufactured in a factory?
+            YES = table, chair, bottle, phone, computer, car, book, pen, clock, lamp
+            NO = elephant, india, dog, paris, apple, tree, human, mountain
+            Answer with only YES or NO.
+            """
         else:
             # For other themes, use regular theme checking
             prompt = f"""
