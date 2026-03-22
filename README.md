@@ -1,234 +1,69 @@
-# 🎮 WordLego AI - Competitive Word Chain Game
+# WordLego
 
-**WordLego AI** is a modern, responsive word chain game where players compete by building chains of words that follow specific themes. The game features AI-powered theme validation and intelligent opponents using minimax algorithm with alpha-beta pruning.
+WordLego is a fast-paced, competitive word-chain game where every word you play must begin with the last letter of the previous word. To make things trickier, every word must belong to a specific chosen theme (like "Fruits" or "Atlas") and is actively vetted by a dedicated AI validator behind the scenes.
 
----
+You can play against a friend locally or take on the custom-built Minimax AI.
 
-## 🚀 Features
+## The Vibe
+The frontend features a fully responsive, vibrant, comic-book-inspired aesthetic. We traded generic styling for thick pop-art borders, sharp drop shadows, punchy colors, and halftone background patterns. 
 
-### 🎯 Core Gameplay
-* **Theme-based word validation** using AI (Gemini) for semantic checking
-* **Word chain mechanics** - each word must start with the last letter of the previous word
-* **30-second turn timer** for competitive gameplay
-* **2-player modes** - Human vs Human or Human vs AI
-* **Automatic invalid move detection** with instant feedback
+## Key Features
+- **AI-Powered Validation:** We use Gemini 1.5 Flash alongside NLTK's WordNet. The system aggressively verifies if a word is real, chains properly, doesn't contain profanity, and most importantly, accurately matches the selected theme.
+- **Minimax AI Opponent:** Play against an AI that uses an optimized Minimax algorithm with Alpha-Beta pruning. The AI knows how to leverage the dictionary to find strong branching words.
+- **Intense 30-Second Timer:** You only have 30 seconds per turn. Taking too long means instant forfeit.
+- **Multiple Modes & Difficulty Level:** Choose between Multiplayer (PvP) or playing Against the AI with Easy, Medium, and Hard difficulty configs.
 
-### � AI System
-* **Minimax algorithm** with alpha-beta pruning for strategic decision-making
-* **3 difficulty levels** - Easy (1-ply), Medium (2-ply), Hard (3-ply)
-* **Full WordNet dictionary** - 100,000+ words (not limited to small lists)
-* **Smart theme validation** - AI checks if words are thematically relevant
-* **Performance optimized** - Cached validation and limited search for speed
+## Tech Stack
+- **Frontend:** React + Vite, styled purely with custom, token-based CSS. We integrated Framer Motion for snappy animations and Canvas Confetti to celebrate victories.
+- **Backend:** Python + FastAPI.
+- **AI & Logic:** Gemini API (generative AI rules vetting), NLTK (WordNet for quick offline dictionary validation), and custom Minimax logic for the AI opponent.
 
-### 🎨 Modern UI
-* **Responsive design** - Works on mobile, tablet, and desktop
-* **Animated backgrounds** with particle effects
-* **Glass morphism** design with blur effects
-* **Smooth transitions** between game screens
-* **Real-time updates** with game state polling
+## Running the Project Locally
 
----
+To run the game, you'll need to boot up both the frontend React app and the Python backend server. 
 
-## 🧩 How to Play
+### 1. Start the Backend
 
-1. Enter Player 1 and Player 2 names
-2. Select a theme (e.g., Fruits, Countries, Animals, Movies)
-3. Start the game
-4. Players take turns entering words
-
----
-
-## 📜 Game Rules
-
-* ✅ Word must belong to the selected theme
-* 🔤 Word must start with the **last letter** of the previous word
-* 🚫 No repeated words
-* 🚫 Only **single words** allowed (no sentences)
-* ⏱️ Each player has **30 seconds per turn**
-* ❌ Invalid move → opponent wins immediately
-
----
-
-## 🧠 AI Logic
-
-The game uses an AI-based semantic validation approach:
-
-* Converts words and themes into embeddings
-* Compares similarity to check relevance
-* Ensures smarter validation than static word lists
-
----
-
-## 🏗️ Project Structure
-
-```
-word-lego-ai/
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── screens/
-│   │   ├── services/
-│   │   └── App.js
-│   └── package.json
-│
-├── backend/
-│   ├── main.py
-│   ├── game_manager.py
-│   ├── validator.py
-│   ├── embedding_validator.py
-│   └── requirements.txt
-│
-└── README.md
-```
-
----
-
-## ⚙️ Installation & Setup
-
-### 🔹 1. Clone the Repository
-
-```bash
-git clone https://github.com/Vinisha-725/WordLegoGame.git
-cd WordLegoGame
-```
-
----
-
-## 💻 Frontend Setup
-
-```bash
-cd frontend
-npm install
-npm start
-```
-
-* Runs on: `http://localhost:3000`
-
----
-
-## 🖥️ Backend Setup
-
-### Step 1: Navigate to backend
+Make sure you have Python installed. You can set up a virtual environment and install the required dependencies:
 
 ```bash
 cd backend
-```
-
-### Step 2: Create virtual environment
-
-```bash
 python -m venv venv
-```
 
-### Step 3: Activate environment
+# Activate the venv:
+# Windows: venv\Scripts\activate
+# Mac/Linux: source venv/bin/activate
 
-**Windows (PowerShell):**
-
-```bash
-.\venv\Scripts\activate
-```
-
-**Windows (CMD):**
-
-```bash
-venv\Scripts\activate
-```
-
----
-
-### Step 4: Install dependencies
-
-```bash
 pip install -r requirements.txt
 ```
 
----
-
-### Step 5: Run server
+Once dependencies are installed, start the FastAPI server:
 
 ```bash
 uvicorn main:app --reload
 ```
+The backend should now be running on `http://127.0.0.1:8000`.
 
-* Runs on: `http://127.0.0.1:8000`
-* API Docs: `http://127.0.0.1:8000/docs`
+### 2. Start the Frontend
 
----
+In a separate terminal window, navigate to the frontend folder and run the Vite dev server:
 
-## 🔌 API Endpoints
-
-### Create Game
-
+```bash
+cd frontend
+npm install
+npm run dev
 ```
-POST /create_game
-```
+The React frontend should now be running locally on your machine at `http://localhost:5173`.
 
-### Submit Word
+## Gameplay Rules
+1. Only **single words** are allowed. Sentences will be instantly rejected.
+2. Words must conform semantically to the chosen theme.
+3. Your word **must** start with the very last letter of the previous player's valid word.
+4. No repeating words. If you use a word already in the chain, you lose.
+5. If you exceed the 30-second timer, your turn is skipped and you lose the game.
 
-```
-POST /submit_word
-```
+## Contributing
+Since this started as a fun hackathon-style build, feel free to fork it, mess around with the UI, or expand the AI validation logic to support new wild themes! Pull requests are always welcome.
 
-### Get Game State
-
-```
-GET /game_state
-```
-
----
-
-## 🔗 Connecting Frontend to Backend
-
-Make sure your frontend service file points to:
-
-```javascript
-const API = "http://127.0.0.1:8000";
-```
-
----
-
-## 🎯 Tech Stack
-
-**Frontend:**
-
-* React
-* CSS (custom styling)
-
-**Backend:**
-
-* FastAPI
-* Python
-
-**AI:**
-
-* Sentence Transformers (embeddings)
-* Cosine similarity for semantic validation
-
----
-
-## 🏆 Future Improvements
-
-* 🌐 Multiplayer (online rooms)
-* 🤖 AI opponent mode
-* 📊 Leaderboards
-* 🎚️ Difficulty levels
-* 🎤 Voice input
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to fork the repo and submit a pull request.
-
----
-
-## 📄 License
-
-This project is for educational and hackathon purposes.
-
----
-
-## 💡 Inspiration
-
-Built to combine **gaming + AI + real-time interaction** into a fun and competitive experience.
+## License
+Provided for educational and hackathon purposes. Enjoy the game!
