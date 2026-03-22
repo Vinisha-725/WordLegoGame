@@ -151,3 +151,14 @@ def submit_word(game_id, player, word):
         "word_chain": game["word_chain"],
         "next_player": game["players"][game["turn"]]
     }
+
+def get_hint_word(game_id):
+    game = games.get(game_id)
+    if not game:
+        return {"error": "Game not found"}
+        
+    last_letter = game["word_chain"][-1][-1] if game["word_chain"] else None
+    hint = get_best_move(last_letter, game["theme"], game["word_chain"], "easy")
+    if hint:
+        return {"hint": hint.upper()}
+    return {"error": "No valid words found right now"}

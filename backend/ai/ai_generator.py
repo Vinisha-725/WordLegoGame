@@ -86,15 +86,39 @@ def is_theme_related(word, theme):
             """
         
         response = model.generate_content(prompt)
-        result = response.text.strip().upper() == "YES"
+        result_text = response.text.strip().upper()
+        result = "YES" in result_text
         
         # Cache the result
         theme_cache[cache_key] = result
         return result
-    except:
-        # Fallback: be lenient if AI fails
-        theme_cache[cache_key] = True
-        return True
+    except Exception as e:
+        print(f"Theme check AI Error: {e}")
+        # Fallback: Use NLTK WordNet
+        try:
+            from nltk.corpus import wordnet as wn
+            synsets = wn.synsets(word)
+            if not synsets:
+                theme_cache[cache_key] = False
+                return False
+            for syn in synsets:
+                paths = syn.hypernym_paths()
+                for path in paths:
+                    hyper_names = [s.name().split('.')[0] for s in path]
+                    if theme == 'animals' and any(n in ['animal', 'bird', 'fish', 'insect', 'reptile', 'amphibian'] for n in hyper_names):
+                        theme_cache[cache_key] = True
+                        return True
+                    if theme == 'atlas' and any(n in ['location', 'region', 'country', 'city', 'body_of_water', 'landmass', 'geographical_area'] for n in hyper_names):
+                        theme_cache[cache_key] = True
+                        return True
+                    if theme == 'things' and any(n in ['artifact', 'instrumentality', 'article', 'commodity'] for n in hyper_names):
+                        theme_cache[cache_key] = True
+                        return True
+            theme_cache[cache_key] = False
+            return False
+        except:
+            theme_cache[cache_key] = False
+            return False
 
 def check_letter_chain(prev_word, new_word):
     """Check if new_word starts with last letter of prev_word"""

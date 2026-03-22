@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from game_manager import create_game, submit_word, games
+from game_manager import create_game, submit_word, get_hint_word, games
 
 app = FastAPI()
 
@@ -59,3 +59,10 @@ async def get_state(game_id: str):
     if not game:
         raise HTTPException(status_code=404, detail="Game not found")
     return game
+
+@app.get("/get_hint")
+async def process_hint(game_id: str):
+    result = get_hint_word(game_id)
+    if "error" in result:
+        raise HTTPException(status_code=404, detail=result["error"])
+    return result

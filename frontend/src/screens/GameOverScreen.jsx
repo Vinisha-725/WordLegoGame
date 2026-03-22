@@ -43,42 +43,11 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
       flexDirection: 'column',
       overflowX: 'hidden',
       overflowY: 'auto',
-      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
-      position: 'relative'
-    }}>
-      {/* Animated Background */}
-      <div style={{
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        overflow: 'hidden',
-        zIndex: 0
-      }}>
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            style={{
-              position: 'absolute',
-              width: Math.random() * 3 + 1 + 'px',
-              height: Math.random() * 3 + 1 + 'px',
-              background: `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 255, ${Math.random() * 0.3 + 0.1})`,
-              borderRadius: '50%',
-              left: Math.random() * 100 + '%',
-              top: Math.random() * 100 + '%'
-            }}
-            animate={{
-              y: [0, -80, 0],
-              opacity: [0.1, 0.5, 0.1],
-              scale: [1, 1.5, 1]
-            }}
-            transition={{
-              duration: Math.random() * 8 + 8,
-              repeat: Infinity,
-              delay: Math.random() * 4
-            }}
-          />
-        ))}
-      </div>
+      padding: '2rem 1.5rem',
+      backgroundColor: 'transparent',
+      fontFamily: 'var(--font-main)',
+      color: 'var(--foreground)'
+    }} className="scroll-hidden">
 
       {/* Main Content */}
       <div style={{
@@ -87,18 +56,18 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 'clamp(1rem, 3vw, 2rem)',
         position: 'relative',
         zIndex: 1,
-        minHeight: '100%',
-        width: '100%'
+        width: '100%',
+        maxWidth: '500px',
+        margin: '0 auto'
       }}>
         {/* Trophy Animation */}
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: "spring", damping: 10, stiffness: 100 }}
-          style={{ marginBottom: 'clamp(1rem, 3vw, 2rem)' }}
+          style={{ marginBottom: '1rem' }}
         >
           <motion.div
             animate={{ 
@@ -106,23 +75,9 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
               scale: [1, 1.1, 1],
               y: [0, -10, 0]
             }}
-            transition={{ 
-              repeat: Infinity, 
-              duration: 3,
-              ease: "easeInOut"
-            }}
+            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
           >
-            <Trophy 
-              size={80} 
-              color="#fbbf24" 
-              style={{ 
-                filter: 'drop-shadow(0 0 30px rgba(251, 191, 36, 0.6))',
-                background: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
-              }} 
-            />
+            <Trophy size={80} color="var(--primary-hover)" />
           </motion.div>
         </motion.div>
 
@@ -131,18 +86,13 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3, type: "spring", damping: 10 }}
+          className="gradient-text"
           style={{ 
-            fontSize: 'clamp(2rem, 6vw, 4rem)', 
+            fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', 
             fontWeight: 900, 
             marginBottom: '1rem',
-            background: isAIWinner 
-              ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' 
-              : 'linear-gradient(135deg, #fbbf24, #f59e0b)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            textShadow: '0 0 40px rgba(251, 191, 36, 0.3)',
-            textAlign: 'center'
+            textAlign: 'center',
+            textShadow: '3px 3px 0px #ffffff'
           }}
         >
           {winner === 'Draw' ? 'DRAW!' : `${winner} WINS!`}
@@ -153,26 +103,22 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          style={{ textAlign: 'center', marginBottom: 'clamp(1rem, 3vw, 2rem)' }}
+          style={{ textAlign: 'center', marginBottom: '2rem', width: '100%' }}
         >
           {isAIWinner && (
             <motion.div
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ repeat: Infinity, duration: 2 }}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '0.75rem 1.5rem',
-                background: 'rgba(99, 102, 241, 0.2)',
-                border: '2px solid rgba(99, 102, 241, 0.3)',
-                borderRadius: '12px',
-                backdropFilter: 'blur(10px)'
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                padding: '0.75rem 1.5rem', background: '#ffffff',
+                border: '3px dashed var(--card-border)', borderRadius: '20px',
+                boxShadow: '4px 4px 0 var(--card-border)'
               }}
             >
-              <Sparkles size={20} color="#6366f1" />
-              <span style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)', fontWeight: 600, color: '#6366f1' }}>
-                AI Victory! Minimax Algorithm Wins
+              <Sparkles size={24} color="var(--secondary)" />
+              <span style={{ fontSize: '1.2rem', fontWeight: 'bold', fontFamily: 'var(--font-heading)' }}>
+                AI Victory! Minimax Rules
               </span>
             </motion.div>
           )}
@@ -182,19 +128,15 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ repeat: Infinity, duration: 2 }}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '0.75rem 1.5rem',
-                background: 'rgba(251, 191, 36, 0.2)',
-                border: '2px solid rgba(251, 191, 36, 0.3)',
-                borderRadius: '12px',
-                backdropFilter: 'blur(10px)'
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                padding: '0.75rem 1.5rem', background: '#ffffff',
+                border: '3px dashed var(--card-border)', borderRadius: '20px',
+                boxShadow: '4px 4px 0 var(--card-border)'
               }}
             >
-              <Target size={20} color="#fbbf24" />
-              <span style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)', fontWeight: 600, color: '#fbbf24' }}>
-                Human Victory! Strategic Mastermind
+              <Target size={24} color="var(--primary-hover)" />
+              <span style={{ fontSize: '1.2rem', fontWeight: 'bold', fontFamily: 'var(--font-heading)' }}>
+                Human Victory! Awesome!
               </span>
             </motion.div>
           )}
@@ -207,19 +149,19 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
             style={{
-              background: 'rgba(239, 68, 68, 0.1)',
-              border: '1px solid rgba(239, 68, 68, 0.2)',
+              background: '#ffffff',
+              border: '3px dashed var(--error)',
               padding: '0.75rem 1.5rem',
-              borderRadius: '10px',
-              marginBottom: 'clamp(1rem, 3vw, 2rem)',
-              color: '#ef4444',
-              fontWeight: 600,
-              backdropFilter: 'blur(10px)',
-              fontSize: 'clamp(0.8rem, 2vw, 1rem)'
+              borderRadius: '20px',
+              marginBottom: '2rem',
+              color: 'var(--error)',
+              fontWeight: 'bold',
+              fontSize: '1.2rem',
+              boxShadow: '4px 4px 0 var(--error)'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Zap size={18} color="#ef4444" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Zap size={22} />
               {gameState.reason}
             </div>
           </motion.div>
@@ -232,71 +174,49 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
           transition={{ delay: 0.7 }}
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-            gap: 'clamp(0.75rem, 2vw, 1.5rem)',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+            gap: '1rem',
             width: '100%',
-            maxWidth: '600px',
-            marginBottom: 'clamp(2rem, 5vw, 3rem)'
+            marginBottom: '2rem'
           }}
         >
-          <motion.div
-            whileHover={{ scale: 1.05, y: -3 }}
+          <motion.div whileHover={{ scale: 1.05, y: -3 }}
             style={{
-              background: 'rgba(99, 102, 241, 0.1)',
-              border: '1px solid rgba(99, 102, 241, 0.2)',
-              borderRadius: '12px',
-              padding: 'clamp(0.75rem, 2vw, 1.5rem)',
-              textAlign: 'center',
-              backdropFilter: 'blur(10px)'
+              background: 'var(--accent)', border: '3px solid var(--card-border)', borderRadius: '20px',
+              padding: '1.5rem 1rem', textAlign: 'center', boxShadow: '4px 4px 0 var(--card-border)'
             }}
           >
-            <Hash size={28} color="#6366f1" style={{ marginBottom: '0.5rem' }} />
-            <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 900, color: '#6366f1' }}>
+            <Hash size={28} style={{ marginBottom: '0.5rem' }} />
+            <div style={{ fontSize: '2.5rem', fontWeight: 900, fontFamily: 'var(--font-heading)' }}>
               {chain.length}
             </div>
-            <div style={{ fontSize: 'clamp(0.7rem, 2vw, 0.9rem)', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Words Built
-            </div>
+            <div style={{ fontSize: '1rem', fontWeight: 'bold' }}>Words</div>
           </motion.div>
 
-          <motion.div
-            whileHover={{ scale: 1.05, y: -3 }}
+          <motion.div whileHover={{ scale: 1.05, y: -3 }}
             style={{
-              background: 'rgba(139, 92, 246, 0.1)',
-              border: '1px solid rgba(139, 92, 246, 0.2)',
-              borderRadius: '12px',
-              padding: 'clamp(0.75rem, 2vw, 1.5rem)',
-              textAlign: 'center',
-              backdropFilter: 'blur(10px)'
+              background: '#ffffff', border: '3px solid var(--card-border)', borderRadius: '20px',
+              padding: '1.5rem 1rem', textAlign: 'center', boxShadow: '4px 4px 0 var(--card-border)'
             }}
           >
-            <Target size={28} color="#8b5cf6" style={{ marginBottom: '0.5rem' }} />
-            <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 900, color: '#8b5cf6' }}>
-              {gameData.theme}
+            <Target size={28} style={{ marginBottom: '0.5rem' }} />
+            <div style={{ fontSize: '2rem', fontWeight: 900, fontFamily: 'var(--font-heading)' }}>
+              {gameData.theme || 'Any'}
             </div>
-            <div style={{ fontSize: 'clamp(0.7rem, 2vw, 0.9rem)', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Theme
-            </div>
+            <div style={{ fontSize: '1rem', fontWeight: 'bold' }}>Theme</div>
           </motion.div>
 
-          <motion.div
-            whileHover={{ scale: 1.05, y: -3 }}
+          <motion.div whileHover={{ scale: 1.05, y: -3 }}
             style={{
-              background: 'rgba(251, 191, 36, 0.1)',
-              border: '1px solid rgba(251, 191, 36, 0.2)',
-              borderRadius: '12px',
-              padding: 'clamp(0.75rem, 2vw, 1.5rem)',
-              textAlign: 'center',
-              backdropFilter: 'blur(10px)'
+              background: 'var(--primary)', border: '3px solid var(--card-border)', borderRadius: '20px',
+              padding: '1.5rem 1rem', textAlign: 'center', boxShadow: '4px 4px 0 var(--card-border)'
             }}
           >
-            <Sparkles size={28} color="#fbbf24" style={{ marginBottom: '0.5rem' }} />
-            <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 900, color: '#fbbf24' }}>
-              {gameMode === 'ai' ? 'vs AI' : 'vs Human'}
+            <Sparkles size={28} style={{ marginBottom: '0.5rem' }} />
+            <div style={{ fontSize: '1.8rem', fontWeight: 900, fontFamily: 'var(--font-heading)' }}>
+              {gameMode === 'ai' ? 'vs AI' : 'vs Hum'}
             </div>
-            <div style={{ fontSize: 'clamp(0.7rem, 2vw, 0.9rem)', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Mode
-            </div>
+            <div style={{ fontSize: '1rem', fontWeight: 'bold' }}>Mode</div>
           </motion.div>
         </motion.div>
 
@@ -307,77 +227,47 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
           transition={{ delay: 0.8 }}
           style={{
             width: '100%',
-            maxWidth: '600px',
-            background: 'rgba(15, 23, 42, 0.8)',
-            border: '1px solid rgba(99, 102, 241, 0.2)',
-            borderRadius: '16px',
-            padding: 'clamp(1rem, 3vw, 2rem)',
-            backdropFilter: 'blur(20px)',
-            marginBottom: 'clamp(2rem, 5vw, 3rem)'
+            background: '#ffffff',
+            border: '3px solid var(--card-border)',
+            borderRadius: '25px',
+            padding: '1.5rem',
+            boxShadow: '4px 4px 0 var(--card-border)',
+            marginBottom: '2.5rem'
           }}
         >
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center',
-            marginBottom: '1rem',
-            borderBottom: '1px solid rgba(99, 102, 241, 0.2)',
-            paddingBottom: '1rem'
-          }}>
-            <h3 style={{ 
-              textTransform: 'uppercase', 
-              fontSize: 'clamp(0.8rem, 2vw, 1rem)', 
-              letterSpacing: '0.05em', 
-              opacity: 0.8,
-              color: '#e2e8f0',
-              fontWeight: 600
-            }}>
-              Final Word Chain
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '2px dashed var(--card-border)', paddingBottom: '1rem' }}>
+            <h3 style={{ textTransform: 'uppercase', fontSize: '1.2rem', fontWeight: 'bold', fontFamily: 'var(--font-heading)' }}>
+              Final Chain
             </h3>
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '6px', 
-              opacity: 0.7,
-              color: '#6366f1',
-              fontWeight: 600,
-              fontSize: 'clamp(0.7rem, 2vw, 0.9rem)'
-            }}>
-              <Hash size={14} /> 
-              {chain.length} Words
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold', fontSize: '1.1rem' }}>
+              <Hash size={18} /> {chain.length} Words
             </div>
           </div>
           
-          <div style={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
-            gap: '0.5rem', 
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
-            {chain.map((w, i) => (
-              <React.Fragment key={i}>
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.05 }}
-                  style={{ 
-                    fontWeight: 600, 
-                    color: '#6366f1', 
-                    fontSize: 'clamp(0.8rem, 2vw, 1rem)',
-                    padding: '0.4rem 0.8rem',
-                    background: 'rgba(99, 102, 241, 0.1)',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(99, 102, 241, 0.2)'
-                  }}
-                >
-                  {w}
-                </motion.span>
-                {i < chain.length - 1 && (
-                  <ChevronRight size={14} style={{ opacity: 0.3 }} />
-                )}
-              </React.Fragment>
-            ))}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', justifyContent: 'center' }}>
+            {chain.length === 0 ? (
+              <span style={{ fontWeight: 'bold', opacity: 0.5, fontSize: '1.2rem' }}>No words played.</span>
+            ) : (
+              chain.map((w, i) => (
+                <React.Fragment key={i}>
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.05 }}
+                    style={{ 
+                      fontWeight: 'bold', fontSize: '1.2rem', padding: '0.5rem 1rem',
+                      background: 'var(--background)', borderRadius: '15px', border: '2px solid var(--card-border)',
+                      boxShadow: '2px 2px 0 var(--card-border)', textTransform: 'uppercase'
+                    }}
+                  >
+                    {w}
+                  </motion.span>
+                  {i < chain.length - 1 && (
+                    <ChevronRight size={18} style={{ opacity: 0.5 }} />
+                  )}
+                </React.Fragment>
+              ))
+            )}
           </div>
         </motion.div>
 
@@ -386,38 +276,16 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9 }}
-          style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '0.75rem',
-            width: '100%',
-            maxWidth: '350px'
-          }}
+          style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', maxWidth: '350px' }}
         >
           <motion.button 
             onClick={onPlayAgain}
+            className="btn-primary"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            style={{
-              width: '100%',
-              padding: 'clamp(0.75rem, 2vw, 1.5rem)',
-              background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-              border: 'none',
-              borderRadius: '12px',
-              color: 'white',
-              fontWeight: 700,
-              fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              boxShadow: '0 10px 30px rgba(99, 102, 241, 0.4)',
-              backdropFilter: 'blur(10px)'
-            }}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
           >
-            <RefreshCw size={20} />
-            Play Again
+            <RefreshCw size={24} /> PLAY AGAIN
           </motion.button>
           
           <motion.button 
@@ -425,25 +293,14 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             style={{
-              width: '100%',
-              padding: 'clamp(0.6rem, 2vw, 1.25rem)',
-              background: 'transparent',
-              border: '2px solid rgba(99, 102, 241, 0.3)',
-              borderRadius: '12px',
-              color: '#6366f1',
-              fontWeight: 600,
-              fontSize: 'clamp(0.8rem, 2vw, 1rem)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              backdropFilter: 'blur(10px)',
+              width: '100%', padding: '1rem', background: '#fffdf5',
+              border: '3px dashed var(--card-border)', borderRadius: '25px',
+              color: 'var(--foreground)', fontWeight: 'bold', fontSize: '1.4rem', fontFamily: 'var(--font-heading)',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
               transition: 'all 0.3s ease'
             }}
           >
-            <Home size={18} />
-            Exit to Menu
+            <Home size={20} /> EXIT
           </motion.button>
         </motion.div>
       </div>

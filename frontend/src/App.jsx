@@ -20,7 +20,6 @@ function App() {
   });
   const [gameState, setGameState] = useState(null);
   const [error, setError] = useState(null);
-  const [showRuleBook, setShowRuleBook] = useState(false);
 
   const startGame = async (p1, p2, theme, gameMode = 'multiplayer', difficulty = 'medium') => {
     try {
@@ -107,63 +106,6 @@ function App() {
 
   return (
     <div className="app-container">
-      {/* Animated Background */}
-      <div style={{
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        overflow: 'hidden',
-        zIndex: 0
-      }}>
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            style={{
-              position: 'absolute',
-              width: Math.random() * 4 + 1 + 'px',
-              height: Math.random() * 4 + 1 + 'px',
-              background: `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 255, ${Math.random() * 0.3 + 0.1})`,
-              borderRadius: '50%',
-              left: Math.random() * 100 + '%',
-              top: Math.random() * 100 + '%'
-            }}
-            animate={{
-              y: [0, -100, 0],
-              opacity: [0.1, 0.5, 0.1],
-              scale: [1, 1.5, 1]
-            }}
-            transition={{
-              duration: Math.random() * 10 + 10,
-              repeat: Infinity,
-              delay: Math.random() * 5
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Rule Book Button */}
-      <motion.button
-        onClick={() => setShowRuleBook(true)}
-        style={{
-          position: 'absolute',
-          top: '20px',
-          right: '20px',
-          zIndex: 1000,
-          background: 'rgba(99, 102, 241, 0.15)',
-          border: '1px solid rgba(99, 102, 241, 0.3)',
-          borderRadius: '12px',
-          padding: '10px',
-          cursor: 'pointer',
-          backdropFilter: 'blur(10px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-        whileHover={{ scale: 1.1, background: 'rgba(99, 102, 241, 0.25)' }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <Book size={20} color="#6366f1" />
-      </motion.button>
 
       {/* Main Content */}
       <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }}>
@@ -191,71 +133,7 @@ function App() {
         </div>
       </div>
 
-      {/* Rule Book Modal */}
-      <AnimatePresence>
-        {showRuleBook && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 2000,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'rgba(0, 0, 0, 0.8)',
-              backdropFilter: 'blur(10px)'
-            }}
-            onClick={() => setShowRuleBook(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ type: "spring", damping: 20 }}
-              style={{
-                width: '90%',
-                maxWidth: '800px',
-                height: '80%',
-                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95))',
-                border: '1px solid rgba(99, 102, 241, 0.2)',
-                borderRadius: '20px',
-                padding: '40px',
-                position: 'relative',
-                overflow: 'auto',
-                backdropFilter: 'blur(20px)'
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <motion.button
-                onClick={() => setShowRuleBook(false)}
-                style={{
-                  position: 'absolute',
-                  top: '20px',
-                  right: '20px',
-                  background: 'rgba(239, 68, 68, 0.2)',
-                  border: '1px solid rgba(239, 68, 68, 0.3)',
-                  borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer'
-                }}
-                whileHover={{ scale: 1.1, background: 'rgba(239, 68, 68, 0.3)' }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <X size={20} color="#ef4444" />
-              </motion.button>
 
-              <RuleBookScreen />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Error Toast */}
       <AnimatePresence>
