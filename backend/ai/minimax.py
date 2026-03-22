@@ -4,7 +4,7 @@ import nltk
 from nltk.corpus import wordnet
 
 def get_possible_words(last_letter, theme, used_words):
-    """Get possible words - ULTRA FAST with hardcoded fruit list"""
+    """Get possible words - ULTRA FAST with direct letter searching"""
     last_letter = last_letter.lower()
     theme = theme.lower()
     
@@ -25,43 +25,63 @@ def get_possible_words(last_letter, theme, used_words):
                     return possible_words
         return possible_words
     
-    # For other themes, use limited WordNet search
+    # For other themes, scan words starting with the right letter
+    api_calls_made = 0
     words_checked = 0
-    max_checks = 1000  # Drastically reduced for speed
+    max_api_calls = 3 # Heavily constrain API calls to avoid waiting
     
-    for synset in wordnet.all_synsets():
-        for lemma in synset.lemmas():
-            words_checked += 1
+    # We iterate over words in wordnet that start with "last_letter"
+    for word in wordnet.words():
+        word = word.lower()
+        if not word.startswith(last_letter):
+            continue
             
-            # Very early termination
-            if words_checked > max_checks:
-                return possible_words
+        if (word in used_set or 
+            len(word) <= 2 or 
+            len(word) >= 15 or
+            not word.isalpha()):
+            continue
             
-            word = lemma.name().replace('_', '').lower()
+        words_checked += 1
+        
+        # Fast purely local check first (if not valid, skip)
+        synsets = wordnet.synsets(word)
+        if not synsets:
+            continue
             
-            # Quick filters first
-            if (not word.startswith(last_letter) or 
-                word in used_set or 
-                len(word) <= 2 or 
-                len(word) >= 15 or
-                not word.isalpha()):
-                continue
-                
-            # Only check validity for promising candidates
-            if not is_valid_word(word):
-                continue
-                
-            # Theme check
-            if not is_theme_related(word, theme):
-                continue
-                
+        # Optional: fast pre-filter using WordNet before API 
+        is_candidate = False
+        for syn in synsets:
+            paths = syn.hypernym_paths()
+            for path in paths:
+                hyper_names = [s.name().split('.')[0] for s in path]
+                if theme == 'animals' and any(n in ['animal', 'bird', 'fish', 'insect', 'reptile', 'amphibian'] for n in hyper_names):
+                    is_candidate = True; break
+                if theme == 'atlas' and any(n in ['location', 'region', 'country', 'city', 'body_of_water', 'landmass', 'geographical_area'] for n in hyper_names):
+                    is_candidate = True; break
+                if theme == 'things' and any(n in ['artifact', 'instrumentality', 'article', 'commodity', 'object'] for n in hyper_names):
+                    is_candidate = True; break
+                if theme not in ['animals', 'atlas', 'things']:
+                    is_candidate = True; break # Other themes are passed to AI
+            if is_candidate: break
+            
+        if not is_candidate:
+            # Terminate search if we check too many failed words to prevent hanging
+            if words_checked > 200:
+                break
+            continue
+            
+        # Now we know it's a strong candidate, verify with the formal function (which caches and uses Gemini)
+        if is_theme_related(word, theme):
             if word not in possible_words:
                 possible_words.append(word)
-                
-                # Return very early for speed
-                if len(possible_words) >= 5:  # Reduced to 5 for speed
+                if len(possible_words) >= 4:
                     return possible_words
-    
+        
+        api_calls_made += 1
+        if api_calls_made >= max_api_calls and len(possible_words) > 0:
+            return possible_words
+            
     return possible_words
 
 def evaluate_word(word, game_state):
