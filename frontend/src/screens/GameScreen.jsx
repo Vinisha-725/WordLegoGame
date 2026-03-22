@@ -29,8 +29,9 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
       interval = setInterval(() => {
         setTimer(prev => prev - 1);
       }, 1000);
-    } else if (timer === 0 && !winner) {
-      setFeedback({ message: "Time's up!", type: 'error' });
+    } else if (timer === 0 && !winner && !aiThinking) {
+      // Submit timeout to backend
+      handleTimeout();
     }
     return () => clearInterval(interval);
   }, [timer, winner, aiThinking]);
@@ -63,6 +64,36 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
       }
     }
   }, [chain, turn, currentP, gameMode]);
+
+  const handleTimeout = async () => {
+    if (isSubmitting || winner) return;
+    
+    setFeedback({ message: "Time's up!", type: 'error' });
+    setIsSubmitting(true);
+
+    try {
+      const requestBody = {
+        game_id: gameData.gameId,
+        player: currentP,
+        word: "TIMEOUT" // Special word to indicate timeout
+      };
+
+      const response = await fetch(`${API_BASE}/submit_word`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+      
+      const data = await response.json();
+      await onUpdate(gameData.gameId);
+    } catch (err) {
+      setFeedback({ message: "Network error during timeout!", type: 'error' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
