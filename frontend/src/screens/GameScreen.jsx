@@ -157,25 +157,25 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
       
       {/* Top Bar: Space between */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 1.5rem', zIndex: 10 }}>
-        <button onClick={() => window.location.reload()} style={{ background: '#fff', border: '2px solid var(--card-border)', borderRadius: '15px', padding: '0.5rem', cursor: 'pointer', boxShadow: '3px 3px 0 var(--card-border)' }}>
+        <button onClick={() => window.location.reload()} style={{ background: '#fff', border: '4px solid var(--card-border)', borderRadius: '8px', padding: '0.5rem', cursor: 'pointer', boxShadow: '4px 4px 0 var(--card-border)' }}>
           <ArrowLeft size={24} />
         </button>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div style={{ fontWeight: 'bold', fontSize: '1.4rem', fontFamily: 'var(--font-heading)', color: 'var(--foreground)' }}>
-            {isAIMode ? (currentP === 'AI' ? '🤖 AI THINKING' : '✏️ YOUR TURN') : `✏️ ${currentP ? currentP.toUpperCase() : ''}'S TURN`}
+          <div style={{ fontWeight: 'bold', fontSize: '1.6rem', fontFamily: 'var(--font-heading)', color: 'var(--foreground)', textShadow: '2px 2px 0 var(--primary)' }}>
+            {isAIMode ? (currentP === 'AI' ? '🤖 AI THINKING' : '💥 YOUR TURN') : `💥 ${currentP ? currentP.toUpperCase() : ''}'S TURN`}
           </div>
-          <div style={{ fontSize: '1.1rem', fontFamily: 'var(--font-heading)', color: 'var(--secondary)', textTransform: 'capitalize' }}>
+          <div style={{ fontSize: '1.2rem', fontFamily: 'var(--font-heading)', color: 'var(--foreground)', textTransform: 'capitalize' }}>
             Theme: {gameData?.theme || 'Any'}
           </div>
         </div>
-        <div style={{ background: '#fff', border: '2px solid var(--card-border)', borderRadius: '15px', padding: '0.5rem 1rem', fontWeight: 'bold', fontSize: '1.2rem', boxShadow: '3px 3px 0 var(--card-border)', fontFamily: 'var(--font-heading)' }}>
+        <div style={{ background: '#fff', border: '4px solid var(--card-border)', borderRadius: '8px', padding: '0.5rem 1rem', fontWeight: 'bold', fontSize: '1.4rem', boxShadow: '4px 4px 0 var(--card-border)', fontFamily: 'var(--font-heading)' }}>
           Total <span style={{ fontFamily: 'var(--font-main)', marginLeft: '5px' }}>{chain.length}</span>
         </div>
       </div>
 
       {/* Timer: Centered */}
       <div style={{ display: 'flex', justifyContent: 'center', margin: '0.5rem 0', zIndex: 10 }}>
-        <div style={{ background: '#fff', border: '2px solid var(--card-border)', borderRadius: '30px', padding: '0.4rem 1.5rem', fontSize: '1.5rem', fontWeight: 'bold', boxShadow: '3px 3px 0 var(--card-border)', display: 'flex', alignItems: 'center', gap: '8px', color: timer < 10 ? 'var(--error)' : 'var(--foreground)' }}>
+        <div style={{ background: '#fff', border: '4px solid var(--card-border)', borderRadius: '8px', padding: '0.4rem 1.5rem', fontSize: '1.8rem', fontFamily: 'var(--font-heading)', fontWeight: 'bold', boxShadow: '4px 4px 0 var(--card-border)', display: 'flex', alignItems: 'center', gap: '8px', color: timer < 10 ? 'var(--error)' : 'var(--foreground)' }}>
           {aiThinking ? <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }}><Bot size={20} /></motion.div> : <Clock size={20} />}
           {aiThinking ? '🤔' : `${timer}s`}
         </div>
@@ -196,12 +196,12 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
                 <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
                   style={{
                     background: '#fff',
-                    border: '3px solid var(--card-border)',
-                    borderRadius: '25px',
+                    border: '4px solid var(--card-border)',
+                    borderRadius: '8px',
                     padding: '0.5rem 1.5rem',
                     fontSize: '1.8rem',
                     fontWeight: 'bold',
-                    boxShadow: '4px 4px 0 var(--card-border)',
+                    boxShadow: '6px 6px 0 var(--card-border)',
                     textTransform: 'uppercase',
                     display: 'flex',
                     alignItems: 'center',
@@ -224,9 +224,9 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
         <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 2 }} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.4rem', fontWeight: 'bold' }}>
           Starts with: 
           <span style={{ 
-            background: '#fff', border: '2px solid var(--card-border)', borderRadius: '50%', 
+            background: '#fff', border: '4px solid var(--card-border)', borderRadius: '8px', 
             width: '45px', height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center', 
-            fontSize: '1.8rem', color: 'var(--secondary)', boxShadow: '2px 2px 0 var(--card-border)', paddingBottom: '3px'
+            fontSize: '2rem', fontFamily: 'var(--font-heading)', color: 'var(--secondary)', boxShadow: '4px 4px 0 var(--card-border)', paddingBottom: '3px'
           }}>
             {nextChar}
           </span>
@@ -248,9 +248,9 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
                 textTransform: 'uppercase',
                 padding: '1rem 3rem 1rem 1rem',
                 background: '#fff',
-                border: '3px solid var(--card-border)',
-                borderRadius: '25px',
-                boxShadow: 'inset 2px 4px 5px rgba(0,0,0,0.05)',
+                border: '4px solid var(--card-border)',
+                borderRadius: '8px',
+                boxShadow: '4px 4px 0 var(--card-border)',
                 fontFamily: 'var(--font-main)',
                 fontWeight: 'bold',
                 color: 'var(--foreground)'
@@ -260,7 +260,7 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
         ) : (
           <div style={{
             width: '100%', maxWidth: '350px', textAlign: 'center', padding: '1rem',
-            background: '#fff', border: '3px dashed var(--card-border)', borderRadius: '25px', opacity: 0.8
+            background: '#fff', border: '4px dashed var(--card-border)', borderRadius: '8px', opacity: 0.8
           }}>
             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.8rem', margin: 0 }}>Waiting...</h3>
           </div>
@@ -273,21 +273,21 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
 
         {/* Bottom Controls */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', alignItems: 'center', width: '100%', padding: '0.5rem 0 1.5rem 0' }}>
-          <motion.button onClick={handleHint} disabled={isSubmitting || winner || currentP === 'AI'} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ background: '#fff', border: '2px solid var(--card-border)', borderRadius: '50%', width: '55px', height: '55px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: (isSubmitting || winner || currentP === 'AI') ? 'not-allowed' : 'pointer', boxShadow: '3px 3px 0 var(--card-border)', opacity: (isSubmitting || winner || currentP === 'AI') ? 0.5 : 1 }}>
+          <motion.button onClick={handleHint} disabled={isSubmitting || winner || currentP === 'AI'} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{ background: '#fff', border: '4px solid var(--card-border)', borderRadius: '8px', width: '55px', height: '55px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: (isSubmitting || winner || currentP === 'AI') ? 'not-allowed' : 'pointer', boxShadow: '4px 4px 0 var(--card-border)', opacity: (isSubmitting || winner || currentP === 'AI') ? 0.5 : 1 }}>
             <Lightbulb size={24} />
           </motion.button>
           
           <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleSubmit} disabled={!word || winner || isSubmitting}
             style={{ 
-              background: '#fff', border: '3px solid var(--card-border)', borderRadius: '25px', 
-              padding: '1rem 3rem', cursor: 'pointer', boxShadow: '4px 4px 0 var(--card-border)',
+              background: '#fff', border: '4px solid var(--card-border)', borderRadius: '8px', 
+              padding: '1rem 3rem', cursor: 'pointer', boxShadow: '6px 6px 0 var(--card-border)',
               opacity: (!word || winner || isSubmitting) ? 0.6 : 1,
               display: 'flex', alignItems: 'center', justifyContent: 'center'
             }}>
             {isSubmitting ? <Clock size={28} /> : <Send size={28} color="var(--foreground)" />}
           </motion.button>
 
-          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => setWord(word.slice(0, -1))} style={{ background: '#fff', border: '2px solid var(--card-border)', borderRadius: '50%', width: '55px', height: '55px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '3px 3px 0 var(--card-border)' }}>
+          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => setWord(word.slice(0, -1))} style={{ background: '#fff', border: '4px solid var(--card-border)', borderRadius: '8px', width: '55px', height: '55px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '4px 4px 0 var(--card-border)' }}>
             <Delete size={24} />
           </motion.button>
         </div>
@@ -296,9 +296,9 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
       {/* Winner Popup */}
       <AnimatePresence>
         {winner && (
-          <div style={{ position: 'absolute', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(253, 251, 243, 0.9)', backdropFilter: 'blur(5px)' }}>
+          <div style={{ position: 'absolute', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(244, 247, 246, 0.9)', backdropFilter: 'blur(5px)' }}>
             <motion.div initial={{ scale: 0.8, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }}
-              style={{ width: '90%', maxWidth: '400px', padding: '2rem', textAlign: 'center', border: '4px solid var(--card-border)', borderRadius: '35px', background: '#ffffff', boxShadow: '8px 8px 0 var(--card-border)' }}>
+              style={{ width: '90%', maxWidth: '400px', padding: '2rem', textAlign: 'center', border: '6px solid var(--card-border)', borderRadius: '12px', background: '#ffffff', boxShadow: '12px 12px 0 var(--card-border)' }}>
               <motion.div animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 3 }}>
                 <Trophy size={80} color="var(--primary)" style={{ marginBottom: '1.5rem' }} />
               </motion.div>
@@ -309,7 +309,7 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
                 WON!!
               </h1>
               {gameState?.reason && (
-                <div style={{ background: '#fff', border: '2px dashed var(--error)', padding: '1rem', borderRadius: '15px', margin: '0 0 1.5rem 0', color: 'var(--error)', fontWeight: 'bold', fontSize: '1.1rem' }}>
+                <div style={{ background: '#fff', border: '4px dashed var(--error)', padding: '1rem', borderRadius: '8px', margin: '0 0 1.5rem 0', color: 'var(--error)', fontWeight: 'bold', fontSize: '1.2rem', fontFamily: 'var(--font-heading)' }}>
                   {gameState.reason}
                 </div>
               )}

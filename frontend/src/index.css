@@ -1,18 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&display=swap');
 
 :root {
-  --primary: #eaca53; /* Pastel mustard */
-  --primary-hover: #dcb332;
-  --secondary: #e97a5a; /* Pastel orange */
-  --accent: #8db5a6; /* Pastel teal/sage */
-  --background: #fdfbf3; /* Cream/paper background */
-  --foreground: #2d2d2a; /* Doodle charcoal pencil */
-  --card-bg: #ffffff;
-  --card-border: #2d2d2a; /* Hand-drawn black borders */
-  --success: #8bbd8b;
-  --error: #e07a5f;
-  --font-main: 'Patrick Hand', cursive, sans-serif;
-  --font-heading: 'Caveat', cursive, sans-serif;
+  --primary: #FFCC00; /* Comic Yellow */
+  --primary-hover: #E6B800;
+  --secondary: #FF3366; /* Comic Red/Pink */
+  --accent: #00CCFF; /* Comic Cyan */
+  --background: #F4F7F6; /* Light gray-blue comic bg */
+  --foreground: #000000; /* Solid Black */
+  --card-bg: #FFFFFF;
+  --card-border: #000000; /* Solid black bounds */
+  --success: #00E676;
+  --error: #FF1744;
+  --font-main: 'Comic Neue', cursive, sans-serif;
+  --font-heading: 'Bangers', cursive, sans-serif;
 }
 
 * {
@@ -24,21 +24,26 @@
 
 body {
   font-family: var(--font-main);
-  background: var(--accent); /* Outer background for desktop */
+  background-color: var(--accent);
+  background-image: 
+    radial-gradient(#00bbf0 15%, transparent 16%),
+    radial-gradient(#00bbf0 15%, transparent 16%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
   color: var(--foreground);
   min-height: 100vh;
-  min-height: -webkit-fill-available;
+  min-height: 100dvh;
   margin: 0;
-  overflow: hidden;
   user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 #root {
   height: 100vh;
-  height: -webkit-fill-available;
+  height: 100dvh;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -49,29 +54,38 @@ body {
 .app-container {
   width: 100%;
   max-width: 100%;
-  height: 100%;
-  height: -webkit-fill-available;
+  height: 100vh;
+  height: 100dvh;
   background: var(--background);
   position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  /* Whimsical curved background applied directly if needed */
+  background-image: 
+    linear-gradient(#e0e5eb 2px, transparent 2px),
+    linear-gradient(90deg, #e0e5eb 2px, transparent 2px);
+  background-size: 30px 30px;
 }
 
 @media (min-width: 600px) {
+  #root {
+    padding: 1rem;
+    overflow-y: auto;
+  }
   .app-container {
-    max-width: 420px;
-    height: 90vh;
-    height: clamp(650px, 90vh, 900px);
-    border-radius: 35px;
-    border: 3px solid var(--card-border);
-    box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+    max-width: 440px;
+    height: 95%;
+    max-height: 850px;
+    border-radius: 12px;
+    border: 4px solid var(--card-border);
+    box-shadow: 12px 12px 0px var(--foreground);
     margin: auto;
+    /* Translate to visually offset the box shadow so it looks perfectly centered */
+    transform: translate(-6px, -6px);
   }
 }
 
-/* Wavy background top half for App Container */
+/* Angular background top half for App Container */
 .app-container::before {
   content: '';
   position: absolute;
@@ -80,62 +94,62 @@ body {
   width: 100%;
   height: 45%;
   background: var(--primary);
-  border-bottom-left-radius: 50% 12%;
-  border-bottom-right-radius: 50% 12%;
-  border-bottom: 2px solid var(--card-border);
+  border-bottom: 4px solid var(--card-border);
   z-index: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
 }
 
-/* Hand-drawn button style */
+/* Comic Button Style */
 .btn-primary {
-  background: #ffffff;
-  border: 2px solid var(--card-border);
+  background: var(--primary);
+  border: 4px solid var(--card-border);
   color: var(--foreground);
   padding: 1rem 2rem;
-  border-radius: 25px 15px 225px 15px / 15px 225px 15px 25px; /* Doodle squarcle */
+  border-radius: 8px; /* Comic squared edges */
   font-weight: 600;
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 3px 3px 0px var(--card-border); 
+  transition: transform 0.1s, box-shadow 0.1s;
+  box-shadow: 6px 6px 0px var(--card-border); 
   text-transform: uppercase;
   font-family: var(--font-heading);
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
 
 .btn-primary:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px var(--card-border);
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0px var(--card-border);
 }
 
 .btn-primary:disabled {
-  opacity: 0.5;
+  background: #cccccc;
+  opacity: 0.8;
   filter: grayscale(1);
   box-shadow: none;
-  transform: translate(2px, 2px);
+  transform: translate(6px, 6px);
   cursor: not-allowed;
 }
 
 .input-field {
   background: #ffffff;
-  border: 2px solid var(--card-border);
-  border-radius: 20px;
+  border: 4px solid var(--card-border);
+  border-radius: 8px;
   padding: 1rem;
   color: var(--foreground);
   width: 100%;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-family: var(--font-main);
+  font-weight: bold;
   transition: all 0.2s;
-  box-shadow: inset 1px 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 4px 4px 0px var(--card-border);
   text-align: center;
 }
 
 .input-field:focus {
   outline: none;
-  background: #fffdf5;
-  border-color: var(--card-border);
-  box-shadow: 2px 2px 0 var(--card-border);
-  transform: translate(-1px, -1px);
+  background: #FFFDE7;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--card-border);
 }
 
 .scroll-hidden {
@@ -150,5 +164,6 @@ body {
   color: var(--foreground);
   font-family: var(--font-heading);
   font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0 var(--secondary);
 }
-

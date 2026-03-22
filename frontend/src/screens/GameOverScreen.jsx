@@ -112,12 +112,12 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                 padding: '0.75rem 1.5rem', background: '#ffffff',
-                border: '3px dashed var(--card-border)', borderRadius: '20px',
-                boxShadow: '4px 4px 0 var(--card-border)'
+                border: '4px dashed var(--card-border)', borderRadius: '8px',
+                boxShadow: '6px 6px 0 var(--card-border)'
               }}
             >
               <Sparkles size={24} color="var(--secondary)" />
-              <span style={{ fontSize: '1.2rem', fontWeight: 'bold', fontFamily: 'var(--font-heading)' }}>
+              <span style={{ fontSize: '1.4rem', fontWeight: 'bold', fontFamily: 'var(--font-heading)' }}>
                 AI Victory! Minimax Rules
               </span>
             </motion.div>
@@ -130,12 +130,12 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                 padding: '0.75rem 1.5rem', background: '#ffffff',
-                border: '3px dashed var(--card-border)', borderRadius: '20px',
-                boxShadow: '4px 4px 0 var(--card-border)'
+                border: '4px dashed var(--card-border)', borderRadius: '8px',
+                boxShadow: '6px 6px 0 var(--card-border)'
               }}
             >
               <Target size={24} color="var(--primary-hover)" />
-              <span style={{ fontSize: '1.2rem', fontWeight: 'bold', fontFamily: 'var(--font-heading)' }}>
+              <span style={{ fontSize: '1.4rem', fontWeight: 'bold', fontFamily: 'var(--font-heading)' }}>
                 Human Victory! Awesome!
               </span>
             </motion.div>
@@ -150,14 +150,15 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
             transition={{ delay: 0.6 }}
             style={{
               background: '#ffffff',
-              border: '3px dashed var(--error)',
+              border: '4px dashed var(--error)',
               padding: '0.75rem 1.5rem',
-              borderRadius: '20px',
+              borderRadius: '8px',
               marginBottom: '2rem',
               color: 'var(--error)',
               fontWeight: 'bold',
-              fontSize: '1.2rem',
-              boxShadow: '4px 4px 0 var(--error)'
+              fontFamily: 'var(--font-heading)',
+              fontSize: '1.4rem',
+              boxShadow: '6px 6px 0 var(--error)'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -174,7 +175,7 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
           transition={{ delay: 0.7 }}
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+            gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '1rem',
             width: '100%',
             marginBottom: '2rem'
@@ -182,41 +183,41 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
         >
           <motion.div whileHover={{ scale: 1.05, y: -3 }}
             style={{
-              background: 'var(--accent)', border: '3px solid var(--card-border)', borderRadius: '20px',
-              padding: '1.5rem 1rem', textAlign: 'center', boxShadow: '4px 4px 0 var(--card-border)'
+              background: 'var(--accent)', border: '4px solid var(--card-border)', borderRadius: '8px',
+              padding: '1.5rem 0.5rem', textAlign: 'center', boxShadow: '6px 6px 0 var(--card-border)'
             }}
           >
             <Hash size={28} style={{ marginBottom: '0.5rem' }} />
-            <div style={{ fontSize: '2.5rem', fontWeight: 900, fontFamily: 'var(--font-heading)' }}>
+            <div style={{ fontSize: '2.5rem', fontWeight: 900, fontFamily: 'var(--font-heading)', textShadow: '2px 2px 0 #fff' }}>
               {chain.length}
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 'bold' }}>Words</div>
+            <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Words</div>
           </motion.div>
 
           <motion.div whileHover={{ scale: 1.05, y: -3 }}
             style={{
-              background: '#ffffff', border: '3px solid var(--card-border)', borderRadius: '20px',
-              padding: '1.5rem 1rem', textAlign: 'center', boxShadow: '4px 4px 0 var(--card-border)'
+              background: '#ffffff', border: '4px solid var(--card-border)', borderRadius: '8px',
+              padding: '1.5rem 0.5rem', textAlign: 'center', boxShadow: '6px 6px 0 var(--card-border)'
             }}
           >
             <Target size={28} style={{ marginBottom: '0.5rem' }} />
-            <div style={{ fontSize: '2rem', fontWeight: 900, fontFamily: 'var(--font-heading)' }}>
+            <div style={{ fontSize: '1.8rem', fontWeight: 900, fontFamily: 'var(--font-heading)', textTransform: 'uppercase', textShadow: '2px 2px 0 var(--primary)' }}>
               {gameData.theme || 'Any'}
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 'bold' }}>Theme</div>
+            <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Theme</div>
           </motion.div>
 
           <motion.div whileHover={{ scale: 1.05, y: -3 }}
             style={{
-              background: 'var(--primary)', border: '3px solid var(--card-border)', borderRadius: '20px',
-              padding: '1.5rem 1rem', textAlign: 'center', boxShadow: '4px 4px 0 var(--card-border)'
+              background: 'var(--primary)', border: '4px solid var(--card-border)', borderRadius: '8px',
+              padding: '1.5rem 0.5rem', textAlign: 'center', boxShadow: '6px 6px 0 var(--card-border)'
             }}
           >
             <Sparkles size={28} style={{ marginBottom: '0.5rem' }} />
-            <div style={{ fontSize: '1.8rem', fontWeight: 900, fontFamily: 'var(--font-heading)' }}>
-              {gameMode === 'ai' ? 'vs AI' : 'vs Hum'}
+            <div style={{ fontSize: '2rem', fontWeight: 900, fontFamily: 'var(--font-heading)', textShadow: '2px 2px 0 #fff' }}>
+              {gameMode === 'ai' ? 'VS AI' : 'VS P2'}
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 'bold' }}>Mode</div>
+            <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Mode</div>
           </motion.div>
         </motion.div>
 
@@ -228,18 +229,18 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
           style={{
             width: '100%',
             background: '#ffffff',
-            border: '3px solid var(--card-border)',
-            borderRadius: '25px',
+            border: '4px solid var(--card-border)',
+            borderRadius: '8px',
             padding: '1.5rem',
-            boxShadow: '4px 4px 0 var(--card-border)',
+            boxShadow: '6px 6px 0 var(--card-border)',
             marginBottom: '2.5rem'
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '2px dashed var(--card-border)', paddingBottom: '1rem' }}>
-            <h3 style={{ textTransform: 'uppercase', fontSize: '1.2rem', fontWeight: 'bold', fontFamily: 'var(--font-heading)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '4px dashed var(--card-border)', paddingBottom: '1rem' }}>
+            <h3 style={{ textTransform: 'uppercase', fontSize: '1.4rem', fontWeight: 'bold', fontFamily: 'var(--font-heading)' }}>
               Final Chain
             </h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold', fontSize: '1.1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold', fontSize: '1.2rem', fontFamily: 'var(--font-heading)' }}>
               <Hash size={18} /> {chain.length} Words
             </div>
           </div>
@@ -255,15 +256,15 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: i * 0.05 }}
                     style={{ 
-                      fontWeight: 'bold', fontSize: '1.2rem', padding: '0.5rem 1rem',
-                      background: 'var(--background)', borderRadius: '15px', border: '2px solid var(--card-border)',
-                      boxShadow: '2px 2px 0 var(--card-border)', textTransform: 'uppercase'
+                      fontWeight: 'bold', fontSize: '1.4rem', padding: '0.5rem 1rem', fontFamily: 'var(--font-heading)',
+                      background: 'var(--background)', borderRadius: '8px', border: '4px solid var(--card-border)',
+                      boxShadow: '4px 4px 0 var(--card-border)', textTransform: 'uppercase'
                     }}
                   >
                     {w}
                   </motion.span>
                   {i < chain.length - 1 && (
-                    <ChevronRight size={18} style={{ opacity: 0.5 }} />
+                    <ChevronRight size={24} style={{ opacity: 0.8 }} />
                   )}
                 </React.Fragment>
               ))
@@ -293,11 +294,11 @@ function GameOverScreen({ gameState, gameData, onPlayAgain }) {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             style={{
-              width: '100%', padding: '1rem', background: '#fffdf5',
-              border: '3px dashed var(--card-border)', borderRadius: '25px',
+              width: '100%', padding: '1rem', background: '#fff',
+              border: '4px dashed var(--card-border)', borderRadius: '8px',
               color: 'var(--foreground)', fontWeight: 'bold', fontSize: '1.4rem', fontFamily: 'var(--font-heading)',
               cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease', boxShadow: '6px 6px 0 var(--card-border)'
             }}
           >
             <Home size={20} /> EXIT

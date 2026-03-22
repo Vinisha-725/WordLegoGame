@@ -10,8 +10,8 @@ const themes = [
 ];
 
 const gameModes = [
-  { id: 'multiplayer', name: 'vs Human', icon: <Users />, emoji: '👥', color: '#8db5a6' },
-  { id: 'ai', name: 'vs AI', icon: <Bot />, emoji: '🤖', color: '#e97a5a' },
+  { id: 'multiplayer', name: 'Multiplayer', icon: <Users />, emoji: '👥', color: '#8db5a6' },
+  { id: 'ai', name: 'AI', icon: <Bot />, emoji: '🤖', color: '#e97a5a' },
 ];
 
 const difficulties = [
@@ -31,7 +31,7 @@ function SetupScreen({ onStart }) {
     if (p1 && selectedTheme && gameMode) {
       const player2Name = gameMode === 'ai' ? 'AI' : p2;
       if (gameMode === 'multiplayer' && !p2) return;
-      
+
       onStart(p1, player2Name, selectedTheme, gameMode, difficulty);
     }
   };
@@ -62,40 +62,40 @@ function SetupScreen({ onStart }) {
           fontSize: '4rem',
           fontFamily: 'var(--font-heading)',
           margin: '0',
-          textShadow: '3px 3px 0 #ffffff',
+          textShadow: '4px 4px 0 var(--secondary)',
           letterSpacing: '2px'
         }}>
           WordLego
         </h1>
         <p style={{ fontSize: '1.4rem', fontWeight: 600, marginTop: '-0.5rem', opacity: 0.8 }}>
-          a cozy word game ✏️
+          An AI Based Word Game ✏️
         </p>
       </motion.div>
 
       {/* Main Content Centered */}
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         gap: '2rem',
         maxWidth: '400px',
         width: '100%'
       }}>
-        
+
         {/* Player Inputs */}
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div>
             <label style={{ display: 'block', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.3rem', paddingLeft: '0.5rem' }}>Player 1:</label>
             <input className="input-field" placeholder="your name..." value={p1} onChange={(e) => setP1(e.target.value)} />
           </div>
-          
+
           {gameMode === 'multiplayer' ? (
             <div>
               <label style={{ display: 'block', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '0.3rem', paddingLeft: '0.5rem' }}>Player 2:</label>
               <input className="input-field" placeholder="friend's name..." value={p2} onChange={(e) => setP2(e.target.value)} />
             </div>
           ) : (
-            <div style={{ background: '#fff', border: '2px dashed var(--card-border)', borderRadius: '20px', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+            <div style={{ background: '#fff', border: '4px dashed var(--card-border)', borderRadius: '8px', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
               <Bot size={28} />
               <span style={{ fontSize: '1.4rem', fontWeight: 'bold', fontFamily: 'var(--font-heading)' }}>Playing vs AI</span>
             </div>
@@ -109,11 +109,11 @@ function SetupScreen({ onStart }) {
             {gameModes.map((mode) => (
               <motion.div key={mode.id} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setGameMode(mode.id)}
                 style={{
-                  flex: 1, padding: '1rem', cursor: 'pointer', borderRadius: '20px',
-                  background: gameMode === mode.id ? 'var(--card-bg)' : '#fdfbf3',
-                  border: gameMode === mode.id ? `3px solid var(--card-border)` : '2px dashed #ccc',
+                  flex: 1, padding: '1rem', cursor: 'pointer', borderRadius: '8px',
+                  background: gameMode === mode.id ? 'var(--card-bg)' : '#ffffff',
+                  border: gameMode === mode.id ? `4px solid var(--card-border)` : '4px dashed var(--card-border)',
                   display: 'flex', flexDirection: 'column', alignItems: 'center',
-                  boxShadow: gameMode === mode.id ? '3px 3px 0 var(--card-border)' : 'none'
+                  boxShadow: gameMode === mode.id ? '4px 4px 0 var(--card-border)' : 'none'
                 }}>
                 <div style={{ fontSize: '2rem' }}>{mode.emoji}</div>
                 <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>{mode.name}</div>
@@ -130,10 +130,10 @@ function SetupScreen({ onStart }) {
               {difficulties.map((diff) => (
                 <motion.div key={diff.id} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setDifficulty(diff.id)}
                   style={{
-                    flex: 1, padding: '0.5rem', cursor: 'pointer', borderRadius: '15px',
-                    background: '#fff', border: difficulty === diff.id ? `3px solid var(--card-border)` : '2px dashed #ccc',
+                    flex: 1, padding: '0.5rem', cursor: 'pointer', borderRadius: '8px',
+                    background: '#fff', border: difficulty === diff.id ? `4px solid var(--card-border)` : '4px dashed var(--card-border)',
                     display: 'flex', flexDirection: 'column', alignItems: 'center',
-                    boxShadow: difficulty === diff.id ? '2px 2px 0 var(--card-border)' : 'none'
+                    boxShadow: difficulty === diff.id ? '4px 4px 0 var(--card-border)' : 'none'
                   }}>
                   <div style={{ fontSize: '1.5rem' }}>{diff.emoji}</div>
                   <div style={{ fontWeight: 'bold' }}>{diff.name}</div>
@@ -145,15 +145,15 @@ function SetupScreen({ onStart }) {
 
         {/* Theme Selection */}
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} style={{ width: '100%' }}>
-          <h3 style={{ fontSize: '1.4rem', textAlign: 'center', marginBottom: '1rem', fontFamily: 'var(--font-heading)' }}>Theme / Pack</h3>
+          <h3 style={{ fontSize: '1.4rem', textAlign: 'center', marginBottom: '1rem', fontFamily: 'var(--font-heading)' }}>Theme</h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             {themes.map((theme) => (
               <motion.div key={theme.id} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setSelectedTheme(theme.id)}
                 style={{
-                  padding: '1rem', cursor: 'pointer', borderRadius: '20px',
-                  background: '#fff', border: selectedTheme === theme.id ? `3px solid var(--card-border)` : '2px dashed #ccc',
+                  padding: '1rem', cursor: 'pointer', borderRadius: '8px',
+                  background: '#fff', border: selectedTheme === theme.id ? `4px solid var(--card-border)` : '4px dashed var(--card-border)',
                   display: 'flex', alignItems: 'center', gap: '0.5rem',
-                  boxShadow: selectedTheme === theme.id ? '3px 3px 0 var(--card-border)' : 'none'
+                  boxShadow: selectedTheme === theme.id ? '4px 4px 0 var(--card-border)' : 'none'
                 }}>
                 <div style={{ fontSize: '1.8rem' }}>{theme.emoji}</div>
                 <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>{theme.name}</div>
