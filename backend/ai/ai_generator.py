@@ -2,6 +2,7 @@ import google.generativeai as genai
 import nltk
 from nltk.corpus import wordnet
 import random
+import time
 
 # Initialize AI
 genai.configure(api_key="AIzaSyABWNWTqAcYRZzTCimsOjtDagb0JFBYDEA")
@@ -10,48 +11,64 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 # Download wordnet if needed
 nltk.download("wordnet", quiet=True)
 
-import dictionary
+# Cache for theme validation to reduce API calls
+theme_cache = {}
 
 def is_valid_word(word):
     """Check if word exists in WordNet"""
-    return dictionary.is_valid_word(word)
+    if not word:
+        return False
+    try:
+        return len(wordnet.synsets(word)) > 0
+    except:
+        return True
 
 def is_theme_related(word, theme):
-    """Use AI to check if word is related to theme, with dictionary fallback"""
+    """Use AI to check if word is related to theme, with caching"""
     word = word.lower().strip()
     theme = theme.lower().strip()
     
-    # Check dictionary first for speed
-    if dictionary.is_in_theme_list(word, theme):
-        return True
+    # Create cache key
+    cache_key = f"{word}_{theme}"
+    
+    # Check cache first
+    if cache_key in theme_cache:
+        return theme_cache[cache_key]
         
     try:
         # For Atlas theme, accept any geographical features
         if theme == "atlas":
             prompt = f"""
-            Is the word "{word}" a geographical feature, location, or place on Earth?
+            Is word "{word}" a geographical feature, location, or place on Earth?
             This includes: countries, cities, towns, continents, rivers, lakes, oceans, 
             mountains, forests, deserts, dams, islands, regions, etc.
+            Be lenient - accept if it could reasonably be geographical.
             Answer with only YES or NO. No explanation.
             """
         elif theme == "things":
             prompt = f"""
-            QUICK YES/NO: Is "{word}" something humans manufactured in a factory?
+            QUICK YES/NO: Is "{word}" something humans manufactured OR a common object?
+            Be lenient - accept if it's a common household item, tool, or manufactured good.
             YES = table, chair, bottle, phone, computer, car, book, pen, clock, lamp
-            NO = elephant, india, dog, paris, apple, tree, human, mountain
+            NO = elephant, india, dog, paris, apple (use fruits theme), tree, human
             Answer with only YES or NO.
             """
         else:
             prompt = f"""
-            Is the word "{word}" related to the theme "{theme}"? 
+            Is word "{word}" related to theme "{theme}"? 
+            Be lenient - accept if there's any reasonable connection.
             Answer with only YES or NO. No explanation.
             """
         
         response = model.generate_content(prompt)
-        result = response.text.strip().upper()
-        return result == "YES"
+        result = response.text.strip().upper() == "YES"
+        
+        # Cache the result
+        theme_cache[cache_key] = result
+        return result
     except:
         # Fallback: be lenient if AI fails
+        theme_cache[cache_key] = True
         return True
 
 def check_letter_chain(prev_word, new_word):

@@ -1,30 +1,38 @@
 import random
 from ai.ai_generator import is_valid_word, is_theme_related
-
-
-import dictionary
+import nltk
+from nltk.corpus import wordnet
 
 def get_possible_words(last_letter, theme, used_words):
-    """Get possible words quickly using central dictionary"""
+    """Get possible words from full WordNet dictionary - Optimized"""
     last_letter = last_letter.lower()
     theme = theme.lower()
     
     # Use set for faster lookup
     used_set = set(used_words)
+    possible_words = []
     
-    # Get words from central theme dictionary
-    theme_dict = dictionary.THEME_DICTIONARIES.get(theme, {})
+    # Get words from WordNet more efficiently
+    for synset in wordnet.all_synsets():
+        for lemma in synset.lemmas():
+            word = lemma.name().replace('_', '').lower()
+            
+            # Basic filters
+            if (word.startswith(last_letter) and 
+                word not in used_set and 
+                len(word) > 2 and 
+                len(word) < 15 and
+                word.isalpha() and
+                is_valid_word(word)):
+                
+                if word not in possible_words:
+                    possible_words.append(word)
+                    
+                    # Limit early to avoid performance issues
+                    if len(possible_words) >= 50:
+                        return possible_words
     
-    # If it's a list-based dictionary (like fruits), it might be a set
-    if isinstance(theme_dict, set):
-        return [w for w in theme_dict if w.startswith(last_letter) and w not in used_set]
-    
-    # If it's a char-based dictionary (already optimized for last_letter)
-    if isinstance(theme_dict, dict):
-        words = theme_dict.get(last_letter, [])
-        return [w for w in words if w not in used_set]
-        
-    return []
+    return possible_words
 
 def evaluate_word(word, game_state):
     """Quick evaluation for AI decision making"""

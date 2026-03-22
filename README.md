@@ -1,18 +1,31 @@
-# 🎮 WordLego AI
+# 🎮 WordLego AI - Competitive Word Chain Game
 
-**WordLego AI** is an interactive 2-player word chain game powered by AI-based theme validation. Players take turns entering words that follow a theme while maintaining a valid word chain — combining fun gameplay with intelligent validation.
+**WordLego AI** is a modern, responsive word chain game where players compete by building chains of words that follow specific themes. The game features AI-powered theme validation and intelligent opponents using minimax algorithm with alpha-beta pruning.
 
 ---
 
 ## 🚀 Features
 
-* 🎯 Theme-based word validation (AI-powered)
-* 🔗 Word chain gameplay (last letter → next word)
-* ⏱️ 30-second turn timer
-* 👥 2-player competitive mode
-* ❌ Automatic invalid move detection
-* 🧠 Semantic checking using AI (not just hardcoded lists)
-* 🎨 Modern, responsive UI
+### 🎯 Core Gameplay
+* **Theme-based word validation** using AI (Gemini) for semantic checking
+* **Word chain mechanics** - each word must start with the last letter of the previous word
+* **30-second turn timer** for competitive gameplay
+* **2-player modes** - Human vs Human or Human vs AI
+* **Automatic invalid move detection** with instant feedback
+
+### � AI System
+* **Minimax algorithm** with alpha-beta pruning for strategic decision-making
+* **3 difficulty levels** - Easy (1-ply), Medium (2-ply), Hard (3-ply)
+* **Full WordNet dictionary** - 100,000+ words (not limited to small lists)
+* **Smart theme validation** - AI checks if words are thematically relevant
+* **Performance optimized** - Cached validation and limited search for speed
+
+### 🎨 Modern UI
+* **Responsive design** - Works on mobile, tablet, and desktop
+* **Animated backgrounds** with particle effects
+* **Glass morphism** design with blur effects
+* **Smooth transitions** between game screens
+* **Real-time updates** with game state polling
 
 ---
 
@@ -219,4 +232,3 @@ This project is for educational and hackathon purposes.
 ## 💡 Inspiration
 
 Built to combine **gaming + AI + real-time interaction** into a fun and competitive experience.
-
