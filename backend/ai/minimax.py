@@ -1,10 +1,10 @@
 import random
-from ai.ai_generator import is_valid_word, is_theme_related
+from ai.ai_generator import is_valid_word, is_theme_related, FRUITS_LIST
 import nltk
 from nltk.corpus import wordnet
 
 def get_possible_words(last_letter, theme, used_words):
-    """Get possible words from full WordNet dictionary - Optimized"""
+    """Get possible words - ULTRA FAST with hardcoded fruit list"""
     last_letter = last_letter.lower()
     theme = theme.lower()
     
@@ -12,25 +12,55 @@ def get_possible_words(last_letter, theme, used_words):
     used_set = set(used_words)
     possible_words = []
     
-    # Get words from WordNet more efficiently
+    # Special fast path for fruits theme
+    if theme == 'fruits':
+        for fruit in FRUITS_LIST:
+            if (fruit.startswith(last_letter) and 
+                fruit not in used_set and 
+                len(fruit) > 2 and 
+                len(fruit) < 15 and
+                fruit.isalpha()):
+                possible_words.append(fruit)
+                if len(possible_words) >= 5:
+                    return possible_words
+        return possible_words
+    
+    # For other themes, use limited WordNet search
+    words_checked = 0
+    max_checks = 1000  # Drastically reduced for speed
+    
     for synset in wordnet.all_synsets():
         for lemma in synset.lemmas():
+            words_checked += 1
+            
+            # Very early termination
+            if words_checked > max_checks:
+                return possible_words
+            
             word = lemma.name().replace('_', '').lower()
             
-            # Basic filters
-            if (word.startswith(last_letter) and 
-                word not in used_set and 
-                len(word) > 2 and 
-                len(word) < 15 and
-                word.isalpha() and
-                is_valid_word(word)):
+            # Quick filters first
+            if (not word.startswith(last_letter) or 
+                word in used_set or 
+                len(word) <= 2 or 
+                len(word) >= 15 or
+                not word.isalpha()):
+                continue
                 
-                if word not in possible_words:
-                    possible_words.append(word)
-                    
-                    # Limit early to avoid performance issues
-                    if len(possible_words) >= 50:
-                        return possible_words
+            # Only check validity for promising candidates
+            if not is_valid_word(word):
+                continue
+                
+            # Theme check
+            if not is_theme_related(word, theme):
+                continue
+                
+            if word not in possible_words:
+                possible_words.append(word)
+                
+                # Return very early for speed
+                if len(possible_words) >= 5:  # Reduced to 5 for speed
+                    return possible_words
     
     return possible_words
 
@@ -53,7 +83,7 @@ def evaluate_word(word, game_state):
     return score
 
 def minimax(game_state, depth, alpha, beta, maximizing_player):
-    """Fast minimax with limited depth"""
+    """Fast minimax with limited depth and move count"""
     
     # Terminal conditions
     if depth == 0 or game_state.get('game_over', False):
@@ -70,6 +100,11 @@ def minimax(game_state, depth, alpha, beta, maximizing_player):
         # No moves available - current player loses
         score = -1000 if maximizing_player else 1000
         return score, None
+    
+    # Limit moves to consider for performance
+    max_moves = 5 if maximizing_player else 3  # Reduced for speed
+    if len(possible_moves) > max_moves:
+        possible_moves = possible_moves[:max_moves]
     
     best_move = None
     

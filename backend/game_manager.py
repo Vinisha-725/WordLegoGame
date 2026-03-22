@@ -39,6 +39,16 @@ def submit_word(game_id, player, word):
     if player != current_player:
         return {"valid": False, "reason": "Not your turn"}
 
+    # TIMEOUT CHECK (Special case for frontend timeout)
+    if word == "timeout":
+        game["winner"] = game["players"][1 - game["turn"]]
+        game["reason"] = f"Time's up! {current_player} ran out of time"
+        return {
+            "valid": False,
+            "reason": game["reason"],
+            "winner": game["winner"]
+        }
+
     # TIMER CHECK (30 seconds limit)
     time_taken = current_time - game["last_move_time"]
     if time_taken > 31: # allowing 1s buffer for network latencies

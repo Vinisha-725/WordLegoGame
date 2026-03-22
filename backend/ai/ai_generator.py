@@ -14,6 +14,18 @@ nltk.download("wordnet", quiet=True)
 # Cache for theme validation to reduce API calls
 theme_cache = {}
 
+# Hardcoded fruit list for fast validation
+FRUITS_LIST = {
+    'apple', 'banana', 'orange', 'grape', 'strawberry', 'blueberry', 'watermelon', 
+    'pineapple', 'mango', 'kiwi', 'lemon', 'peach', 'plum', 'cherry', 'raspberry',
+    'blackberry', 'coconut', 'papaya', 'pomegranate', 'guava', 'passionfruit', 'dragonfruit',
+    'lychee', 'durian', 'avocado', 'tomato', 'olive', 'fig', 'date', 'apricot', 'nectarine',
+    'cantaloupe', 'honeydew', 'grapefruit', 'lime', 'tangerine', 'mandarin', 'clementine',
+    'persimmon', 'starfruit', 'jackfruit', 'breadfruit', 'acai', 'goji', 'cranberry',
+    'boysenberry', 'elderberry', 'mulberry', 'currant', 'gooseberry', 'kiwano', 'rambutan',
+    'mangosteen', 'plantain', 'pear', 'quince', 'apricot', 'nectarine', 'persimmon'
+}
+
 def is_valid_word(word):
     """Check if word exists in WordNet"""
     if not word:
@@ -34,6 +46,12 @@ def is_theme_related(word, theme):
     # Check cache first
     if cache_key in theme_cache:
         return theme_cache[cache_key]
+    
+    # Fast check for fruits using hardcoded list
+    if theme == "fruits":
+        result = word in FRUITS_LIST
+        theme_cache[cache_key] = result
+        return result
         
     try:
         # For Atlas theme, accept any geographical features
@@ -43,6 +61,13 @@ def is_theme_related(word, theme):
             This includes: countries, cities, towns, continents, rivers, lakes, oceans, 
             mountains, forests, deserts, dams, islands, regions, etc.
             Be lenient - accept if it could reasonably be geographical.
+            Answer with only YES or NO. No explanation.
+            """
+        elif theme == "animals":
+            prompt = f"""
+            Is "{word}" an animal, bird, fish, reptile, amphibian, or insect?
+            This includes: mammals, birds, fish, reptiles, amphibians, insects, arachnids, etc.
+            Be strict - only accept actual animals. NO mythical creatures, NO animal products.
             Answer with only YES or NO. No explanation.
             """
         elif theme == "things":
