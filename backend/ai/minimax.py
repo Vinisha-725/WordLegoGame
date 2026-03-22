@@ -157,7 +157,7 @@ def minimax(game_state, depth, alpha, beta, maximizing_player):
         return min_eval, best_move
 
 def evaluate_position(game_state):
-    """Quick position evaluation"""
+    """Quick position evaluation - OPTIMIZED"""
     score = 0.0
     
     # If game is over, return extreme values
@@ -167,18 +167,16 @@ def evaluate_position(game_state):
         else:
             return -1000
     
-    # Evaluate based on current position
+    # Simple evaluation without expensive calls
     last_letter = game_state['last_letter']
-    theme = game_state['theme']
     used_words = game_state['word_chain']
     
-    # Number of available moves
-    available_moves = len(get_possible_words(last_letter, theme, used_words))
-    score += available_moves * 0.1
-    
-    # Current player advantage
+    # Simple scoring based on position
     if game_state['current_player'] == 'ai':
-        score += 1
+        score += 2  # AI advantage
+    
+    # Small penalty for longer chains (harder to find words)
+    score -= len(used_words) * 0.1
     
     return score
 
