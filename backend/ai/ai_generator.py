@@ -33,6 +33,22 @@ FRUITS_LIST = {
     'breadnut', 'buri palm', 'betelnut', 'areca nut', 'coconut water', 'coconut milk'
 }
 
+# Hardcoded things list for fast validation
+THINGS_LIST = {
+    'table', 'chair', 'bottle', 'phone', 'computer', 'car', 'book', 'pen', 'clock', 'lamp',
+    'desk', 'bed', 'door', 'window', 'mirror', 'television', 'radio', 'camera', 'keyboard', 'mouse',
+    'laptop', 'tablet', 'watch', 'glasses', 'shoes', 'shirt', 'pants', 'hat', 'bag', 'wallet',
+    'keys', 'lock', 'hammer', 'screwdriver', 'drill', 'saw', 'knife', 'fork', 'spoon', 'plate',
+    'cup', 'glass', 'mug', 'bowl', 'pot', 'pan', 'oven', 'refrigerator', 'microwave', 'toaster',
+    'blender', 'mixer', 'vacuum', 'broom', 'mop', 'bucket', 'soap', 'towel', 'paper', 'pencil',
+    'eraser', 'ruler', 'scissors', 'tape', 'glue', 'stapler', 'calculator', 'calendar', 'notebook',
+    'folder', 'envelope', 'stamp', 'umbrella', 'coat', 'scarf', 'gloves', 'belt', 'socks', 'shoe',
+    'boot', 'sneaker', 'sandals', 'helmet', 'backpack', 'suitcase', 'luggage', 'purse', 'wallet',
+    'ring', 'necklace', 'bracelet', 'earring', 'watch', 'clock', 'alarm', 'timer', 'remote',
+    'controller', 'joystick', 'speaker', 'headphones', 'microphone', 'charger', 'battery', 'cable',
+    'wire', 'plug', 'socket', 'switch', 'bulb', 'flashlight', 'lantern', 'candle', 'match', 'lighter'
+}
+
 def is_valid_word(word):
     """Check if word exists in WordNet"""
     if not word:
@@ -61,6 +77,12 @@ def is_theme_related(word, theme):
     if theme == "fruits":
         # Check both with and without spaces
         result = word in FRUITS_LIST or word_no_spaces in FRUITS_LIST
+        theme_cache[cache_key] = result
+        return result
+    
+    # Fast check for things using hardcoded list
+    if theme == "things":
+        result = word in THINGS_LIST or word_no_spaces in THINGS_LIST
         theme_cache[cache_key] = result
         return result
         
@@ -122,7 +144,7 @@ def is_theme_related(word, theme):
                     if theme == 'atlas' and any(n in ['location', 'region', 'country', 'city', 'body_of_water', 'landmass', 'geographical_area'] for n in hyper_names):
                         theme_cache[cache_key] = True
                         return True
-                    if theme == 'things' and any(n in ['artifact', 'instrumentality', 'article', 'commodity'] for n in hyper_names):
+                    if theme == 'things' and any(n in ['artifact', 'instrumentality', 'article', 'commodity', 'object', 'device', 'tool', 'equipment', 'furniture', 'vehicle', 'appliance'] for n in hyper_names):
                         theme_cache[cache_key] = True
                         return True
             theme_cache[cache_key] = False
