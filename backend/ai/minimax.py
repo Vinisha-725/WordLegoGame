@@ -8,19 +8,20 @@ def get_possible_words(last_letter, theme, used_words):
     last_letter = last_letter.lower()
     theme = theme.lower()
     
-    # Use set for faster lookup
-    used_set = set(used_words)
+    # Use set for faster lookup - normalize by removing spaces
+    used_set = set(word.replace(' ', '') for word in used_words)
     possible_words = []
     
     # Special fast path for fruits theme
     if theme == 'fruits':
         for fruit in FRUITS_LIST:
-            if (fruit.startswith(last_letter) and 
-                fruit not in used_set and 
-                len(fruit) > 2 and 
-                len(fruit) < 15 and
-                fruit.isalpha()):
-                possible_words.append(fruit)
+            fruit_no_spaces = fruit.replace(' ', '')
+            if (fruit_no_spaces.startswith(last_letter) and 
+                fruit_no_spaces not in used_set and 
+                len(fruit_no_spaces) > 2 and 
+                len(fruit_no_spaces) < 15 and
+                fruit_no_spaces.isalpha()):
+                possible_words.append(fruit)  # Return original with spaces
                 if len(possible_words) >= 5:
                     return possible_words
         return possible_words

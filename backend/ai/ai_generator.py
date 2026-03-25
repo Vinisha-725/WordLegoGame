@@ -6,7 +6,7 @@ import time
 
 # Initialize AI
 genai.configure(api_key="AIzaSyABWNWTqAcYRZzTCimsOjtDagb0JFBYDEA")
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-pro")
 
 # Download wordnet if needed
 nltk.download("wordnet", quiet=True)
@@ -23,7 +23,14 @@ FRUITS_LIST = {
     'cantaloupe', 'honeydew', 'grapefruit', 'lime', 'tangerine', 'mandarin', 'clementine',
     'persimmon', 'starfruit', 'jackfruit', 'breadfruit', 'acai', 'goji', 'cranberry',
     'boysenberry', 'elderberry', 'mulberry', 'currant', 'gooseberry', 'kiwano', 'rambutan',
-    'mangosteen', 'plantain', 'pear', 'quince', 'apricot', 'nectarine', 'persimmon'
+    'mangosteen', 'plantain', 'pear', 'quince', 'ice apple', 'iceapple', 'water apple',
+    'rose apple', 'cashew apple', 'sugar apple', 'custard apple', 'star apple', 'buddha hand',
+    'finger lime', 'blood orange', 'navel orange', 'cara cara', 'satsuma', 'pomelo', 'ugli fruit',
+    'tangelo', 'kumquat', 'citron', 'jambul', 'jamun', 'ber', 'chiku', 'sapodilla', 'sapota',
+    'longan', 'lanzones', 'langsat', 'santol', 'soursop', 'guyabano', 'graviola', 'cherimoya',
+    'papaw', 'pawpaw', 'prickly pear', 'cactus fruit', 'dragon egg', 'eggfruit', 'canistel',
+    'abiu', 'cupuacu', 'jaboticaba', 'camucamu', 'mamey', 'sapote', 'genip', 'hala fruit',
+    'breadnut', 'buri palm', 'betelnut', 'areca nut', 'coconut water', 'coconut milk'
 }
 
 def is_valid_word(word):
@@ -40,6 +47,9 @@ def is_theme_related(word, theme):
     word = word.lower().strip()
     theme = theme.lower().strip()
     
+    # Handle multi-word phrases by removing spaces for checking
+    word_no_spaces = word.replace(' ', '')
+    
     # Create cache key
     cache_key = f"{word}_{theme}"
     
@@ -49,7 +59,8 @@ def is_theme_related(word, theme):
     
     # Fast check for fruits using hardcoded list
     if theme == "fruits":
-        result = word in FRUITS_LIST
+        # Check both with and without spaces
+        result = word in FRUITS_LIST or word_no_spaces in FRUITS_LIST
         theme_cache[cache_key] = result
         return result
         
@@ -97,7 +108,7 @@ def is_theme_related(word, theme):
         # Fallback: Use NLTK WordNet
         try:
             from nltk.corpus import wordnet as wn
-            synsets = wn.synsets(word)
+            synsets = wn.synsets(word_no_spaces)  # Use no-space version for WordNet
             if not synsets:
                 theme_cache[cache_key] = False
                 return False
