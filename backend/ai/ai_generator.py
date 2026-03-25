@@ -49,6 +49,12 @@ THINGS_LIST = {
     'wire', 'plug', 'socket', 'switch', 'bulb', 'flashlight', 'lantern', 'candle', 'match', 'lighter'
 }
 
+# Hardcoded blacklist for inappropriate words only
+THINGS_BLACKLIST = {
+    'kampuchean', 'yankee', 'nigger', 'nigga', 'fuck', 'shit', 'cunt', 'bitch',
+    'whore', 'slut', 'bastard', 'asshole', 'dickhead', 'piss', 'crap', 'damn'
+}
+
 def is_valid_word(word):
     """Check if word exists in WordNet"""
     if not word:
@@ -79,6 +85,11 @@ def is_theme_related(word, theme):
         result = word in FRUITS_LIST or word_no_spaces in FRUITS_LIST
         theme_cache[cache_key] = result
         return result
+        
+    # Fast blacklist check for things theme
+    if theme == "things" and word in THINGS_BLACKLIST:
+        theme_cache[cache_key] = False
+        return False
         
     try:
         # For Atlas theme, accept any geographical features
@@ -138,9 +149,12 @@ def is_theme_related(word, theme):
                     if theme == 'atlas' and any(n in ['location', 'region', 'country', 'city', 'body_of_water', 'landmass', 'geographical_area'] for n in hyper_names):
                         theme_cache[cache_key] = True
                         return True
-                    if theme == 'things' and any(n in ['artifact', 'instrumentality', 'article', 'commodity', 'object', 'device', 'tool', 'equipment', 'furniture', 'vehicle', 'appliance'] for n in hyper_names):
-                        theme_cache[cache_key] = True
-                        return True
+                    if theme == 'things' and any(n in ['artifact', 'instrumentality', 'article', 'commodity', 'object', 'device', 'tool', 'equipment', 'furniture', 'vehicle', 'appliance', 'utensil', 'container', 'instrument', 'implement'] for n in hyper_names):
+                        # Additional check: reject abstract concepts
+                        abstract_terms = ['state', 'condition', 'quality', 'attribute', 'relation', 'concept', 'idea', 'thought', 'feeling', 'emotion', 'time', 'space', 'quantity', 'measure', 'group', 'class', 'type', 'category']
+                        if not any(abstract in syn.definition().lower() for abstract in abstract_terms):
+                            theme_cache[cache_key] = True
+                            return True
             theme_cache[cache_key] = False
             return False
         except:

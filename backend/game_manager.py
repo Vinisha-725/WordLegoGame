@@ -121,7 +121,7 @@ def submit_word(game_id, player, word):
                 # Add AI word
                 game["word_chain"].append(ai_word)
                 game["turn"] = 1 - game["turn"]  # Back to human player
-                game["last_move_time"] = time.time()
+                game["last_move_time"] = time.time()  # RESET TIMER FOR HUMAN TURN
                 
                 result = {
                     "valid": True,
@@ -131,16 +131,41 @@ def submit_word(game_id, player, word):
                     "message": f"AI played: {ai_word}"
                 }
             else:
-                # AI can't find a word, human wins
-                game["winner"] = game["players"][1 - game["turn"]]  # Human player
-                game["reason"] = "AI has no valid moves. You win!"
-                result = {
-                    "valid": True,
-                    "word_chain": game["word_chain"],
-                    "winner": game["winner"],
-                    "reason": game["reason"],
-                    "message": "AI has no valid moves. You win!"
-                }
+                # AI CANNOT LOSE! Generate fallback word
+                last_letter = game["word_chain"][-1][-1] if game["word_chain"] else 'a'
+                
+                # Emergency fallback: generate ANY valid word
+                from ai.ai_generator import generate_words
+                fallback_words = generate_words(last_letter, game["theme"])
+                ai_word = fallback_words[0] if fallback_words else None
+                
+                if ai_word:
+                    # Use fallback word
+                    game["word_chain"].append(ai_word)
+                    game["turn"] = 1 - game["turn"]
+                    game["last_move_time"] = time.time()
+                    
+                    result = {
+                        "valid": True,
+                        "word_chain": game["word_chain"],
+                        "next_player": game["players"][game["turn"]],
+                        "ai_move": ai_word,
+                        "message": f"AI played: {ai_word} (fallback)"
+                    }
+                else:
+                    # ULTIMATE fallback: use theme name
+                    theme_word = game["theme"][:3] + last_letter
+                    game["word_chain"].append(theme_word)
+                    game["turn"] = 1 - game["turn"]
+                    game["last_move_time"] = time.time()
+                    
+                    result = {
+                        "valid": True,
+                        "word_chain": game["word_chain"],
+                        "next_player": game["players"][game["turn"]],
+                        "ai_move": theme_word,
+                        "message": f"AI played: {theme_word} (emergency)"
+                    }
             return result
         finally:
             game["ai_thinking"] = False
@@ -161,4 +186,4 @@ def get_hint_word(game_id):
     hint = get_best_move(last_letter, game["theme"], game["word_chain"], "easy")
     if hint:
         return {"hint": hint.upper()}
-    return {"error": "No valid words found right now"}
+    return {"error": "No valid words found right now"}
