@@ -103,7 +103,7 @@ def evaluate_word(word, game_state):
     
     return score
 
-def minimax(game_state, depth, alpha, beta, maximizing_player):
+def minimax(game_state, depth, alpha, beta, maximizing_player, difficulty='medium'):
     """Fast minimax with limited depth and move count"""
     
     # Terminal conditions
@@ -122,8 +122,12 @@ def minimax(game_state, depth, alpha, beta, maximizing_player):
         score = -1000 if maximizing_player else 1000
         return score, None
     
-    # Limit moves to consider for performance
-    max_moves = 5 if maximizing_player else 3  # Reduced for speed
+    # Limit moves to consider for performance - DIFFICULTY BASED
+    if difficulty == 'hard':
+        max_moves = 10 if maximizing_player else 8  # More moves for hard mode
+    else:
+        max_moves = 5 if maximizing_player else 3  # Standard limits
+    
     if len(possible_moves) > max_moves:
         possible_moves = possible_moves[:max_moves]
     
@@ -141,7 +145,7 @@ def minimax(game_state, depth, alpha, beta, maximizing_player):
                 'game_over': False
             }
             
-            eval_score, _ = minimax(new_state, depth - 1, alpha, beta, False)
+            eval_score, _ = minimax(new_state, depth - 1, alpha, beta, False, difficulty)
             
             if eval_score > max_eval:
                 max_eval = eval_score
@@ -165,7 +169,7 @@ def minimax(game_state, depth, alpha, beta, maximizing_player):
                 'game_over': False
             }
             
-            eval_score, _ = minimax(new_state, depth - 1, alpha, beta, True)
+            eval_score, _ = minimax(new_state, depth - 1, alpha, beta, True, difficulty)
             
             if eval_score < min_eval:
                 min_eval = eval_score
@@ -217,8 +221,21 @@ def get_best_move(last_letter, theme, word_chain, difficulty='medium'):
         return None
     
     if difficulty == 'easy':
-        # Easy mode: random valid word
-        return random.choice(possible_moves)
+        # Easy mode: shallow minimax (depth=1) instead of random
+        minimax_state = {
+            'word_chain': used_words,
+            'last_letter': last_letter,
+            'theme': theme,
+            'current_player': 'ai',
+            'game_over': False
+        }
+        _, best_move = minimax(minimax_state, 1, float('-inf'), float('inf'), True, difficulty)
+        
+        # Fallback to random if minimax fails
+        if not best_move:
+            best_move = random.choice(possible_moves)
+        
+        return best_move
     
     # Medium and Hard: use minimax with limited depth
     minimax_state = {
@@ -229,7 +246,7 @@ def get_best_move(last_letter, theme, word_chain, difficulty='medium'):
         'game_over': False
     }
     
-    _, best_move = minimax(minimax_state, depth, float('-inf'), float('inf'), True)
+    _, best_move = minimax(minimax_state, depth, float('-inf'), float('inf'), True, difficulty)
     
     # Fallback to random if minimax fails
     if not best_move:
