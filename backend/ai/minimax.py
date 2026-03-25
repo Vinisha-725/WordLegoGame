@@ -1,5 +1,5 @@
 import random
-from ai.ai_generator import is_valid_word, is_theme_related, FRUITS_LIST
+from ai.ai_generator import is_valid_word, is_theme_related, FRUITS_LIST, THINGS_LIST
 import nltk
 from nltk.corpus import wordnet
 

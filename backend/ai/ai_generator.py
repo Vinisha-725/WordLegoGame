@@ -6,7 +6,7 @@ import time
 
 # Initialize AI
 genai.configure(api_key="AIzaSyABWNWTqAcYRZzTCimsOjtDagb0JFBYDEA")
-model = genai.GenerativeModel("gemini-pro")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Download wordnet if needed
 nltk.download("wordnet", quiet=True)
@@ -77,12 +77,6 @@ def is_theme_related(word, theme):
     if theme == "fruits":
         # Check both with and without spaces
         result = word in FRUITS_LIST or word_no_spaces in FRUITS_LIST
-        theme_cache[cache_key] = result
-        return result
-    
-    # Fast check for things using hardcoded list
-    if theme == "things":
-        result = word in THINGS_LIST or word_no_spaces in THINGS_LIST
         theme_cache[cache_key] = result
         return result
         
