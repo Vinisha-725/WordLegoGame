@@ -142,29 +142,6 @@ The comic-book theme is implemented with CSS variables. Modify colors and styles
 }
 ```
 
-## 🚀 Deployment
-
-### 🐳 Docker Setup
-For containerized deployment:
-
-```dockerfile
-FROM python:3.9-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-EXPOSE 8000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0"]
-```
-
-### ☁️ Vercel/Railway Deployment
-The app is designed for easy deployment to modern platforms:
-
-1. **Backend**: Deploy FastAPI to any cloud provider
-2. **Frontend**: Deploy React static build to Vercel/Netlify
-3. **Environment**: Set API base URL and Gemini API key
-4. **Database**: Add Redis for production caching if needed
-
 ## 🤝 Contributing
 
 Since this started as a fun hackathon-style build, feel free to fork it, mess around with the UI, or expand the AI validation logic to support new wild themes! Pull requests are always welcome.
