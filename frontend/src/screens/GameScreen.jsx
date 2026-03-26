@@ -35,7 +35,7 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
   }, [timer, winner, aiThinking]);
 
   useEffect(() => {
-    // Reset timer when game state updates (after AI moves)
+    // Only reset timer when it's actually a new turn
     if (gameState && !winner) {
       setTimer(30);
       setWord('');
@@ -48,7 +48,7 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
         setTimeout(() => inputRef.current?.focus(), 100);
       }
     }
-  }, [turn, gameState]); // Reset on turn change AND game state updates
+  }, [turn]); // Only reset on turn change, not game state updates
 
   // Reset timer when AI finishes thinking and it's human's turn
   useEffect(() => {
@@ -78,7 +78,6 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
     
     setFeedback({ message: "Time's up!", type: 'error' });
     setIsSubmitting(true);
-    setTimer(30); // Reset timer after timeout
 
     try {
       const requestBody = {
@@ -127,11 +126,9 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
         setFeedback({ message: data.message || "Great move!", type: 'success' });
         await onUpdate(gameData.gameId);
         setWord('');
-        setTimer(30); // Reset timer for next turn
       } else {
         setFeedback({ message: data.reason, type: 'error' });
         await onUpdate(gameData.gameId); 
-        setTimer(30); // Reset timer even after invalid move
       }
     } catch (err) {
       setFeedback({ message: "Network error!", type: 'error' });

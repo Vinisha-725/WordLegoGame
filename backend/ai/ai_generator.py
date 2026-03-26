@@ -3,10 +3,17 @@ import nltk
 from nltk.corpus import wordnet
 import random
 import time
+import os
 
-# Initialize AI
-genai.configure(api_key="AIzaSyABWNWTqAcYRZzTCimsOjtDagb0JFBYDEA")
-model = genai.GenerativeModel("gemini-1.5-flash")
+# Initialize AI with new package and environment variable
+try:
+    genai.configure(api_key=os.getenv("GEMINI_API_KEY", "YOUR_API_KEY_HERE"))
+    model = genai.GenerativeModel("gemini-pro")  # Use working model
+    print("✅ Gemini AI initialized successfully")
+except Exception as e:
+    print(f"⚠️ Gemini AI not available: {e}")
+    print("🔄 Using WordNet fallback only")
+    model = None
 
 # Download wordnet if needed
 nltk.download("wordnet", quiet=True)
@@ -92,6 +99,10 @@ def is_theme_related(word, theme):
         return False
         
     try:
+        # Only use AI if model is available
+        if model is None:
+            raise Exception("AI model not available")
+            
         # For Atlas theme, accept any geographical features
         if theme == "atlas":
             prompt = f"""
