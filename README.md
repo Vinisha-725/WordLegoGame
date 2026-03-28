@@ -405,23 +405,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 📞 Support & Contact
-
-### Getting Help
-
-- **Documentation**: This README and inline code comments
-- **Issues**: GitHub Issues for bug reports and feature requests
-- **Community**: Discussion forums for general questions
-
-### Professional Inquiries
-
-For commercial licensing, custom development, or enterprise deployment:
-
-- **Email**: [your-contact@example.com]
-- **LinkedIn**: [your-linkedin-profile]
-- **Portfolio**: [your-portfolio-website]
-
----
 
 ## 🎯 Future Roadmap
 
