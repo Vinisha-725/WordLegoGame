@@ -411,7 +411,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### Version 2.0 Features
 
 - **🌐 Multiplayer**: Real-time online gameplay
-- **🏆 Tournaments**: Competitive brackets and leaderboards
 - **🎨 Themes Expansion**: Sports, Science, History categories
 - **♿ Accessibility**: Screen reader support and keyboard navigation
 - **📱 Mobile**: Progressive Web App (PWA) support
@@ -420,7 +419,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **🤖 Enhanced AI**: Machine learning for personalized difficulty
 - **🌍 Internationalization**: Multi-language support
-- **📚 Educational Mode**: Classroom features and progress tracking
 - **🔊 Audio Integration**: Voice recognition and text-to-speech
 
 ---
