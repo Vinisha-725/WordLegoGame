@@ -322,31 +322,6 @@ AI_CONFIG = {
 
 ---
 
-## 🚀 Deployment Guide
-
-### Production Deployment
-
-#### Docker Configuration
-
-```dockerfile
-# Multi-stage build for optimized production
-FROM node:18-alpine AS frontend
-WORKDIR /app/frontend
-COPY frontend/package*.json ./
-RUN npm ci --only=production
-COPY frontend/ ./
-RUN npm run build
-
-FROM python:3.9-slim AS backend
-WORKDIR /app
-COPY backend/requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-COPY backend/ ./
-COPY --from=frontend /app/frontend/dist ./static
-
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
 #### Environment Setup
 
 ```bash
