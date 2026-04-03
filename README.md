@@ -32,7 +32,7 @@ WordLego represents a sophisticated integration of modern web technologies with 
          │                        ┌─────────────────┐
          │                        │   AI Services   │
          │                        │                 │
-         │                        │ • Gemini API    │
+         │                        │ • Gemini-API    │
          │                        │ • WordNet       │
          │                        │ • Minimax AI    │
          │                        └─────────────────┘
@@ -66,7 +66,8 @@ WordLego represents a sophisticated integration of modern web technologies with 
 
 - **Python 3.8+** with pip
 - **Node.js 16+** with npm
-- **Google Gemini API Key** (optional, falls back to WordNet)
+- **Google Gemini API Key**
+
 
 ### Installation & Setup
 
