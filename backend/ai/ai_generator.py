@@ -7,8 +7,12 @@ import os
 
 # Initialize AI with new package and environment variable
 try:
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY", "YOUR_API_KEY_HERE"))
-    model = genai.GenerativeModel("gemini-pro")  # Use working model
+    api_key = os.getenv("GEMINI_API_KEY", "YOUR_API_KEY_HERE")
+    if api_key and api_key != "YOUR_API_KEY_HERE":
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel("gemini-2.5-flash")  # Working model
+    else:
+        model = None
     print("✅ Gemini AI initialized successfully")
 except Exception as e:
     print(f"⚠️ Gemini AI not available: {e}")
