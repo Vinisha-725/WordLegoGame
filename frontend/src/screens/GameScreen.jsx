@@ -24,38 +24,29 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
 
   useEffect(() => {
     let interval;
-    if (timer > 0 && !winner && !aiThinking) {
+    // Only count down when not submitting and not AI thinking
+    if (timer > 0 && !winner && !aiThinking && !isSubmitting) {
       interval = setInterval(() => {
         setTimer(prev => prev - 1);
       }, 1000);
-    } else if (timer === 0 && !winner && !aiThinking) {
+    } else if (timer === 0 && !winner && !aiThinking && !isSubmitting) {
       handleTimeout();
     }
     return () => clearInterval(interval);
-  }, [timer, winner, aiThinking]);
+  }, [timer, winner, aiThinking, isSubmitting]);
 
   useEffect(() => {
-    // Only reset timer when it's actually a new turn
-    if (gameState && !winner) {
+    // Reset timer when it's human's turn (including after AI moves)
+    console.log(`Timer check - currentP: ${currentP}, turn: ${turn}, chainLength: ${chain.length}, winner: ${winner}`);
+    if (gameState && !winner && currentP !== 'AI' && currentP !== 'Loading...') {
+      console.log('Resetting timer to 30 for human turn');
       setTimer(30);
       setWord('');
       setFeedback(null);
-      
-      if (currentP === 'AI') {
-        setAiThinking(true);
-      } else {
-        setAiThinking(false);
-        setTimeout(() => inputRef.current?.focus(), 100);
-      }
+      setAiThinking(false);
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
-  }, [turn]); // Only reset on turn change, not game state updates
-
-  // Reset timer when AI finishes thinking and it's human's turn
-  useEffect(() => {
-    if (currentP !== 'AI' && !aiThinking && !winner) {
-      setTimer(30); // Ensure human gets full 30 seconds
-    }
-  }, [currentP, aiThinking, winner]);
+  }, [turn, currentP, winner, chain.length]); // Reset when turn changes to human
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
