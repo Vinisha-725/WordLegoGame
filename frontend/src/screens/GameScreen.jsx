@@ -36,17 +36,15 @@ function GameScreen({ gameState, gameData, onUpdate, onGameOver }) {
   }, [timer, winner, aiThinking, isSubmitting]);
 
   useEffect(() => {
-    // Reset timer when it's human's turn (including after AI moves)
-    console.log(`Timer check - currentP: ${currentP}, turn: ${turn}, chainLength: ${chain.length}, winner: ${winner}`);
+    // Reset timer to 30 whenever it's human's turn and game is active
     if (gameState && !winner && currentP !== 'AI' && currentP !== 'Loading...') {
-      console.log('Resetting timer to 30 for human turn');
       setTimer(30);
       setWord('');
       setFeedback(null);
       setAiThinking(false);
       setTimeout(() => inputRef.current?.focus(), 100);
     }
-  }, [turn, currentP, winner, chain.length]); // Reset when turn changes to human
+  }, [turn, chain.length, winner]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
