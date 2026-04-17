@@ -1,5 +1,5 @@
 import random
-from ai.ai_generator import is_valid_word, is_theme_related, FRUITS_LIST, THINGS_LIST
+from ai.ai_generator import is_valid_word, is_theme_related, FRUITS_LIST, THINGS_LIST, ATLAS_LIST
 import nltk
 from nltk.corpus import wordnet
 
@@ -36,6 +36,21 @@ def get_possible_words(last_letter, theme, used_words):
                 len(thing_no_spaces) < 15 and
                 thing_no_spaces.isalpha()):
                 possible_words.append(thing)  # Return original with spaces
+                if len(possible_words) >= 5:
+                    return possible_words
+        if possible_words:
+            return possible_words
+
+    # Fast path for atlas theme using hardcoded list
+    if theme == 'atlas':
+        for place in ATLAS_LIST:
+            place_no_spaces = place.replace(' ', '')
+            if (place_no_spaces.startswith(last_letter) and 
+                place_no_spaces not in used_set and 
+                len(place_no_spaces) > 2 and 
+                len(place_no_spaces) < 20 and
+                place_no_spaces.isalpha()):
+                possible_words.append(place)  # Return original with spaces
                 if len(possible_words) >= 5:
                     return possible_words
         if possible_words:

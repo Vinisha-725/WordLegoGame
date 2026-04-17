@@ -57,13 +57,133 @@ THINGS_LIST = {
     'boot', 'sneaker', 'sandals', 'helmet', 'backpack', 'suitcase', 'luggage', 'purse', 'wallet',
     'ring', 'necklace', 'bracelet', 'earring', 'watch', 'clock', 'alarm', 'timer', 'remote',
     'controller', 'joystick', 'speaker', 'headphones', 'microphone', 'charger', 'battery', 'cable',
-    'wire', 'plug', 'socket', 'switch', 'bulb', 'flashlight', 'lantern', 'candle', 'match', 'lighter'
+    'wire', 'plug', 'socket', 'switch', 'bulb', 'flashlight', 'lantern', 'candle', 'match', 'lighter', 'word'
 }
 
 # Hardcoded blacklist for inappropriate words only
 THINGS_BLACKLIST = {
     'kampuchean', 'yankee', 'nigger', 'nigga', 'fuck', 'shit', 'cunt', 'bitch',
     'whore', 'slut', 'bastard', 'asshole', 'dickhead', 'piss', 'crap', 'damn'
+}
+
+# Hardcoded atlas list - comprehensive geography
+ATLAS_LIST = {
+    # COUNTRIES (A-Z)
+    'afghanistan', 'albania', 'algeria', 'andorra', 'angola', 'antigua', 'argentina', 'armenia',
+    'australia', 'austria', 'azerbaijan', 'bahamas', 'bahrain', 'bangladesh', 'barbados', 'belarus',
+    'belgium', 'belize', 'benin', 'bhutan', 'bolivia', 'bosnia', 'botswana', 'brazil',
+    'brunei', 'bulgaria', 'burundi', 'cambodia', 'cameroon', 'canada', 'capeverde', 'chad',
+    'chile', 'china', 'colombia', 'comoros', 'congo', 'croatia', 'cuba', 'cyprus',
+    'czech', 'denmark', 'djibouti', 'dominica', 'ecuador', 'egypt', 'elsalvador', 'eritrea',
+    'estonia', 'eswatini', 'ethiopia', 'fiji', 'finland', 'france', 'gabon', 'gambia',
+    'georgia', 'germany', 'ghana', 'greece', 'grenada', 'guatemala', 'guinea', 'guyana',
+    'haiti', 'honduras', 'hungary', 'iceland', 'india', 'indonesia', 'iran', 'iraq',
+    'ireland', 'israel', 'italy', 'jamaica', 'japan', 'jordan', 'kazakhstan', 'kenya',
+    'kiribati', 'kosovo', 'kuwait', 'kyrgyzstan', 'laos', 'latvia', 'lebanon', 'lesotho',
+    'liberia', 'libya', 'liechtenstein', 'lithuania', 'luxembourg', 'madagascar', 'malawi', 'malaysia',
+    'maldives', 'mali', 'malta', 'mauritania', 'mauritius', 'mexico', 'micronesia', 'moldova',
+    'monaco', 'mongolia', 'montenegro', 'morocco', 'mozambique', 'myanmar', 'namibia', 'nauru',
+    'nepal', 'netherlands', 'nicaragua', 'niger', 'nigeria', 'northmacedonia', 'norway', 'oman',
+    'pakistan', 'palau', 'palestine', 'panama', 'paraguay', 'peru', 'philippines', 'poland',
+    'portugal', 'qatar', 'romania', 'russia', 'rwanda', 'samoa', 'senegal', 'serbia',
+    'seychelles', 'singapore', 'slovakia', 'slovenia', 'somalia', 'spain', 'srilanka', 'sudan',
+    'suriname', 'sweden', 'switzerland', 'syria', 'taiwan', 'tajikistan', 'tanzania', 'thailand',
+    'togo', 'tonga', 'tunisia', 'turkey', 'turkmenistan', 'tuvalu', 'uganda', 'ukraine',
+    'uae', 'uk', 'usa', 'uruguay', 'uzbekistan', 'vanuatu', 'vatican', 'venezuela',
+    'vietnam', 'yemen', 'zambia', 'zimbabwe',
+    # CITIES
+    'tokyo', 'delhi', 'shanghai', 'dhaka', 'saopaulo', 'mexicocity', 'cairo', 'beijing',
+    'mumbai', 'osaka', 'karachi', 'chongqing', 'kinshasa', 'lagos', 'istanbul', 'buenosaires',
+    'kolkata', 'manila', 'tianjin', 'guangzhou', 'rio', 'lahore', 'bangalore', 'shenzhen',
+    'moscow', 'chennai', 'bogota', 'jakarta', 'lima', 'paris', 'bangkok', 'hyderabad',
+    'london', 'ahmedabad', 'newyork', 'tehran', 'kuala', 'santiago', 'singapore', 'riyadh',
+    'baghdad', 'ankara', 'berlin', 'madrid', 'jaipur', 'amman', 'nairobi', 'pune',
+    'sydney', 'chicago', 'dubai', 'melbourne', 'rome', 'barcelona', 'montreal', 'toronto',
+    'vancouver', 'miami', 'sanfrancisco', 'losangeles', 'seattle', 'boston', 'dallas', 'houston',
+    'atlanta', 'phoenix', 'philadelphia', 'detroit', 'denver', 'portland', 'lasvegas', 'austin',
+    'nashville', 'neworleans', 'cleveland', 'minneapolis', 'tampa', 'pittsburgh', 'cincinnati', 'kansas',
+    'baltimore', 'milwaukee', 'charlotte', 'raleigh', 'omaha', 'tucson', 'fresno', 'mesa',
+    'sacramento', 'longbeach', 'oakland', 'tulsa', 'wichita', 'arlington', 'bakersfield', 'anaheim',
+    'honolulu', 'riverside', 'lexington', 'stockton', 'corpus', 'irvine', 'orlando', 'irving',
+    'newark', 'lincoln', 'toledo', 'chandler', 'fortwayne', 'lubbock', 'madison', 'gilbert',
+    'reno', 'buffalo', 'chesapeake', 'aurora', 'scottsdale', 'glendale', 'greensboro', 'winston',
+    'fremont', 'boise', 'richmond', 'batonrouge', 'desmoines', 'spokane', 'sanbernardino', 'modesto',
+    'birmingham', 'rochester', 'oxnard', 'fremont', 'irvine', 'moreno', 'glendale', 'huntington',
+    'augusta', 'amarillo', 'little', 'akron', 'shreveport', 'mobile', 'grandrapids', 'saltlake',
+    'huntsville', 'tallahassee', 'grandprairie', 'knoxville', 'worcester', 'newport', 'providence', 'fortlauderdale',
+    'chattanooga', 'tempe', 'brownsville', 'jackson', 'providence', 'overland', 'vancouver', 'sioux',
+    'peoria', 'springfield', 'lancaster', 'eugene', 'salem', 'elizabeth', 'pasadena', 'palmdale',
+    'mcallen', 'topeka', 'thornton', 'miramar', 'odessa', 'carlsbad', 'mesquite', 'hayward',
+    'sunnyvale', 'fullerton', 'orange', 'roseville', 'denton', 'surprise', 'murfreesboro', 'mcKinney',
+    'midland', 'manchester', 'olathe', 'carrollton', 'rockford', 'gainesville', 'bellevue', 'visalia',
+    'concord', 'charleston', 'clarksville', 'vallejo', 'thousandoaks', 'raleigh', 'fairfield', 'berkeley',
+    'richardson', 'arvada', 'annarbor', 'rochester', 'cambridge', 'antioch', 'temecula', 'college',
+    'billings', 'gresham', 'highpoint', 'greenbay', 'murrieta', 'inglewood', 'odessa', 'league',
+    'brokenarrow', 'westvalley', 'miami', 'boulder', 'provo', 'westminster', 'northcharleston', 'norwalk',
+    'fairfield', 'berkeley', 'manchester', 'santa', 'fargo', 'billings', 'elgin', 'waterbury',
+    'costamesa', 'miami', 'daly', 'westcovina', 'richardson', 'pompano', 'gresham', 'lewisville',
+    'lakewood', 'burbank', 'everett', 'inglewood', 'southbend', 'edison', 'kenosha', 'woodbridge',
+    # US STATES
+    'alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado', 'connecticut', 'delaware',
+    'florida', 'georgia', 'hawaii', 'idaho', 'illinois', 'indiana', 'iowa', 'kansas',
+    'kentucky', 'louisiana', 'maine', 'maryland', 'massachusetts', 'michigan', 'minnesota', 'mississippi',
+    'missouri', 'montana', 'nebraska', 'nevada', 'newhampshire', 'newjersey', 'newmexico', 'newyork',
+    'northcarolina', 'northdakota', 'ohio', 'oklahoma', 'oregon', 'pennsylvania', 'rhodeisland', 'southcarolina',
+    'southdakota', 'tennessee', 'texas', 'utah', 'vermont', 'virginia', 'washington', 'westvirginia',
+    'wisconsin', 'wyoming',
+    # CONTINENTS
+    'africa', 'antarctica', 'asia', 'australia', 'europe', 'northamerica', 'southamerica',
+    # OCEANS & SEAS
+    'pacific', 'atlantic', 'indian', 'arctic', 'antarctic', 'caribbean', 'mediterranean', 'baltic',
+    'blacksea', 'redsea', 'arabiansea', 'southchina', 'coral', 'tasman', 'adriatic', 'aegean',
+    'tyrrhenian', 'ionian', 'ligurian', 'alboran', 'bering', 'okhotsk', 'japansea', 'yellow',
+    'eastchina', 'philippine', 'sulu', 'celebes', 'javasea', 'flores', 'bandasea', 'arafura',
+    'timor', 'molucca', 'halmahera', 'ceram', 'barents', 'kara', 'laptev', 'east',
+    'beaufort', 'chukchi', 'white', 'barents', 'norwegian', 'greenland', 'labrador', 'hudson',
+    'baffin', 'davies', 'amundsen', 'ross', 'weddell', 'scotia', 'bellingshausen', 'lazarev',
+    'mawson', 'davis', ' Cooperation', ' Cooperation', ' Cooperation', ' Cooperation',
+    # MAJOR RIVERS
+    'amazon', 'nile', 'yangtze', 'mississippi', 'yenisei', 'yellow', 'ob', 'congo',
+    'amur', 'lena', 'mekong', 'mackenzie', 'niger', 'brahmaputra', 'volga', 'indus',
+    'tunguska', 'zambezi', 'orinoco', 'danube', 'salween', 'yenisei', 'amur', 'lena',
+    'irrawaddy', 'godavari', 'missouri', 'parana', 'murray', 'tigris', 'rhine', 'ganges',
+    'sao', 'puru', 'madeira', 'arawak', 'grande', 'colorado', 'ohio', 'tennessee',
+    'columbia', 'snake', 'platte', 'arkansas', 'red', 'minnesota', 'wabash', 'green',
+    'potomac', 'susquehanna', 'delaware', 'hudson', 'connecticut', 'merrimack', 'kennebec', 'penobscot',
+    # MAJOR LAKES
+    'superior', 'victoria', 'huron', 'michigan', 'tangan', 'baikal', 'greatbear', 'malawi',
+    'erie', 'winnipeg', 'ontario', 'ladoga', 'vostok', 'onega', 'titicaca', 'nicaragua',
+    'athabasca', 'reindeer', 'turkana', 'albert', 'victoria', 'tanganyika', 'kivu', 'edward',
+    'mweru', 'bangweulu', 'koko', 'balkhash', 'issyk', 'qinghai', 'dongting', 'poyang',
+    'tai', 'hulun', 'xingkai', 'biwa', 'ladoga', 'onega', 'peipus', 'vattern',
+    # MOUNTAINS
+    'everest', 'k2', 'kangchenjunga', 'lhotse', 'makalu', 'chooyu', 'dhaulagiri', 'manaslu',
+    'nanga', 'annapurna', 'gasherbrum', 'broad', 'shishapangma', 'aconcagua', 'denali', 'kilimanjaro',
+    'elbrus', 'vinson', 'puncak', 'montblanc', 'matterhorn', 'eiger', 'jungfrau', 'zugspitze',
+    'olympus', 'fuji', 'rainier', 'whitney', 'elbert', 'harney', 'mckinley', 'foraker',
+    'hunter', 'bona', 'saint', 'bering', 'fairweather', 'hubbard', 'alaska', 'wrangell',
+    'hassan', 'marcy', 'washington', 'franconia', 'lafayette', 'lincoln', 'moosilauke', 'cannon',
+    # DESERTS
+    'sahara', 'arabian', 'gobi', 'kalahari', 'mojave', 'sonoran', 'chihuahuan', 'greatvictoria',
+    'patagonian', 'greatsandy', 'karakum', 'thar', 'namib', 'atacama', 'danakil', 'rub',
+    'syrian', 'negev', 'colorado', 'yuma', 'registan', 'dashtekavir', 'dashtelut', 'an',
+    # ISLANDS
+    'greenland', 'newguinea', 'borneo', 'madagascar', 'baffin', 'sumatra', 'honshu', 'luzon',
+    'greatbritain', 'victoria', 'ellesmere', 'ceylon', 'newfoundland', 'cuba', 'iceland', 'mindanao',
+    'ireland', 'hokkaido', 'sakhalin', 'hispaniola', 'banks', 'srilanka', 'tasmnia', 'devon',
+    'alexander', 'southampton', 'melville', 'axel', 'norfolk', 'tahiti', 'fiji', 'malta',
+    'cyprus', 'sardinia', 'sicily', 'crete', 'majorca', 'minorca', 'ibiza', 'corfu',
+    'rhodes', 'lesbos', 'euboea', 'malta', 'manhattan', 'longisland', 'staten', 'rhodeisland',
+    # REGIONS
+    'caribbean', 'scandinavia', 'balkans', 'caucasus', 'anatolia', 'levant', 'mesopotamia', 'maghreb',
+    'sub-sahara', 'patagonia', 'pampas', 'amazonia', 'andean', 'centralasia', 'siberia', 'manchuria',
+    'indochina', 'malay', 'deccan', 'gujarat', 'punjab', 'bengal', 'kashmir', 'balochistan',
+    'sindh', 'myanmar', 'thai', 'lao', 'khmer', 'viet', 'malay', 'borneo',
+    'sumatra', 'java', 'sulawesi', 'timor', 'moluccas', 'papua', 'micronesia', 'melanesia',
+    'polynesia', 'hawaii', 'tahiti', 'samoa', 'tonga', 'fiji', 'guam', 'palau',
+    'guadeloupe', 'martinique', 'reunion', 'mauritius', 'seychelles', 'comoros', 'canary', 'azores',
+    'madeira', 'balearic', 'sardinia', 'corsica', 'elba', 'sicily', 'malta', 'crete',
+    'rhodes', 'cyprus', 'hokkaido', 'honshu', 'kyushu', 'shikoku', 'okinawa', 'amami'
 }
 
 def is_valid_word(word):
@@ -101,6 +221,13 @@ def is_theme_related(word, theme):
     if theme == "things" and word in THINGS_BLACKLIST:
         theme_cache[cache_key] = False
         return False
+        
+    # Fast check for atlas theme using hardcoded list
+    if theme == "atlas":
+        if word in ATLAS_LIST or word_no_spaces in ATLAS_LIST:
+            theme_cache[cache_key] = True
+            return True
+        # If not in list, fall through to AI validation
         
     try:
         # Only use AI if model is available
